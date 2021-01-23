@@ -105,7 +105,7 @@
           </el-form>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onConfirmCreateTable">添加</el-button>
+          <el-button type="primary" @click="onSave">保存</el-button>
           <el-button @click="onCancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -118,30 +118,12 @@
 
   export default {
     name: "ProjectTable",
-    data() {
-      return {
-        table: {
-          name: '',
-          columns: [{
-            name: '',
-            type: '',
-            length: 0,
-            comment: '',
-            primary: false,
-            searchable: false,
-            enableFormItem: true,
-            formItemType: ''
-          }],
-          permissions: [{
-            role: '',
-            operations: []
-          }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
-        },
-        isDialogShow: true
+    props: {
+      table: {
+        type: Object
+      },
+      isDialogShow: {
+        type: Boolean
       }
     },
     methods: {
@@ -172,6 +154,9 @@
       },
       onDeletePermission(index) {
         this.table.permissions.splice(index, 1)
+      },
+      onSave() {
+        this.$emit('on-save')
       }
     }
   }

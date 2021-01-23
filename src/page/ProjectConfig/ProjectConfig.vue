@@ -66,6 +66,9 @@
     props: {
       config: {
         type: Object
+      },
+      projectTypes: {
+        type: Array
       }
     }
   }

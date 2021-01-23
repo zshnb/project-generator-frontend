@@ -5,7 +5,7 @@
         <project-config :config="config"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置">
-        <project-table :tables="tables"/>
+        <project-table :table="table" @on-save="onSave" :is-dialog-show="isDialogShow"/>
       </el-tab-pane>
       <el-tab-pane label="菜单配置">
 
@@ -43,7 +43,34 @@
           jdbcDatabase: '',
           type: 1
         },
-        tables: []
+        tables: [],
+        table: {
+          name: '',
+          columns: [{
+            name: '',
+            type: '',
+            length: 0,
+            comment: '',
+            primary: false,
+            searchable: false,
+            enableFormItem: true,
+            formItemType: ''
+          }],
+          permissions: [{
+            role: '',
+            operations: []
+          }],
+          enablePage: true,
+          form: {
+            formItems: []
+          },
+        },
+        isDialogShow: true
+      }
+    },
+    methods: {
+      onSave() {
+        console.log(this.table)
       }
     }
   }
