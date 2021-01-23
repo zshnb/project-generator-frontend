@@ -40,7 +40,7 @@
             </el-form-item>
             <el-form-item label="类型">
               <el-select v-model="column.type">
-                <el-option label="varchar" value="varchar"/>
+                <el-option v-for="type in columnTypes" :key="type" :label="type" :value="type"/>
               </el-select>
             </el-form-item>
             <el-form-item class="length-form-item" label="长度">
@@ -60,7 +60,10 @@
             </el-form-item>
             <el-form-item label="表单项类型">
               <el-select v-model="column.formItemType">
-                <el-option label="输入框" value="input"/>
+                <el-option v-for="formItemType in formItemTypes"
+                           :key="formItemType.className"
+                           :label="formItemType.name"
+                           :value="formItemType.className"/>
               </el-select>
             </el-form-item>
           </el-form>
@@ -95,13 +98,6 @@
                 <el-checkbox label="delete"/>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item>
-              <el-button type="danger"
-                         size="small"
-                         icon="el-icon-remove-outline"
-                         plain
-                         @click="onDeletePermission(index)"/>
-            </el-form-item>
           </el-form>
         </el-form-item>
         <el-form-item>
@@ -115,15 +111,26 @@
 
 <script>
   import { md5 } from '../../util/HashUtil'
+  import axios from '../../util/Axios'
 
   export default {
     name: "ProjectTable",
+    created() {
+      axios.get('/column/types').then(res => this.columnTypes = res.list)
+      axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
+    },
     props: {
       table: {
         type: Object
       },
       isDialogShow: {
         type: Boolean
+      }
+    },
+    data() {
+      return {
+        columnTypes: [],
+        formItemTypes: []
       }
     },
     methods: {
@@ -157,6 +164,9 @@
       },
       onSave() {
         this.$emit('on-save')
+      },
+      onCancel() {
+        this.isDialogShow = false
       }
     }
   }
