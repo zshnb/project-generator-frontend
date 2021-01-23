@@ -5,7 +5,7 @@
         <project-config :config="config"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置">
-
+        <project-table :tables="tables"/>
       </el-tab-pane>
       <el-tab-pane label="菜单配置">
 
@@ -19,10 +19,11 @@
 
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
+  import ProjectTable from "../ProjectTable/ProjectTable";
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectConfig},
+    components: {ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -42,6 +43,7 @@
           jdbcDatabase: '',
           type: 1
         },
+        tables: []
       }
     }
   }
