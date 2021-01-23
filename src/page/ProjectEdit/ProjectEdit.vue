@@ -5,7 +5,16 @@
         <project-config :config="config"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置">
-        <project-table :table="table" @on-save="onSave" :is-dialog-show="isDialogShow"/>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <project-table :table="table" @on-save="onSave" :is-dialog-show="isDialogShow"/>
+          </el-col>
+          <el-col :span="6">
+            <el-card>
+              <i class="el-icon-plus"/>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-tab-pane>
       <el-tab-pane label="菜单配置">
 
@@ -20,10 +29,11 @@
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
+  import TableDialog from "../../components/TableDialog/TableDialog";
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectTable, ProjectConfig},
+    components: {TableDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -65,7 +75,7 @@
             formItems: []
           },
         },
-        isDialogShow: true
+        isDialogShow: false
       }
     },
     methods: {
