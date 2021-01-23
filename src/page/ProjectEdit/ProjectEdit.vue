@@ -26,11 +26,22 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="角色配置">
-
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-card class="create-role-card" @click.native="showCreateRoleDialog">
+              <i class="el-icon-plus"/>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
     <table-dialog :table="table" :is-dialog-show="isTableDialogShow" @on-save="onSaveTable" @on-close="onCloseTable"/>
     <menu-dialog :menu="menu" :is-dialog-show="isMenuDialogShow" @on-save="onSaveMenu" @on-close="onCloseMenu"/>
+    <role-dialog :role="role"
+                 :menus="menus"
+                 :is-dialog-show="isRoleDialogShow"
+                 @on-save="onSaveRole"
+                 @on-close="onCloseRole"/>
   </div>
 </template>
 
@@ -39,10 +50,11 @@
   import ProjectTable from "../ProjectTable/ProjectTable";
   import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
+  import RoleDialog from "../../components/RoleDialog/RoleDialog";
 
   export default {
     name: "ProjectEdit",
-    components: {MenuDialog, TableDialog, ProjectTable, ProjectConfig},
+    components: {RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -89,6 +101,12 @@
           name: '',
           icon: '',
           href: ''
+        },
+        roles: [],
+        role: {
+          name: '',
+          description: '',
+          menus: []
         },
         isTableDialogShow: false,
         isMenuDialogShow: false,
@@ -146,12 +164,30 @@
       onCloseMenu(data) {
         this.isMenuDialogShow = data
       },
+      onSaveRole() {
+        this.role.menus.forEach(it => it.role = this.role.name)
+        let newRole = {}
+        Object.assign(newRole, this.role)
+        this.roles.push(newRole)
+        this.role = {
+          name: '',
+          description: '',
+          menus: []
+        }
+        this.isRoleDialogShow = false
+      },
+      showCreateRoleDialog() {
+        this.isRoleDialogShow = true
+      },
+      onCloseRole(data) {
+        this.isRoleDialogShow = data
+      },
     }
   }
 </script>
 
 <style scoped lang="stylus">
   #project-edit
-    .create-table-card, .create-menu-card
+    .create-table-card, .create-menu-card, .create-role-card
       cursor pointer
 </style>
