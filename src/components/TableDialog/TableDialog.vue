@@ -1,6 +1,6 @@
 <template>
   <div id="table-dialog">
-    <el-dialog :visible.sync="isDialogShow" width="90%">
+    <el-dialog :visible.sync="innerIsDialogShow" width="90%" @close="onClose">
       <el-form :model="table" label-width="120px">
         <el-form-item class="name-form-item">
           <div slot="label">
@@ -91,7 +91,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSave">保存</el-button>
-          <el-button @click="onCancel">取消</el-button>
+          <el-button @click="onClose">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -119,7 +119,13 @@
     data() {
       return {
         columnTypes: [],
-        formItemTypes: []
+        formItemTypes: [],
+        innerIsDialogShow: this.isDialogShow
+      }
+    },
+    watch: {
+      isDialogShow(val) {
+        this.innerIsDialogShow = val
       }
     },
     methods: {
@@ -154,8 +160,8 @@
       onSave() {
         this.$emit('on-save')
       },
-      onCancel() {
-        this.isDialogShow = false
+      onClose() {
+        this.$emit('on-close', false)
       }
     }
   }

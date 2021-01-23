@@ -10,7 +10,7 @@
             <project-table :table="table" @on-save="onSave" :is-dialog-show="isDialogShow"/>
           </el-col>
           <el-col :span="6">
-            <el-card>
+            <el-card class="create-table-card" @click.native="showCreateTableDialog">
               <i class="el-icon-plus"/>
             </el-card>
           </el-col>
@@ -23,6 +23,7 @@
 
       </el-tab-pane>
     </el-tabs>
+    <table-dialog :table="table" :is-dialog-show="isDialogShow" @on-save="onSave" @on-close="onClose"/>
   </div>
 </template>
 
@@ -80,12 +81,20 @@
     },
     methods: {
       onSave() {
-        console.log(this.table)
+
+      },
+      showCreateTableDialog() {
+        this.isDialogShow = true
+      },
+      onClose(data) {
+        this.isDialogShow = data
       }
     }
   }
 </script>
 
 <style scoped lang="stylus">
-
+  #project-edit
+    .create-table-card
+      cursor pointer
 </style>
