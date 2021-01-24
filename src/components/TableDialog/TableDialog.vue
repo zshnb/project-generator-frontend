@@ -162,6 +162,10 @@
         this.table.permissions.splice(index, 1)
       },
       onSave() {
+        this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
+          .map(it => {
+            return { formItemClassName: it.formItemType }
+          })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
         this.$emit('on-save', newTable)
