@@ -60,7 +60,6 @@
   import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
-  import {md5} from "../../util/HashUtil";
 
   export default {
     name: "ProjectEdit",
@@ -125,7 +124,6 @@
     },
     methods: {
       onSaveTable(event) {
-        console.log(event)
         this.tables.push(event)
         Object.assign(this.table, {
           name: '',
@@ -152,16 +150,13 @@
       showCreateTableDialog() {
         this.isTableDialogShow = true
       },
-      onSaveMenu() {
-        let newMenu = {}
-        Object.assign(newMenu, this.menu)
-        this.menus.push(newMenu)
-        this.menu = {
+      onSaveMenu(event) {
+        this.menus.push(event)
+        Object.assign(this.menu, {
           name: '',
           icon: '',
           href: ''
-        }
-        this.isMenuDialogShow = false
+        })
       },
       showCreateMenuDialog() {
         this.isMenuDialogShow = true

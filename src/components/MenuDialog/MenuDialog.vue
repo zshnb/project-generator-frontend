@@ -43,7 +43,10 @@
     },
     methods: {
       onSave() {
-        this.$emit('on-save')
+        let newMenu = JSON.parse(JSON.stringify(this.menu))
+        newMenu.id = Math.random()
+        this.$emit('on-save', newMenu)
+        this.$emit('update:isDialogShow', false)
       },
       onClose() {
         this.$emit('update:isDialogShow', false)

@@ -144,7 +144,7 @@
           enableFormItem: true,
           formItemType: ''
         }
-        column.id = md5(column)
+        column.id = Math.random()
         this.table.columns.push(column)
       },
       onDeleteColumn(index) {
