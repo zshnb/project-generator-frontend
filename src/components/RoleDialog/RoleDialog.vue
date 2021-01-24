@@ -1,6 +1,6 @@
 <template>
   <div id="role-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" @close="onClose">
+    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false">
       <el-form :model="role" label-width="80px">
         <el-form-item label="角色描述">
           <el-input v-model="role.description"/>
@@ -39,14 +39,14 @@
         type: Array
       }
     },
-    data() {
-      return {
-        innerIsDialogShow: this.isDialogShow
-      }
-    },
-    watch: {
-      isDialogShow(val) {
-        this.innerIsDialogShow = val
+    computed: {
+      innerIsDialogShow: {
+        get() {
+          return this.isDialogShow
+        },
+        set(newValue) {
+          this.$emit('update:isDialogShow', newValue)
+        }
       }
     },
     methods: {
@@ -54,7 +54,7 @@
         this.$emit('on-save')
       },
       onClose() {
-        this.$emit('on-close', false)
+        this.$emit('update:isDialogShow', false)
       }
     }
   }

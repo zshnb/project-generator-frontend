@@ -1,6 +1,6 @@
 <template>
   <div id="table-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" width="90%" @close="onClose">
+    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false" width="90%">
       <el-form :model="table" label-width="120px">
         <el-form-item class="name-form-item">
           <div slot="label">
@@ -119,13 +119,17 @@
     data() {
       return {
         columnTypes: [],
-        formItemTypes: [],
-        innerIsDialogShow: this.isDialogShow
+        formItemTypes: []
       }
     },
-    watch: {
-      isDialogShow(val) {
-        this.innerIsDialogShow = val
+    computed: {
+      innerIsDialogShow: {
+        get() {
+          return this.isDialogShow
+        },
+        set(newValue) {
+          this.$emit('update:isDialogShow', newValue)
+        }
       }
     },
     methods: {
@@ -158,10 +162,12 @@
         this.table.permissions.splice(index, 1)
       },
       onSave() {
-        this.$emit('on-save')
+        let newTable = JSON.parse(JSON.stringify(this.table))
+        this.$emit('on-save', newTable)
+        this.$emit('update:isDialogShow', false)
       },
       onClose() {
-        this.$emit('on-close', false)
+        this.$emit('update:isDialogShow', false)
       }
     }
   }

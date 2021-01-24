@@ -6,8 +6,8 @@
       </el-tab-pane>
       <el-tab-pane label="表结构配置">
         <el-row :gutter="20">
-          <el-col :span="6">
-            <project-table :table="table" @on-save="onSaveTable" :is-dialog-show="isTableDialogShow"/>
+          <el-col :span="6" v-for="table in tables" :key="table.id">
+            <project-table :table="table"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
@@ -35,7 +35,10 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <table-dialog :table="table" :is-dialog-show="isTableDialogShow" @on-save="onSaveTable" @on-close="onCloseTable"/>
+    <table-dialog :table="table"
+                  v-if="isTableDialogShow"
+                  :is-dialog-show.sync="isTableDialogShow"
+                  @on-save="onSaveTable"/>
     <menu-dialog :menu="menu" :is-dialog-show="isMenuDialogShow" @on-save="onSaveMenu" @on-close="onCloseMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
@@ -51,6 +54,7 @@
   import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
+  import {md5} from "../../util/HashUtil";
 
   export default {
     name: "ProjectEdit",
@@ -114,11 +118,12 @@
       }
     },
     methods: {
-      onSaveTable() {
-        let newTable = {}
-        Object.assign(newTable, this.table)
+      onSaveTable(event) {
+        console.log(`event: ${JSON.stringify(event)}`)
+        event.id = md5(event)
+        let newTable = JSON.parse(JSON.stringify(this.table))
         this.tables.push(newTable)
-        this.table = {
+        Object.assign(this.table, {
           name: '',
           columns: [{
             name: '',
@@ -138,14 +143,10 @@
           form: {
             formItems: []
           },
-        }
-        this.isTableDialogShow = false
+        })
       },
       showCreateTableDialog() {
         this.isTableDialogShow = true
-      },
-      onCloseTable(data) {
-        this.isTableDialogShow = data
       },
       onSaveMenu() {
         let newMenu = {}
