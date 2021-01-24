@@ -1,6 +1,6 @@
 <template>
   <div id="menu-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" @close="onClose">
+    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false" @close="onClose">
       <el-form :model="menu" label-width="80px">
         <el-form-item label="菜单名称">
           <el-input v-model="menu.name"/>
@@ -31,14 +31,14 @@
         type: Boolean
       }
     },
-    data() {
-      return {
-        innerIsDialogShow: this.isDialogShow
-      }
-    },
-    watch: {
-      isDialogShow(val) {
-        this.innerIsDialogShow = val
+    computed: {
+      innerIsDialogShow: {
+        get() {
+          return this.isDialogShow
+        },
+        set(newValue) {
+          this.$emit('update:isDialogShow', newValue)
+        }
       }
     },
     methods: {
@@ -46,7 +46,7 @@
         this.$emit('on-save')
       },
       onClose() {
-        this.$emit('on-close', false)
+        this.$emit('update:isDialogShow', false)
       }
     }
   }

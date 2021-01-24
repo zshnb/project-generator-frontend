@@ -6,8 +6,8 @@
       </el-tab-pane>
       <el-tab-pane label="表结构配置">
         <el-row :gutter="20">
-          <el-col :span="6">
-            <project-table :table="table" @on-save="onSaveTable" :is-dialog-show="isTableDialogShow"/>
+          <el-col :span="6" v-for="table in tables" :key="table.id">
+            <table-dialog :table="table" :is-dialog-show="isTableDialogShow" @on-save="onSaveTable" @on-close="onCloseTable"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
@@ -35,7 +35,11 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <table-dialog :table="table" :is-dialog-show="isTableDialogShow" @on-save="onSaveTable" @on-close="onCloseTable"/>
+    <table-dialog :table="table"
+                  v-if="isTableDialogShow"
+                  :is-dialog-show.sync="isTableDialogShow"
+                  @on-save="onSaveTable"
+                  @on-close="onCloseTable"/>
     <menu-dialog :menu="menu" :is-dialog-show="isMenuDialogShow" @on-save="onSaveMenu" @on-close="onCloseMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
@@ -51,6 +55,7 @@
   import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
+  import {md5} from "../../util/HashUtil";
 
   export default {
     name: "ProjectEdit",
@@ -115,9 +120,37 @@
     },
     methods: {
       onSaveTable() {
-        let newTable = {}
-        Object.assign(newTable, this.table)
+        this.table.id = md5(this.table)
+        let newTable = JSON.parse(JSON.stringify(this.table))
         this.tables.push(newTable)
+        Object.assign(this.table, {
+          name: '',
+          columns: [{
+            name: '',
+            type: '',
+            length: 0,
+            comment: '',
+            primary: false,
+            searchable: false,
+            enableFormItem: true,
+            formItemType: ''
+          }],
+          permissions: [{
+            role: '',
+            operations: []
+          }],
+          enablePage: true,
+          form: {
+            formItems: []
+          },
+        })
+        this.isTableDialogShow = false
+      },
+      showCreateTableDialog() {
+        this.isTableDialogShow = true
+      },
+      onCloseTable(data) {
+        this.isTableDialogShow = data
         this.table = {
           name: '',
           columns: [{
@@ -139,13 +172,6 @@
             formItems: []
           },
         }
-        this.isTableDialogShow = false
-      },
-      showCreateTableDialog() {
-        this.isTableDialogShow = true
-      },
-      onCloseTable(data) {
-        this.isTableDialogShow = data
       },
       onSaveMenu() {
         let newMenu = {}
