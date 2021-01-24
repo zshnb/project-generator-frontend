@@ -163,6 +163,7 @@
       },
       onSave() {
         let newTable = JSON.parse(JSON.stringify(this.table))
+        newTable.id = Math.random()
         this.$emit('on-save', newTable)
         this.$emit('update:isDialogShow', false)
       },

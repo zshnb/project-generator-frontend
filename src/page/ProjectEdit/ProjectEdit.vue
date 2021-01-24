@@ -18,6 +18,9 @@
       </el-tab-pane>
       <el-tab-pane label="菜单配置">
         <el-row :gutter="20">
+          <el-col :span="6" v-for="menu in menus" :key="menu.id">
+
+          </el-col>
           <el-col :span="6">
             <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
               <i class="el-icon-plus"/>
@@ -39,7 +42,10 @@
                   v-if="isTableDialogShow"
                   :is-dialog-show.sync="isTableDialogShow"
                   @on-save="onSaveTable"/>
-    <menu-dialog :menu="menu" :is-dialog-show="isMenuDialogShow" @on-save="onSaveMenu" @on-close="onCloseMenu"/>
+    <menu-dialog :menu="menu"
+                 v-if="isMenuDialogShow"
+                 :is-dialog-show="isMenuDialogShow"
+                 @on-save="onSaveMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
                  :is-dialog-show="isRoleDialogShow"
@@ -74,7 +80,7 @@
           jdbcHost: 'localhost',
           jdbcPort: 3306,
           jdbcUser: 'root',
-          jdbcPassword: '',
+          jdbcPassword: 'root',
           jdbcDatabase: '',
           type: 1
         },
@@ -119,10 +125,8 @@
     },
     methods: {
       onSaveTable(event) {
-        console.log(`event: ${JSON.stringify(event)}`)
-        event.id = md5(event)
-        let newTable = JSON.parse(JSON.stringify(this.table))
-        this.tables.push(newTable)
+        console.log(event)
+        this.tables.push(event)
         Object.assign(this.table, {
           name: '',
           columns: [{
@@ -161,9 +165,6 @@
       },
       showCreateMenuDialog() {
         this.isMenuDialogShow = true
-      },
-      onCloseMenu(data) {
-        this.isMenuDialogShow = data
       },
       onSaveRole() {
         this.role.menus.forEach(it => it.role = this.role.name)
