@@ -3,7 +3,7 @@
     <el-tabs>
       <el-tab-pane class="content">
         <span slot="label" style="margin-left: 100px">基础配置</span>
-        <project-config :config="config"/>
+        <project-config :config="config" @generate="onGenerate"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
@@ -66,6 +66,7 @@
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
+  import axios from '../../util/Axios'
 
   export default {
     name: "ProjectEdit",
@@ -178,6 +179,32 @@
       showCreateRoleDialog() {
         this.isRoleDialogShow = true
       },
+      onGenerate() {
+        const project = {
+          config: this.config,
+          tables: this.tables,
+          pages: this.tables.map(t => {
+            return { form: t.form }
+          }),
+          roles: this.roles
+        }
+        axios.post('/project/generate', JSON.stringify(project), {
+          responseType: 'blob'
+        }).then(data => {
+          if (!data) {
+            return
+          }
+          let url = window.URL.createObjectURL(new Blob([data]))
+          let a = document.createElement('a')
+          a.style.display = 'none'
+          a.href = url
+          a.setAttribute('download', `${this.config.artifactId}.zip`)
+          document.body.appendChild(a)
+          a.click() //执行下载
+          window.URL.revokeObjectURL(a.href)
+          document.body.removeChild(a)
+        })
+      }
     }
   }
 </script>
@@ -186,6 +213,7 @@
   #project-edit
     .content
       margin-left 100px
+
     .create-table-card, .create-menu-card, .create-role-card
       cursor pointer
 </style>

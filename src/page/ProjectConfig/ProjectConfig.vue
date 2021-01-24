@@ -54,7 +54,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="onGenerate">生成</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -66,9 +66,19 @@
     props: {
       config: {
         type: Object
-      },
-      projectTypes: {
-        type: Array
+      }
+    },
+    data() {
+      return {
+        projectTypes: [{
+          name: 'layui',
+          value: 1
+        }]
+      }
+    },
+    methods: {
+      onGenerate() {
+        this.$emit('generate')
       }
     }
   }
