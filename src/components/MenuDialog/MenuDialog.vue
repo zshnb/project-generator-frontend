@@ -1,6 +1,6 @@
 <template>
   <div id="menu-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false" @close="onClose">
+    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false">
       <el-form :model="menu" label-width="80px">
         <el-form-item label="菜单名称">
           <el-input v-model="menu.name"/>
@@ -43,7 +43,10 @@
     },
     methods: {
       onSave() {
-        this.$emit('on-save')
+        let newMenu = JSON.parse(JSON.stringify(this.menu))
+        newMenu.id = Math.random()
+        this.$emit('on-save', newMenu)
+        this.$emit('update:isDialogShow', false)
       },
       onClose() {
         this.$emit('update:isDialogShow', false)

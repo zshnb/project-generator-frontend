@@ -144,7 +144,7 @@
           enableFormItem: true,
           formItemType: ''
         }
-        column.id = md5(column)
+        column.id = Math.random()
         this.table.columns.push(column)
       },
       onDeleteColumn(index) {
@@ -163,6 +163,7 @@
       },
       onSave() {
         let newTable = JSON.parse(JSON.stringify(this.table))
+        newTable.id = Math.random()
         this.$emit('on-save', newTable)
         this.$emit('update:isDialogShow', false)
       },

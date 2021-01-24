@@ -51,7 +51,11 @@
     },
     methods: {
       onSave() {
-        this.$emit('on-save')
+        this.role.menus = this.role.menus.forEach(it => it.role = this.role.name)
+        let newRole = JSON.parse(JSON.stringify(this.role))
+        newRole.id = Math.random()
+        this.$emit('on-save', newRole)
+        this.$emit('update:isDialogShow', false)
       },
       onClose() {
         this.$emit('update:isDialogShow', false)
