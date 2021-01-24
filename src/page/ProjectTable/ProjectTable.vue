@@ -7,7 +7,6 @@
         <el-button size="small" type="danger">删除</el-button>
       </div>
     </el-card>
-    <table-dialog @on-save="onSave" :table="table" :is-dialog-show="isDialogShow"/>
   </div>
 </template>
 

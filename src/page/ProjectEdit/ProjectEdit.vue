@@ -7,7 +7,7 @@
       <el-tab-pane label="表结构配置">
         <el-row :gutter="20">
           <el-col :span="6" v-for="table in tables" :key="table.id">
-            <table-dialog :table="table" :is-dialog-show="isTableDialogShow" @on-save="onSaveTable" @on-close="onCloseTable"/>
+            <project-table :table="table"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
@@ -38,8 +38,7 @@
     <table-dialog :table="table"
                   v-if="isTableDialogShow"
                   :is-dialog-show.sync="isTableDialogShow"
-                  @on-save="onSaveTable"
-                  @on-close="onCloseTable"/>
+                  @on-save="onSaveTable"/>
     <menu-dialog :menu="menu" :is-dialog-show="isMenuDialogShow" @on-save="onSaveMenu" @on-close="onCloseMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
@@ -119,8 +118,9 @@
       }
     },
     methods: {
-      onSaveTable() {
-        this.table.id = md5(this.table)
+      onSaveTable(event) {
+        console.log(`event: ${JSON.stringify(event)}`)
+        event.id = md5(event)
         let newTable = JSON.parse(JSON.stringify(this.table))
         this.tables.push(newTable)
         Object.assign(this.table, {
@@ -144,34 +144,9 @@
             formItems: []
           },
         })
-        this.isTableDialogShow = false
       },
       showCreateTableDialog() {
         this.isTableDialogShow = true
-      },
-      onCloseTable(data) {
-        this.isTableDialogShow = data
-        this.table = {
-          name: '',
-          columns: [{
-            name: '',
-            type: '',
-            length: 0,
-            comment: '',
-            primary: false,
-            searchable: false,
-            enableFormItem: true,
-            formItemType: ''
-          }],
-          permissions: [{
-            role: '',
-            operations: []
-          }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
-        }
       },
       onSaveMenu() {
         let newMenu = {}

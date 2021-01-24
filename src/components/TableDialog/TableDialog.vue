@@ -162,7 +162,9 @@
         this.table.permissions.splice(index, 1)
       },
       onSave() {
-        this.$emit('on-save')
+        let newTable = JSON.parse(JSON.stringify(this.table))
+        this.$emit('on-save', newTable)
+        this.$emit('update:isDialogShow', false)
       },
       onClose() {
         this.$emit('update:isDialogShow', false)
