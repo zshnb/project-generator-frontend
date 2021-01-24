@@ -1,10 +1,11 @@
 <template>
   <div id="project-edit">
     <el-tabs>
-      <el-tab-pane label="基础配置">
+      <el-tab-pane class="content">
+        <span slot="label" style="margin-left: 100px">基础配置</span>
         <project-config :config="config"/>
       </el-tab-pane>
-      <el-tab-pane label="表结构配置">
+      <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
           <el-col :span="6" v-for="table in tables" :key="table.id">
             <project-table :table="table"/>
@@ -16,7 +17,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="菜单配置">
+      <el-tab-pane label="菜单配置" class="content">
         <el-row :gutter="20">
           <el-col :span="6" v-for="menu in menus" :key="menu.id">
             <project-menu :menu="menu"/>
@@ -28,8 +29,11 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="角色配置">
+      <el-tab-pane label="角色配置" class="content">
         <el-row :gutter="20">
+          <el-col :span="6" v-for="role in roles" :key="role.id">
+            <project-role :role="role"/>
+          </el-col>
           <el-col :span="6">
             <el-card class="create-role-card" @click.native="showCreateRoleDialog">
               <i class="el-icon-plus"/>
@@ -48,9 +52,9 @@
                  @on-save="onSaveMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
-                 :is-dialog-show="isRoleDialogShow"
-                 @on-save="onSaveRole"
-                 @on-close="onCloseRole"/>
+                 v-if="isRoleDialogShow"
+                 :is-dialog-show.sync="isRoleDialogShow"
+                 @on-save="onSaveRole"/>
   </div>
 </template>
 
@@ -61,10 +65,11 @@
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
+  import ProjectRole from "../ProjectRole/ProjectRole";
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectMenu, RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -162,23 +167,16 @@
       showCreateMenuDialog() {
         this.isMenuDialogShow = true
       },
-      onSaveRole() {
-        this.role.menus.forEach(it => it.role = this.role.name)
-        let newRole = {}
-        Object.assign(newRole, this.role)
-        this.roles.push(newRole)
-        this.role = {
+      onSaveRole(event) {
+        this.roles.push(event)
+        Object.assign(this.role, {
           name: '',
           description: '',
           menus: []
-        }
-        this.isRoleDialogShow = false
+        })
       },
       showCreateRoleDialog() {
         this.isRoleDialogShow = true
-      },
-      onCloseRole(data) {
-        this.isRoleDialogShow = data
       },
     }
   }
@@ -186,6 +184,8 @@
 
 <style scoped lang="stylus">
   #project-edit
+    .content
+      margin-left 100px
     .create-table-card, .create-menu-card, .create-role-card
       cursor pointer
 </style>
