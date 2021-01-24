@@ -19,7 +19,7 @@
       <el-tab-pane label="菜单配置">
         <el-row :gutter="20">
           <el-col :span="6" v-for="menu in menus" :key="menu.id">
-
+            <project-menu :menu="menu"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
@@ -44,7 +44,7 @@
                   @on-save="onSaveTable"/>
     <menu-dialog :menu="menu"
                  v-if="isMenuDialogShow"
-                 :is-dialog-show="isMenuDialogShow"
+                 :is-dialog-show.sync="isMenuDialogShow"
                  @on-save="onSaveMenu"/>
     <role-dialog :role="role"
                  :menus="menus"
@@ -60,10 +60,11 @@
   import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
+  import ProjectMenu from "../ProjectMenu/ProjectMenu";
 
   export default {
     name: "ProjectEdit",
-    components: {RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
+    components: {ProjectMenu, RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {

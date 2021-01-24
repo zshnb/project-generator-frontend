@@ -1,6 +1,6 @@
 <template>
   <div id="menu-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false" @close="onClose">
+    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false">
       <el-form :model="menu" label-width="80px">
         <el-form-item label="菜单名称">
           <el-input v-model="menu.name"/>
