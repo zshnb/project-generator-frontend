@@ -7,8 +7,8 @@
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="table in tables" :key="table.id">
-            <project-table :table="table"/>
+          <el-col :span="6" v-for="(table, index) in tables" :key="table.id">
+            <project-table :table="table" @delete-table="onDeleteTable(index)"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
@@ -19,8 +19,8 @@
       </el-tab-pane>
       <el-tab-pane label="菜单配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="menu in menus" :key="menu.id">
-            <project-menu :menu="menu"/>
+          <el-col :span="6" v-for="(menu, index) in menus" :key="menu.id">
+            <project-menu :menu="menu" @delete-menu="onDeleteMenu(index)"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
@@ -31,8 +31,8 @@
       </el-tab-pane>
       <el-tab-pane label="角色配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="role in roles" :key="role.id">
-            <project-role :role="role"/>
+          <el-col :span="6" v-for="(role, index) in roles" :key="role.id">
+            <project-role :role="role" @delete-role="onDeleteRole(index)"/>
           </el-col>
           <el-col :span="6">
             <el-card class="create-role-card" @click.native="showCreateRoleDialog">
@@ -47,6 +47,7 @@
                   :is-dialog-show.sync="isTableDialogShow"
                   @on-save="onSaveTable"/>
     <menu-dialog :menu="menu"
+                 :tables="tables"
                  v-if="isMenuDialogShow"
                  :is-dialog-show.sync="isMenuDialogShow"
                  @on-save="onSaveMenu"/>
@@ -116,7 +117,8 @@
         menu: {
           name: '',
           icon: '',
-          href: ''
+          href: '',
+          tableName: ''
         },
         roles: [],
         role: {
@@ -161,6 +163,12 @@
           }
         },
         deep: true
+      },
+      config: {
+        handler(newValue, oldValue) {
+          newValue.rootPackageName = `${newValue.groupId}.${newValue.artifactId}`
+        },
+        deep: true
       }
     },
     methods: {
@@ -191,16 +199,23 @@
       showCreateTableDialog() {
         this.isTableDialogShow = true
       },
+      onDeleteTable(index) {
+        this.tables.splice(index, 1)
+      },
       onSaveMenu(event) {
         this.menus.push(event)
         Object.assign(this.menu, {
           name: '',
           icon: '',
-          href: ''
+          href: '',
+          tableName: ''
         })
       },
       showCreateMenuDialog() {
         this.isMenuDialogShow = true
+      },
+      onDeleteMenu(index) {
+        this.menus.splice(index, 1)
       },
       onSaveRole(event) {
         this.roles.push(event)
@@ -212,6 +227,9 @@
       },
       showCreateRoleDialog() {
         this.isRoleDialogShow = true
+      },
+      onDeleteRole(index) {
+        this.roles.splice(index, 1)
       },
       onGenerate() {
         const project = {

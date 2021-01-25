@@ -4,7 +4,7 @@
       <div slot="header">
         <span>{{table.name}}</span>
         <el-button size="small" type="primary">编辑</el-button>
-        <el-button size="small" type="danger">删除</el-button>
+        <el-button size="small" type="danger" @click="onDelete">删除</el-button>
       </div>
     </el-card>
   </div>
@@ -28,6 +28,9 @@
     methods: {
       onSave() {
         this.$emit('on-save')
+      },
+      onDelete() {
+        this.$emit('delete-table')
       }
     }
   }
