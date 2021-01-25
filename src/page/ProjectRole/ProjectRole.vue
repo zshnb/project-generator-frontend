@@ -4,12 +4,11 @@
       <div slot="header">
         <span>{{role.description}}</span>
         <el-button size="small" type="primary">编辑</el-button>
-        <el-button size="small" type="danger">删除</el-button>
+        <el-button size="small" type="danger" @click="onDelete">删除</el-button>
       </div>
     </el-card>
   </div>
 </template>
-
 <script>
   export default {
     name: "ProjectRole",
@@ -21,6 +20,11 @@
         type: Boolean
       }
     },
+    methods: {
+      onDelete() {
+        this.$emit('delete-role')
+      }
+    }
   }
 </script>
 

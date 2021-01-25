@@ -9,6 +9,11 @@
           <el-input v-model="menu.icon"/>
         </el-form-item>
         <el-form-item label="路径">
+          <el-select v-model="menu.tableName">
+            <el-option v-for="table in tables" :key="table.id" :label="table.name" :value="table.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-input v-model="menu.href"/>
         </el-form-item>
         <el-form-item>
@@ -29,7 +34,13 @@
       },
       isDialogShow: {
         type: Boolean
+      },
+      tables: {
+        type: Array
       }
+    },
+    created() {
+      console.log(this.tables)
     },
     computed: {
       innerIsDialogShow: {
@@ -39,6 +50,15 @@
         set(newValue) {
           this.$emit('update:isDialogShow', newValue)
         }
+      },
+    },
+    watch: {
+      menu: {
+        handler(newValue, oldValue) {
+          const inflect = require('i')()
+          newValue.href = `${inflect.camelize(oldValue.tableName, false)}/tablePage`
+        },
+        deep: true
       }
     },
     methods: {
@@ -50,7 +70,7 @@
       },
       onClose() {
         this.$emit('update:isDialogShow', false)
-      }
+      },
     }
   }
 </script>
