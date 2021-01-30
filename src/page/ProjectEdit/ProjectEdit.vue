@@ -7,10 +7,10 @@
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="(table, index) in tables" :key="table.id">
+          <el-col :span="3" v-for="(table, index) in tables" :key="table.id">
             <project-table :table="table" @delete-table="onDeleteTable(index)"/>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="3">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
               <i class="el-icon-plus"/>
             </el-card>
@@ -19,10 +19,10 @@
       </el-tab-pane>
       <el-tab-pane label="菜单配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="(menu, index) in menus" :key="menu.id">
+          <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
             <project-menu :menu="menu" @delete-menu="onDeleteMenu(index)"/>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="3">
             <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
               <i class="el-icon-plus"/>
             </el-card>
@@ -31,10 +31,10 @@
       </el-tab-pane>
       <el-tab-pane label="角色配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="(role, index) in roles" :key="role.id">
+          <el-col :span="3" v-for="(role, index) in roles" :key="role.id">
             <project-role :role="role" @delete-role="onDeleteRole(index)"/>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="3">
             <el-card class="create-role-card" @click.native="showCreateRoleDialog">
               <i class="el-icon-plus"/>
             </el-card>
@@ -43,6 +43,7 @@
       </el-tab-pane>
     </el-tabs>
     <table-dialog :table="table"
+                  :roles="roles"
                   v-if="isTableDialogShow"
                   :is-dialog-show.sync="isTableDialogShow"
                   @on-save="onSaveTable"/>
@@ -167,6 +168,7 @@
       config: {
         handler(newValue, oldValue) {
           newValue.rootPackageName = `${newValue.groupId}.${newValue.artifactId}`
+          newValue.jdbcDatabase = newValue.artifactId
         },
         deep: true
       }
