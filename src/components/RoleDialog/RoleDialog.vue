@@ -51,7 +51,7 @@
     },
     methods: {
       onSave() {
-        this.role.menus = this.role.menus.forEach(it => it.role = this.role.name)
+        this.role.menus.forEach(it => it.role = this.role.name)
         let newRole = JSON.parse(JSON.stringify(this.role))
         newRole.id = Math.random()
         this.$emit('on-save', newRole)

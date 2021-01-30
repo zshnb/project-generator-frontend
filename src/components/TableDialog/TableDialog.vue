@@ -76,7 +76,7 @@
                    class="permission-form">
             <el-form-item label="角色">
               <el-select v-model="permission.role">
-                <el-option label="管理员" value="admin"/>
+                <el-option v-for="role in roles" :key="role.name" :label="role.description" :value="role.name"/>
               </el-select>
             </el-form-item>
             <el-form-item label="操作">
@@ -114,6 +114,9 @@
       },
       isDialogShow: {
         type: Boolean
+      },
+      roles: {
+        type: Array
       }
     },
     data() {
