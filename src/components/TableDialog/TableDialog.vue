@@ -48,7 +48,7 @@
               <el-switch v-model="column.enableFormItem"/>
             </el-form-item>
             <el-form-item label="表单项类型">
-              <el-select v-model="column.formItemType">
+              <el-select v-model="column.formItemType" @change="onChangeFormItemType">
                 <el-option v-for="formItemType in formItemTypes"
                            :key="formItemType.className"
                            :label="formItemType.name"
@@ -176,6 +176,9 @@
       },
       onClose() {
         this.$emit('update:isDialogShow', false)
+      },
+      onChangeFormItemType() {
+
       }
     }
   }
