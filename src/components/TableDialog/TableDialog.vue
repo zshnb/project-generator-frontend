@@ -48,7 +48,7 @@
               <el-switch v-model="column.enableFormItem"/>
             </el-form-item>
             <el-form-item label="表单项类型">
-              <el-select v-model="column.formItemType" @change="onChangeFormItemType">
+              <el-select v-model="column.formItemType" @change="onChangeFormItemType(column)">
                 <el-option v-for="formItemType in formItemTypes"
                            :key="formItemType.className"
                            :label="formItemType.name"
@@ -100,7 +100,6 @@
 
 <script>
   import axios from "../../util/Axios";
-  import {md5} from "../../util/HashUtil";
 
   export default {
     name: "TableDialog",
@@ -158,7 +157,7 @@
           role: '',
           operations: []
         }
-        permission.id = md5(permission)
+        permission.id = Math.random()
         this.table.permissions.push(permission)
       },
       onDeletePermission(index) {
@@ -167,7 +166,10 @@
       onSave() {
         this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
           .map(it => {
-            return { formItemClassName: it.formItemType }
+            return {
+              formItemClassName: it.formItemType,
+              options: []
+            }
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
@@ -177,7 +179,12 @@
       onClose() {
         this.$emit('update:isDialogShow', false)
       },
-      onChangeFormItemType() {
+      onChangeFormItemType(column) {
+        if (column.formItemType === 'com.zshnb.projectgenerator.generator.entity.SelectFormItem') {
+          column.options = []
+        }
+      },
+      hasOptionFormItem() {
 
       }
     }
