@@ -166,10 +166,13 @@
       onSave() {
         this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
           .map(it => {
-            return {
-              formItemClassName: it.formItemType,
-              options: []
+            let formItem = {
+              formItemClassName: it.formItemType
             }
+            this.isOptionFormItem(column.formItemType, () => {
+              formItem.options = it.options
+            })
+            return formItem
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
@@ -180,12 +183,17 @@
         this.$emit('update:isDialogShow', false)
       },
       onChangeFormItemType(column) {
-        if (column.formItemType === 'com.zshnb.projectgenerator.generator.entity.SelectFormItem') {
+        console.log(this.isOptionFormItem(column.formItemType))
+        this.isOptionFormItem(column.formItemType, () => {
           column.options = []
-        }
+        })
       },
-      hasOptionFormItem() {
-
+      isOptionFormItem(formItemType, callback) {
+        axios.get(`/page/option-form-items?formItemType=${formItemType}`).then(res => {
+          if (res.data) {
+            callback()
+          }
+        })
       }
     }
   }
