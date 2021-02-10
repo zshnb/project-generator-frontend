@@ -44,11 +44,14 @@
             <el-form-item label="搜索">
               <el-switch v-model="column.searchable"/>
             </el-form-item>
+            <el-form-item label="必选项">
+              <el-switch v-model="column.require"/>
+            </el-form-item>
             <el-form-item label="表单项">
               <el-switch v-model="column.enableFormItem"/>
             </el-form-item>
             <el-form-item label="表单项类型">
-              <el-select v-model="column.formItemType">
+              <el-select v-model="column.formItemType" @change="onChangeFormItemType(column)">
                 <el-option v-for="formItemType in formItemTypes"
                            :key="formItemType.className"
                            :label="formItemType.name"
@@ -100,7 +103,6 @@
 
 <script>
   import axios from "../../util/Axios";
-  import {md5} from "../../util/HashUtil";
 
   export default {
     name: "TableDialog",
@@ -145,7 +147,8 @@
           primary: false,
           searchable: false,
           enableFormItem: true,
-          formItemType: ''
+          formItemType: '',
+          require: false
         }
         column.id = Math.random()
         this.table.columns.push(column)
@@ -158,7 +161,7 @@
           role: '',
           operations: []
         }
-        permission.id = md5(permission)
+        permission.id = Math.random()
         this.table.permissions.push(permission)
       },
       onDeletePermission(index) {
@@ -167,7 +170,14 @@
       onSave() {
         this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
           .map(it => {
-            return { formItemClassName: it.formItemType }
+            let formItem = {
+              formItemClassName: it.formItemType,
+              require: it.require
+            }
+            this.isOptionFormItem(it.formItemType, () => {
+              formItem.options = it.options
+            })
+            return formItem
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
@@ -176,6 +186,19 @@
       },
       onClose() {
         this.$emit('update:isDialogShow', false)
+      },
+      onChangeFormItemType(column) {
+        console.log(this.isOptionFormItem(column.formItemType))
+        this.isOptionFormItem(column.formItemType, () => {
+          column.options = []
+        })
+      },
+      isOptionFormItem(formItemType, callback) {
+        axios.get(`/page/option-form-items?formItemType=${formItemType}`).then(res => {
+          if (res.data) {
+            callback()
+          }
+        })
       }
     }
   }
