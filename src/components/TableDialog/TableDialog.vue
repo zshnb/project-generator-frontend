@@ -44,6 +44,9 @@
             <el-form-item label="搜索">
               <el-switch v-model="column.searchable"/>
             </el-form-item>
+            <el-form-item label="必选项">
+              <el-switch v-model="column.require"/>
+            </el-form-item>
             <el-form-item label="表单项">
               <el-switch v-model="column.enableFormItem"/>
             </el-form-item>
@@ -144,7 +147,8 @@
           primary: false,
           searchable: false,
           enableFormItem: true,
-          formItemType: ''
+          formItemType: '',
+          require: false
         }
         column.id = Math.random()
         this.table.columns.push(column)
@@ -167,9 +171,10 @@
         this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
           .map(it => {
             let formItem = {
-              formItemClassName: it.formItemType
+              formItemClassName: it.formItemType,
+              require: it.require
             }
-            this.isOptionFormItem(column.formItemType, () => {
+            this.isOptionFormItem(it.formItemType, () => {
               formItem.options = it.options
             })
             return formItem
