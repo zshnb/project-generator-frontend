@@ -8,7 +8,7 @@
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(table, index) in tables" :key="table.id">
-            <project-table :table="table" @delete-table="onDeleteTable(index)"/>
+            <project-table :table.sync="table" @delete-table="onDeleteTable(index)"/>
           </el-col>
           <el-col :span="3">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">
@@ -92,7 +92,47 @@
           jdbcDatabase: '',
           type: 1
         },
-        tables: [],
+        tables: [
+          {
+            name: 'user',
+            columns: [{
+              name: 'username',
+              type: 'varchar',
+              length: 255,
+              comment: '用户名',
+              primary: false,
+              searchable: false,
+              enableFormItem: true,
+              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+            },{
+              name: 'password',
+              type: 'varchar',
+              length: 255,
+              comment: '密码',
+              primary: false,
+              searchable: false,
+              enableFormItem: true,
+              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+            }, {
+              name: 'role',
+              type: 'varchar',
+              length: 255,
+              comment: '角色',
+              primary: false,
+              searchable: false,
+              enableFormItem: true,
+              formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+            }],
+            permissions: [{
+              role: '',
+              operations: []
+            }],
+            enablePage: true,
+            form: {
+              formItems: []
+            }
+          }
+        ],
         table: {
           name: '',
           columns: [{
