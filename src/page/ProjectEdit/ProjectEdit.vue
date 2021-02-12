@@ -8,7 +8,7 @@
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(table, index) in tables" :key="table.id">
-            <project-table :table="table" @delete-table="onDeleteTable(index)"/>
+            <project-table :table.sync="table" @delete-table="onDeleteTable(index)"/>
           </el-col>
           <el-col :span="3">
             <el-card class="create-table-card" @click.native="showCreateTableDialog">

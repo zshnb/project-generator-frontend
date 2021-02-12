@@ -3,10 +3,15 @@
     <el-card>
       <div slot="header">
         <span>{{table.name}}</span>
-        <el-button size="small" type="primary">编辑</el-button>
+        <el-button size="small" type="primary" @click="onEdit">编辑</el-button>
         <el-button size="small" type="danger" @click="onDelete">删除</el-button>
       </div>
     </el-card>
+    <table-dialog :table="table"
+                  :roles="roles"
+                  v-if="isTableDialogShow"
+                  :is-dialog-show.sync="isTableDialogShow"
+                  @on-save="onUpdateTable"/>
   </div>
 </template>
 
@@ -23,6 +28,14 @@
       },
       isDialogShow: {
         type: Boolean
+      },
+      roles: {
+        type: Array
+      }
+    },
+    data() {
+      return {
+        isTableDialogShow: false
       }
     },
     methods: {
@@ -31,6 +44,12 @@
       },
       onDelete() {
         this.$emit('delete-table')
+      },
+      onEdit() {
+        this.isTableDialogShow = true
+      },
+      onUpdateTable(event) {
+        this.$emit("update:table", event)
       }
     }
   }

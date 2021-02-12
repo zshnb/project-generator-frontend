@@ -188,7 +188,6 @@
         this.$emit('update:isDialogShow', false)
       },
       onChangeFormItemType(column) {
-        console.log(this.isOptionFormItem(column.formItemType))
         this.isOptionFormItem(column.formItemType, () => {
           column.options = []
         })
