@@ -24,7 +24,7 @@
           <el-form :inline="true"
                    :model="column"
                    class="column-form">
-            <el-form-item label="列名">
+            <el-form-item label="列名" class="name-form-item">
               <el-input v-model="column.name"/>
             </el-form-item>
             <el-form-item label="类型">
@@ -208,9 +208,6 @@
   #table-dialog
     .el-icon-circle-plus-outline
       cursor pointer
-
-    .name-form-item
-      width 500px
 
     .column-form, .permission-form
       margin-bottom 20px
