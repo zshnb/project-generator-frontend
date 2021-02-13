@@ -104,7 +104,7 @@
               searchable: false,
               enableFormItem: true,
               formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
-            },{
+            }, {
               name: 'password',
               type: 'varchar',
               length: 255,
@@ -189,16 +189,14 @@
               newValue.columns[index].length = 1
               break
             }
+            case 'date':
+            case 'text':
             case 'datetime': {
               newValue.columns[index].length = 0
               break
             }
             case 'double': {
               newValue.columns[index].length = 11
-              break
-            }
-            case 'text': {
-              newValue.columns[index].length = 0
               break
             }
           }
@@ -239,7 +237,12 @@
         })
       },
       showCreateTableDialog() {
-        this.isTableDialogShow = true
+        this.$router.push({
+          name: 'TableEdit',
+          params: {
+            table: this.table
+          }
+        })
       },
       onDeleteTable(index) {
         this.tables.splice(index, 1)
@@ -278,7 +281,7 @@
           config: this.config,
           tables: this.tables,
           pages: this.tables.map(t => {
-            return { form: t.form }
+            return {form: t.form}
           }),
           roles: this.roles
         }
