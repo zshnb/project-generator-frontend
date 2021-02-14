@@ -15,7 +15,7 @@
                      size="small"
                      icon="el-icon-circle-plus-outline"
                      plain
-                     @click="onAddColumn"/>
+                     @click="onAddColumn(index)"/>
           <el-button type="danger"
                      size="small"
                      icon="el-icon-remove-outline"
@@ -129,7 +129,7 @@
       }
     },
     methods: {
-      onAddColumn() {
+      onAddColumn(index) {
         let column = {
           name: '',
           type: '',
@@ -142,7 +142,7 @@
           require: false
         }
         column.id = Math.random()
-        this.table.columns.push(column)
+        this.table.columns.splice(index + 1, 0, column)
       },
       onDeleteColumn(index) {
         this.table.columns.splice(index, 1)
