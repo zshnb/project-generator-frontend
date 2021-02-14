@@ -175,10 +175,9 @@
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
         this.$emit('on-save', newTable)
-        this.$emit('update:isDialogShow', false)
       },
       onClose() {
-        this.$emit('update:isDialogShow', false)
+        this.$router.back()
       },
       onChangeFormItemType(column) {
         this.isOptionFormItem(column.formItemType, () => {

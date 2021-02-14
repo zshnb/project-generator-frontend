@@ -1,8 +1,7 @@
 <template>
   <div id="project-edit">
     <el-tabs>
-      <el-tab-pane class="content">
-        <span slot="label" style="margin-left: 100px">基础配置</span>
+      <el-tab-pane class="content" label="基础配置">
         <project-config :config="config" @generate="onGenerate"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
@@ -306,8 +305,10 @@
   }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus">
   #project-edit
+    .el-tabs__nav
+      margin-left 100px
     .content
       margin-left 100px
 
