@@ -45,23 +45,25 @@
             <el-form-item label="主键">
               <el-switch v-model="column.primary"/>
             </el-form-item>
-            <el-form-item label="搜索">
-              <el-switch v-model="column.searchable"/>
-            </el-form-item>
-            <el-form-item label="必选项">
-              <el-switch v-model="column.require"/>
-            </el-form-item>
-            <el-form-item label="表单项">
-              <el-switch v-model="column.enableFormItem"/>
-            </el-form-item>
-            <el-form-item label="表单项类型">
-              <el-select v-model="column.formItemType" @change="onChangeFormItemType(column)">
-                <el-option v-for="formItemType in formItemTypes"
-                           :key="formItemType.className"
-                           :label="formItemType.name"
-                           :value="formItemType.className"/>
-              </el-select>
-            </el-form-item>
+            <div v-if="table.enablePage">
+              <el-form-item label="搜索">
+                <el-switch v-model="column.searchable"/>
+              </el-form-item>
+              <el-form-item label="必选项">
+                <el-switch v-model="column.require"/>
+              </el-form-item>
+              <el-form-item label="表单项">
+                <el-switch v-model="column.enableFormItem"/>
+              </el-form-item>
+              <el-form-item label="表单项类型" v-if="column.enableFormItem">
+                <el-select v-model="column.formItemType" @change="onChangeFormItemType(column)">
+                  <el-option v-for="formItemType in formItemTypes"
+                             :key="formItemType.className"
+                             :label="formItemType.name"
+                             :value="formItemType.className"/>
+                </el-select>
+              </el-form-item>
+            </div>
           </el-row>
         </el-form>
       </el-form-item>
