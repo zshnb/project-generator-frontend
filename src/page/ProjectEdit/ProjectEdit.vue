@@ -62,6 +62,7 @@
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
+  import { mapState } from 'vuex'
 
   export default {
     name: "ProjectEdit",
@@ -85,47 +86,6 @@
           jdbcDatabase: '',
           type: 1
         },
-        tables: [
-          {
-            name: 'user',
-            columns: [{
-              name: 'username',
-              type: 'varchar',
-              length: 255,
-              comment: '用户名',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
-            }, {
-              name: 'password',
-              type: 'varchar',
-              length: 255,
-              comment: '密码',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
-            }, {
-              name: 'role',
-              type: 'varchar',
-              length: 255,
-              comment: '角色',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
-            }],
-            permissions: [{
-              role: '',
-              operations: []
-            }],
-            enablePage: true,
-            form: {
-              formItems: []
-            }
-          }
-        ],
         table: {
           name: '',
           columns: [{
@@ -165,6 +125,9 @@
         isMenuDialogShow: false,
         isRoleDialogShow: false
       }
+    },
+    computed: {
+      ...mapState(['tables'])
     },
     watch: {
       table: {
@@ -281,6 +244,7 @@
   #project-edit
     .el-tabs__nav
       margin-left 100px
+
     .content
       margin-left 100px
 
