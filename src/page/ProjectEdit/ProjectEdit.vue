@@ -41,11 +41,6 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <table-dialog :table="table"
-                  :roles="roles"
-                  v-if="isTableDialogShow"
-                  :is-dialog-show.sync="isTableDialogShow"
-                  @on-save="onSaveTable"/>
     <menu-dialog :menu="menu"
                  :tables="tables"
                  v-if="isMenuDialogShow"
@@ -62,7 +57,6 @@
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
-  import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
@@ -71,7 +65,7 @@
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -168,7 +162,6 @@
           description: '',
           menus: []
         },
-        isTableDialogShow: false,
         isMenuDialogShow: false,
         isRoleDialogShow: false
       }
@@ -213,30 +206,6 @@
       }
     },
     methods: {
-      onSaveTable(event) {
-        this.tables.push(event)
-        Object.assign(this.table, {
-          name: '',
-          columns: [{
-            name: '',
-            type: '',
-            length: 0,
-            comment: '',
-            primary: false,
-            searchable: false,
-            enableFormItem: true,
-            formItemType: ''
-          }],
-          permissions: [{
-            role: '',
-            operations: []
-          }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
-        })
-      },
       showCreateTableDialog() {
         this.$router.push({
           name: 'TableEdit',

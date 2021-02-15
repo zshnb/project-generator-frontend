@@ -211,7 +211,6 @@
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
-        console.log(newTable)
         this.$emit('on-save', newTable)
       },
       onClose() {

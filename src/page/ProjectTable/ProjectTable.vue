@@ -7,21 +7,13 @@
         <el-button size="small" type="danger" @click="onDelete">删除</el-button>
       </div>
     </el-card>
-    <table-dialog :table="table"
-                  :roles="roles"
-                  v-if="isTableDialogShow"
-                  :is-dialog-show.sync="isTableDialogShow"
-                  @on-save="onUpdateTable"/>
   </div>
 </template>
 
 <script>
 
-  import TableDialog from "../../components/TableDialog/TableDialog";
-
   export default {
     name: "ProjectTable",
-    components: {TableDialog},
     props: {
       table: {
         type: Object
