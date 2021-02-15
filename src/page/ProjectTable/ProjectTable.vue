@@ -49,7 +49,8 @@
         this.$router.push({
           name: 'TableEdit',
           params: {
-            table: this.table
+            table: this.table,
+            roles: this.roles
           }
         })
       },
