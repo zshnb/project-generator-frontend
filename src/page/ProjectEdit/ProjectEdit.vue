@@ -62,7 +62,7 @@
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
-  import { mapState } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
 
   export default {
     name: "ProjectEdit",
@@ -169,6 +169,7 @@
       }
     },
     methods: {
+      ...mapMutations(['deleteTable']),
       showCreateTableDialog() {
         this.$router.push({
           name: 'TableEdit',
@@ -208,7 +209,7 @@
         this.isRoleDialogShow = true
       },
       onDeleteRole(index) {
-        this.roles.splice(index, 1)
+        this.deleteTable(index)
       },
       onGenerate() {
         const project = {

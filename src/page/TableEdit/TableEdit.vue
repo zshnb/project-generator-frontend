@@ -213,6 +213,7 @@
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
         this.saveTable(newTable)
+        this.$router.back()
       },
       onClose() {
         this.$router.back()

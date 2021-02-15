@@ -53,6 +53,9 @@ const store = new Vuex.Store({
   mutations: {
     saveTable(state, table) {
       state.tables.push(table)
+    },
+    deleteTable(state, index) {
+      state.tables.splice(index, 1)
     }
   }
 })
