@@ -141,6 +141,7 @@
 
 <script>
   import axios from "../../util/Axios";
+  import { mapMutations } from 'vuex'
 
   export default {
     name: "TableEdit",
@@ -211,7 +212,7 @@
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
-        this.$emit('on-save', newTable)
+        this.saveTable(newTable)
       },
       onClose() {
         this.$router.back()
@@ -232,7 +233,8 @@
       },
       onDeleteOption(index) {
         this.column.options.splice(index, 1)
-      }
+      },
+      ...mapMutations(['saveTable'])
     }
   }
 </script>
