@@ -46,7 +46,12 @@
         this.$emit('delete-table')
       },
       onEdit() {
-        this.isTableDialogShow = true
+        this.$router.push({
+          name: 'TableEdit',
+          params: {
+            table: this.table
+          }
+        })
       },
       onUpdateTable(event) {
         this.$emit("update:table", event)

@@ -63,7 +63,7 @@
                              :value="formItemType.className"/>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="column.formItemType">
+              <el-form-item v-if="isOptionalFormItem(column.formItemType)">
                 <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
               </el-form-item>
             </div>
@@ -204,7 +204,7 @@
               formItemClassName: it.formItemType,
               require: it.require
             }
-            if (this.isOptionFormItem(it.formItemType)) {
+            if (this.isOptionalFormItem(it.formItemType)) {
               formItem.options = it.options
             }
             return formItem
@@ -217,7 +217,7 @@
       onClose() {
         this.$router.back()
       },
-      isOptionFormItem(formItemType) {
+      isOptionalFormItem(formItemType) {
         return this.needOptionFormItemTypes.includes(formItemType)
       },
       onEditOptions(column) {
