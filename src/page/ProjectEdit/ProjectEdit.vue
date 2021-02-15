@@ -142,7 +142,9 @@
             primary: false,
             searchable: false,
             enableFormItem: true,
-            formItemType: ''
+            formItemType: '',
+            require: false,
+            options: []
           }],
           permissions: [{
             role: '',

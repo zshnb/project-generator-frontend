@@ -56,12 +56,15 @@
                 <el-switch v-model="column.enableFormItem"/>
               </el-form-item>
               <el-form-item label="表单项类型" v-if="column.enableFormItem">
-                <el-select v-model="column.formItemType" @change="onChangeFormItemType(column)">
+                <el-select v-model="column.formItemType">
                   <el-option v-for="formItemType in formItemTypes"
                              :key="formItemType.className"
                              :label="formItemType.name"
                              :value="formItemType.className"/>
                 </el-select>
+              </el-form-item>
+              <el-form-item v-if="column.formItemType">
+                <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
               </el-form-item>
             </div>
           </el-row>
@@ -104,6 +107,35 @@
         <el-button @click="onClose">取消</el-button>
       </el-form-item>
     </el-form>
+
+    <el-drawer :visible.sync="showEditOptions" class="option-drawer">
+      <el-form :model="column">
+        <el-form-item v-for="(option, index) in column.options" :key="option.id">
+          <el-form :inline="true" :model="option">
+            <el-col :span="11">
+              <el-form-item label="选项名">
+                <el-input v-model="option.title"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="11">
+              <el-form-item label="选项值">
+                <el-input v-model="option.value"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item>
+                <el-button type="danger"
+                           icon="el-icon-remove-outline"
+                           @click="onDeleteOption(index)"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-form-item>
+        <el-form-item class="add-btn-form-item">
+          <el-button type="primary" @click="onAddOption">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
@@ -115,6 +147,7 @@
     created() {
       axios.get('/column/types').then(res => this.columnTypes = res.list)
       axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
+      axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
     },
     props: {
       table: {
@@ -127,7 +160,10 @@
     data() {
       return {
         columnTypes: [],
-        formItemTypes: []
+        formItemTypes: [],
+        needOptionFormItemTypes: [],
+        showEditOptions: false,
+        column: {}
       }
     },
     methods: {
@@ -141,7 +177,8 @@
           searchable: false,
           enableFormItem: true,
           formItemType: '',
-          require: false
+          require: false,
+          options: []
         }
         column.id = Math.random()
         this.table.columns.splice(index + 1, 0, column)
@@ -167,29 +204,35 @@
               formItemClassName: it.formItemType,
               require: it.require
             }
-            this.isOptionFormItem(it.formItemType, () => {
+            if (this.isOptionFormItem(it.formItemType)) {
               formItem.options = it.options
-            })
+            }
             return formItem
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
+        console.log(newTable)
         this.$emit('on-save', newTable)
       },
       onClose() {
         this.$router.back()
       },
-      onChangeFormItemType(column) {
-        this.isOptionFormItem(column.formItemType, () => {
-          column.options = []
+      isOptionFormItem(formItemType) {
+        return this.needOptionFormItemTypes.includes(formItemType)
+      },
+      onEditOptions(column) {
+        this.column = column
+        this.showEditOptions = true
+      },
+      onAddOption() {
+        this.column.options.push({
+          id: Math.random(),
+          title: '',
+          value: ''
         })
       },
-      isOptionFormItem(formItemType, callback) {
-        axios.get(`/page/option-form-items?formItemType=${formItemType}`).then(res => {
-          if (res.data) {
-            callback()
-          }
-        })
+      onDeleteOption(index) {
+        this.column.options.splice(index, 1)
       }
     }
   }
@@ -199,4 +242,11 @@
   #table-edit
     .el-row
       margin-bottom 20px
+
+    .option-drawer
+      .el-form
+        padding 0 10px
+
+    .add-btn-form-item
+      text-align center
 </style>
