@@ -1,8 +1,7 @@
 <template>
   <div id="project-edit">
     <el-tabs>
-      <el-tab-pane class="content">
-        <span slot="label" style="margin-left: 100px">基础配置</span>
+      <el-tab-pane class="content" label="基础配置">
         <project-config :config="config" @generate="onGenerate"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
@@ -42,11 +41,6 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <table-dialog :table="table"
-                  :roles="roles"
-                  v-if="isTableDialogShow"
-                  :is-dialog-show.sync="isTableDialogShow"
-                  @on-save="onSaveTable"/>
     <menu-dialog :menu="menu"
                  :tables="tables"
                  v-if="isMenuDialogShow"
@@ -63,16 +57,16 @@
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
-  import TableDialog from "../../components/TableDialog/TableDialog";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import RoleDialog from "../../components/RoleDialog/RoleDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
+  import { mapState, mapMutations } from 'vuex'
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, TableDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -92,47 +86,6 @@
           jdbcDatabase: '',
           type: 1
         },
-        tables: [
-          {
-            name: 'user',
-            columns: [{
-              name: 'username',
-              type: 'varchar',
-              length: 255,
-              comment: '用户名',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
-            },{
-              name: 'password',
-              type: 'varchar',
-              length: 255,
-              comment: '密码',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
-            }, {
-              name: 'role',
-              type: 'varchar',
-              length: 255,
-              comment: '角色',
-              primary: false,
-              searchable: false,
-              enableFormItem: true,
-              formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
-            }],
-            permissions: [{
-              role: '',
-              operations: []
-            }],
-            enablePage: true,
-            form: {
-              formItems: []
-            }
-          }
-        ],
         table: {
           name: '',
           columns: [{
@@ -143,7 +96,9 @@
             primary: false,
             searchable: false,
             enableFormItem: true,
-            formItemType: ''
+            formItemType: '',
+            require: false,
+            options: []
           }],
           permissions: [{
             role: '',
@@ -167,10 +122,12 @@
           description: '',
           menus: []
         },
-        isTableDialogShow: false,
         isMenuDialogShow: false,
         isRoleDialogShow: false
       }
+    },
+    computed: {
+      ...mapState(['tables'])
     },
     watch: {
       table: {
@@ -189,16 +146,14 @@
               newValue.columns[index].length = 1
               break
             }
+            case 'date':
+            case 'text':
             case 'datetime': {
               newValue.columns[index].length = 0
               break
             }
             case 'double': {
               newValue.columns[index].length = 11
-              break
-            }
-            case 'text': {
-              newValue.columns[index].length = 0
               break
             }
           }
@@ -214,32 +169,15 @@
       }
     },
     methods: {
-      onSaveTable(event) {
-        this.tables.push(event)
-        Object.assign(this.table, {
-          name: '',
-          columns: [{
-            name: '',
-            type: '',
-            length: 0,
-            comment: '',
-            primary: false,
-            searchable: false,
-            enableFormItem: true,
-            formItemType: ''
-          }],
-          permissions: [{
-            role: '',
-            operations: []
-          }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
-        })
-      },
+      ...mapMutations(['deleteTable']),
       showCreateTableDialog() {
-        this.isTableDialogShow = true
+        this.$router.push({
+          name: 'TableEdit',
+          params: {
+            table: this.table,
+            roles: this.roles
+          }
+        })
       },
       onDeleteTable(index) {
         this.tables.splice(index, 1)
@@ -271,14 +209,14 @@
         this.isRoleDialogShow = true
       },
       onDeleteRole(index) {
-        this.roles.splice(index, 1)
+        this.deleteTable(index)
       },
       onGenerate() {
         const project = {
           config: this.config,
           tables: this.tables,
           pages: this.tables.map(t => {
-            return { form: t.form }
+            return {form: t.form}
           }),
           roles: this.roles
         }
@@ -303,8 +241,11 @@
   }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus">
   #project-edit
+    .el-tabs__nav
+      margin-left 100px
+
     .content
       margin-left 100px
 
