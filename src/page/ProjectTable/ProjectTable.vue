@@ -11,31 +11,24 @@
 </template>
 
 <script>
-
+  import {mapMutations} from 'vuex'
   export default {
     name: "ProjectTable",
     props: {
       table: {
         type: Object
       },
-      isDialogShow: {
-        type: Boolean
-      },
       roles: {
         type: Array
-      }
-    },
-    data() {
-      return {
-        isTableDialogShow: false
+      },
+      index: {
+        type: Number
       }
     },
     methods: {
-      onSave() {
-        this.$emit('on-save')
-      },
+      ...mapMutations(['deleteTable']),
       onDelete() {
-        this.$emit('delete-table')
+        this.deleteTable(this.index)
       },
       onEdit() {
         this.$router.push({
@@ -46,9 +39,6 @@
           }
         })
       },
-      onUpdateTable(event) {
-        this.$emit("update:table", event)
-      }
     }
   }
 </script>

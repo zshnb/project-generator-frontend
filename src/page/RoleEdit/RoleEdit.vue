@@ -1,25 +1,27 @@
 <template>
   <div id="role-edit">
-    <el-form :model="role" label-width="80px">
-      <el-form-item label="角色描述">
-        <el-input v-model="role.description"/>
-      </el-form-item>
-      <el-form-item label="角色名称">
-        <el-input v-model="role.name"/>
-      </el-form-item>
-      <el-form-item label="角色菜单">
-        <el-select v-model="role.menus" multiple value-key="name">
-          <el-option v-for="menu in menus"
-                     :key="menu.name"
-                     :label="menu.name"
-                     :value="menu"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSave">保存</el-button>
-        <el-button @click="onClose">取消</el-button>
-      </el-form-item>
-    </el-form>
+    <el-col :span="8">
+      <el-form :model="role" label-width="80px">
+        <el-form-item label="角色描述">
+          <el-input v-model="role.description"/>
+        </el-form-item>
+        <el-form-item label="角色名称">
+          <el-input v-model="role.name"/>
+        </el-form-item>
+        <el-form-item label="角色菜单">
+          <el-select v-model="role.menus" multiple value-key="name">
+            <el-option v-for="menu in menus"
+                       :key="menu.name"
+                       :label="menu.name"
+                       :value="menu"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSave">保存</el-button>
+          <el-button @click="onClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
   </div>
 </template>
 
