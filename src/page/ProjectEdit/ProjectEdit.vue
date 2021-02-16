@@ -19,7 +19,7 @@
       <el-tab-pane label="菜单配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
-            <project-menu :menu="menu" @delete-menu="onDeleteMenu(index)"/>
+            <project-menu :menu="menu" :index="index"/>
           </el-col>
           <el-col :span="3">
             <el-card class="create-menu-card" @click.native="onCreateMenu">
@@ -141,9 +141,6 @@
             menu: this.menu
           }
         })
-      },
-      onDeleteMenu(index) {
-        this.menus.splice(index, 1)
       },
       onCreateRole() {
         this.$router.push({
