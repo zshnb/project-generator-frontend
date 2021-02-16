@@ -1,6 +1,6 @@
 <template>
-  <div id="menu-dialog">
-    <el-dialog :visible.sync="innerIsDialogShow" :close-on-click-modal="false">
+  <div id="menu-edit">
+    <el-col :span="8">
       <el-form :model="menu" label-width="80px">
         <el-form-item label="菜单名称">
           <el-input v-model="menu.name"/>
@@ -8,67 +8,64 @@
         <el-form-item label="图标">
           <el-input v-model="menu.icon"/>
         </el-form-item>
+        <el-form-item label="绑定表">
+          <el-switch v-model="bindTable"/>
+        </el-form-item>
         <el-form-item label="路径">
-          <el-select v-model="menu.tableName">
+          <el-input v-if="!bindTable" v-model="menu.href"/>
+          <el-select v-if="bindTable" v-model="menu.tableName">
             <el-option v-for="table in tables" :key="table.id" :label="table.name" :value="table.name"/>
           </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="menu.href"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSave">保存</el-button>
           <el-button @click="onClose">取消</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog>
+    </el-col>
   </div>
 </template>
 
 <script>
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapState } from 'vuex'
   export default {
-    name: "MenuDialog",
+    name: "MenuEdit",
     props: {
       menu: {
         type: Object
-      },
-      isDialogShow: {
-        type: Boolean
-      },
-      tables: {
-        type: Array
+      }
+    },
+    created() {
+      if (this.menu.name !== '') {
+        this.overwrite = true
+      }
+    },
+    data() {
+      return {
+        bindTable: true,
+        overwrite: false
       }
     },
     computed: {
-      innerIsDialogShow: {
-        get() {
-          return this.isDialogShow
-        },
-        set(newValue) {
-          this.$emit('update:isDialogShow', newValue)
-        }
-      },
-    },
-    watch: {
-      menu: {
-        handler(newValue, oldValue) {
-          const inflect = require('i')()
-          newValue.href = `${inflect.camelize(oldValue.tableName, false)}/tablePage`
-        },
-        deep: true
-      }
+      ...mapState(['tables'])
     },
     methods: {
       ...mapMutations(['saveMenu']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
+        if (this.tableName !== '') {
+          const camelcase = require('camelcase')
+          newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
+        }
         newMenu.id = Math.random()
-        this.saveMenu(newMenu)
-        this.$emit('update:isDialogShow', false)
+        this.saveMenu({
+          menu: newMenu,
+          overwrite: this.overwrite
+        })
+        this.$router.back()
       },
       onClose() {
-        this.$emit('update:isDialogShow', false)
+        this.$router.back()
       },
     }
   }

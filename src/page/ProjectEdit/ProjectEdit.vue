@@ -19,10 +19,10 @@
       <el-tab-pane label="菜单配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
-            <project-menu :menu="menu" @delete-menu="onDeleteMenu(index)"/>
+            <project-menu :menu="menu" :index="index"/>
           </el-col>
           <el-col :span="3">
-            <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
+            <el-card class="create-menu-card" @click.native="onCreateMenu">
               <i class="el-icon-plus"/>
             </el-card>
           </el-col>
@@ -41,18 +41,12 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <menu-dialog :menu="menu"
-                 :tables="tables"
-                 v-if="isMenuDialogShow"
-                 :is-dialog-show.sync="isMenuDialogShow"
-                 @on-save="onSaveMenu"/>
   </div>
 </template>
 
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
-  import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
@@ -60,7 +54,7 @@
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectRole, ProjectMenu, MenuDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -140,20 +134,13 @@
           }
         })
       },
-      onSaveMenu(event) {
-        this.menus.push(event)
-        Object.assign(this.menu, {
-          name: '',
-          icon: '',
-          href: '',
-          tableName: ''
+      onCreateMenu() {
+        this.$router.push({
+          name: 'MenuEdit',
+          params: {
+            menu: this.menu
+          }
         })
-      },
-      showCreateMenuDialog() {
-        this.isMenuDialogShow = true
-      },
-      onDeleteMenu(index) {
-        this.menus.splice(index, 1)
       },
       onCreateRole() {
         this.$router.push({
