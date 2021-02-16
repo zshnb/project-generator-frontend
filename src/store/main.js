@@ -25,7 +25,7 @@ const store = new Vuex.Store({
           primary: false,
           searchable: false,
           enableFormItem: true,
-          formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          formItemType: 'com.zshnb.projectgenerator.generator.entity.PasswordFormItem'
         }, {
           name: 'role',
           type: 'varchar',
@@ -43,7 +43,21 @@ const store = new Vuex.Store({
         }],
         enablePage: true,
         form: {
-          formItems: []
+          formItems: [
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+              require: true
+            },
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+              require: true
+            },
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
+              require: true,
+              options: []
+            }
+          ]
         }
       }
     ],
@@ -66,8 +80,24 @@ const store = new Vuex.Store({
     deleteTable(state, index) {
       state.tables.splice(index, 1)
     },
-    saveRole(state, role) {
-      state.roles.push(role)
+    saveRole(state, payload) {
+      let role = payload.role
+      let overwrite = payload.overwrite
+      if (!overwrite) {
+        state.roles.push(role)
+      }
+      let table = state.tables.find(t => t.name === 'user')
+      if (table !== undefined) {
+        let roleColumnIndex = table.columns.findIndex(c => c.name === 'role')
+        let options = state.roles.map(r => {
+          return {
+            title: r.description,
+            value: r.name
+          }
+        })
+        table.columns[roleColumnIndex].options = options
+        table.form.formItems[roleColumnIndex].options = options
+      }
     },
     deleteRole(state, index) {
       state.roles.splice(index, 1)
@@ -77,7 +107,7 @@ const store = new Vuex.Store({
     },
     deleteMenu(state, index) {
       state.menus.splice(index, 1)
-    }
+    },
   }
 })
 

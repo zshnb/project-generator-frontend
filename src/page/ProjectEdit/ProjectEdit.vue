@@ -7,10 +7,10 @@
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(table, index) in tables" :key="table.id">
-            <project-table :table.sync="table" @delete-table="onDeleteTable(index)"/>
+            <project-table :table.sync="table" :index="index"/>
           </el-col>
           <el-col :span="3">
-            <el-card class="create-table-card" @click.native="showCreateTableDialog">
+            <el-card class="create-table-card" @click.native="onCreateTable">
               <i class="el-icon-plus"/>
             </el-card>
           </el-col>
@@ -31,10 +31,10 @@
       <el-tab-pane label="角色配置" class="content">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(role, index) in roles" :key="role.id">
-            <project-role :role="role" @delete-role="onDeleteRole(index)"/>
+            <project-role :role="role" :index="index"/>
           </el-col>
           <el-col :span="3">
-            <el-card class="create-role-card" @click.native="showCreateRoleDialog">
+            <el-card class="create-role-card" @click.native="onCreateRole">
               <i class="el-icon-plus"/>
             </el-card>
           </el-col>
@@ -46,10 +46,6 @@
                  v-if="isMenuDialogShow"
                  :is-dialog-show.sync="isMenuDialogShow"
                  @on-save="onSaveMenu"/>
-    <role-dialog :role="role"
-                 v-if="isRoleDialogShow"
-                 :is-dialog-show.sync="isRoleDialogShow"
-                 @on-save="onSaveRole"/>
   </div>
 </template>
 
@@ -57,15 +53,14 @@
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
   import MenuDialog from "../../components/MenuDialog/MenuDialog";
-  import RoleDialog from "../../components/RoleDialog/RoleDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState } from 'vuex'
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectRole, ProjectMenu, RoleDialog, MenuDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, MenuDialog, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -124,10 +119,9 @@
       }
     },
     computed: {
-      ...mapState(['tables', 'menus', 'roles'])
+      ...mapState(['menus', 'roles', 'tables'])
     },
     watch: {
-
       config: {
         handler(newValue, oldValue) {
           newValue.rootPackageName = `${newValue.groupId}.${newValue.artifactId}`
@@ -137,8 +131,7 @@
       }
     },
     methods: {
-      ...mapMutations(['deleteTable']),
-      showCreateTableDialog() {
+      onCreateTable() {
         this.$router.push({
           name: 'TableEdit',
           params: {
@@ -146,9 +139,6 @@
             roles: this.roles
           }
         })
-      },
-      onDeleteTable(index) {
-        this.tables.splice(index, 1)
       },
       onSaveMenu(event) {
         this.menus.push(event)
@@ -165,26 +155,20 @@
       onDeleteMenu(index) {
         this.menus.splice(index, 1)
       },
-      onSaveRole(event) {
-        this.roles.push(event)
-        Object.assign(this.role, {
-          name: '',
-          description: '',
-          menus: []
+      onCreateRole() {
+        this.$router.push({
+          name: 'RoleEdit',
+          params: {
+            role: this.role
+          }
         })
-      },
-      showCreateRoleDialog() {
-        this.isRoleDialogShow = true
-      },
-      onDeleteRole(index) {
-        this.deleteTable(index)
       },
       onGenerate() {
         const project = {
           config: this.config,
           tables: this.tables,
           pages: this.tables.map(t => {
-            return {form: t.form}
+            return { form: t.form }
           }),
           roles: this.roles
         }
