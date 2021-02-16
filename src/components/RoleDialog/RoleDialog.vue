@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  import { mapMutations, mapState } from 'vuex'
   export default {
     name: "RoleDialog",
     props: {
@@ -34,12 +35,10 @@
       },
       isDialogShow: {
         type: Boolean
-      },
-      menus: {
-        type: Array
       }
     },
     computed: {
+      ...mapState(['menus']),
       innerIsDialogShow: {
         get() {
           return this.isDialogShow
@@ -50,12 +49,13 @@
       }
     },
     methods: {
+      ...mapMutations(['saveRole']),
       onSave() {
         this.role.menus.forEach(it => it.role = this.role.name)
         let newRole = JSON.parse(JSON.stringify(this.role))
         newRole.id = Math.random()
         newRole.menus.forEach(it => it.id = 0)
-        this.$emit('on-save', newRole)
+        this.saveRole(newRole)
         this.$emit('update:isDialogShow', false)
       },
       onClose() {

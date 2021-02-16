@@ -47,7 +47,6 @@
                  :is-dialog-show.sync="isMenuDialogShow"
                  @on-save="onSaveMenu"/>
     <role-dialog :role="role"
-                 :menus="menus"
                  v-if="isRoleDialogShow"
                  :is-dialog-show.sync="isRoleDialogShow"
                  @on-save="onSaveRole"/>
@@ -115,7 +114,6 @@
           href: '',
           tableName: ''
         },
-        roles: [],
         role: {
           name: '',
           description: '',
@@ -126,7 +124,7 @@
       }
     },
     computed: {
-      ...mapState(['tables', 'menus'])
+      ...mapState(['tables', 'menus', 'roles'])
     },
     watch: {
       table: {

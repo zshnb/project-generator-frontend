@@ -40,9 +40,6 @@
         type: Array
       }
     },
-    created() {
-      console.log(this.tables)
-    },
     computed: {
       innerIsDialogShow: {
         get() {

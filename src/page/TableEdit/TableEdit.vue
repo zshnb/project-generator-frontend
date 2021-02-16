@@ -141,7 +141,7 @@
 
 <script>
   import axios from "../../util/Axios";
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapState } from 'vuex'
 
   export default {
     name: "TableEdit",
@@ -153,9 +153,6 @@
     props: {
       table: {
         type: Object
-      },
-      roles: {
-        type: Array
       }
     },
     data() {
@@ -166,6 +163,9 @@
         showEditOptions: false,
         column: {}
       }
+    },
+    computed: {
+      ...mapState(['roles'])
     },
     methods: {
       onAddColumn(index) {
