@@ -124,10 +124,9 @@
       }
     },
     computed: {
-      ...mapState(['tables', 'menus', 'roles'])
+      ...mapState(['menus', 'roles', 'tables'])
     },
     watch: {
-
       config: {
         handler(newValue, oldValue) {
           newValue.rootPackageName = `${newValue.groupId}.${newValue.artifactId}`
@@ -139,6 +138,7 @@
     methods: {
       ...mapMutations(['deleteTable']),
       showCreateTableDialog() {
+        console.log(this.tables)
         this.$router.push({
           name: 'TableEdit',
           params: {
@@ -184,7 +184,7 @@
           config: this.config,
           tables: this.tables,
           pages: this.tables.map(t => {
-            return {form: t.form}
+            return { form: t.form }
           }),
           roles: this.roles
         }
