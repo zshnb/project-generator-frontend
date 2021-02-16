@@ -109,7 +109,6 @@
             formItems: []
           },
         },
-        menus: [],
         menu: {
           name: '',
           icon: '',
@@ -127,7 +126,7 @@
       }
     },
     computed: {
-      ...mapState(['tables'])
+      ...mapState(['tables', 'menus'])
     },
     watch: {
       table: {

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   export default {
     name: "MenuDialog",
     props: {
@@ -62,10 +63,11 @@
       }
     },
     methods: {
+      ...mapMutations(['saveMenu']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
         newMenu.id = Math.random()
-        this.$emit('on-save', newMenu)
+        this.saveMenu(newMenu)
         this.$emit('update:isDialogShow', false)
       },
       onClose() {

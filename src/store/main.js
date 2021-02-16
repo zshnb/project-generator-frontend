@@ -34,7 +34,8 @@ const store = new Vuex.Store({
           primary: false,
           searchable: false,
           enableFormItem: true,
-          formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+          formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
+          options: []
         }],
         permissions: [{
           role: '',
@@ -45,10 +46,14 @@ const store = new Vuex.Store({
           formItems: []
         }
       }
-    ]
+    ],
+    roles: [],
+    menus: []
   },
   getters: {
-    tables: state => state.tables
+    tables: state => state.tables,
+    roles: state => state.roles,
+    menus: state => state.menus
   },
   mutations: {
     saveTable(state, table) {
@@ -56,6 +61,18 @@ const store = new Vuex.Store({
     },
     deleteTable(state, index) {
       state.tables.splice(index, 1)
+    },
+    saveRole(state, role) {
+      state.roles.push(role)
+    },
+    deleteRole(state, index) {
+      state.roles.splice(index, 1)
+    },
+    saveMenu(state, menu) {
+      state.menus.push(menu)
+    },
+    deleteMenu(state, index) {
+      state.menus.splice(index, 1)
     }
   }
 })
