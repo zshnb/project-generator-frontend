@@ -141,7 +141,7 @@
 
 <script>
   import axios from "../../util/Axios";
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapState } from 'vuex'
 
   export default {
     name: "TableEdit",
@@ -149,13 +149,13 @@
       axios.get('/column/types').then(res => this.columnTypes = res.list)
       axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
       axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
+      if (this.table.name !== '') {
+        this.overwrite = true
+      }
     },
     props: {
       table: {
         type: Object
-      },
-      roles: {
-        type: Array
       }
     },
     data() {
@@ -164,8 +164,44 @@
         formItemTypes: [],
         needOptionFormItemTypes: [],
         showEditOptions: false,
-        column: {}
+        column: {},
+        overwrite: false
       }
+    },
+    computed: {
+      ...mapState(['roles'])
+    },
+    watch: {
+      table: {
+        handler(newValue, oldValue) {
+          let index = newValue.columns.length - 1
+          switch (oldValue.columns[index].type) {
+            case 'int': {
+              newValue.columns[index].length = 11
+              break
+            }
+            case 'varchar': {
+              newValue.columns[index].length = 255
+              break
+            }
+            case 'tinyint': {
+              newValue.columns[index].length = 1
+              break
+            }
+            case 'date':
+            case 'text':
+            case 'datetime': {
+              newValue.columns[index].length = 0
+              break
+            }
+            case 'double': {
+              newValue.columns[index].length = 11
+              break
+            }
+          }
+        },
+        deep: true
+      },
     },
     methods: {
       onAddColumn(index) {
@@ -212,7 +248,10 @@
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
-        this.saveTable(newTable)
+        this.saveTable({
+          table: newTable,
+          overwrite: this.overwrite
+        })
         this.$router.back()
       },
       onClose() {
