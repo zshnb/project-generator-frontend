@@ -22,7 +22,7 @@
             <project-menu :menu="menu" @delete-menu="onDeleteMenu(index)"/>
           </el-col>
           <el-col :span="3">
-            <el-card class="create-menu-card" @click.native="showCreateMenuDialog">
+            <el-card class="create-menu-card" @click.native="onCreateMenu">
               <i class="el-icon-plus"/>
             </el-card>
           </el-col>
@@ -134,7 +134,7 @@
           }
         })
       },
-      showCreateMenuDialog() {
+      onCreateMenu() {
         this.$router.push({
           name: 'MenuEdit',
           params: {

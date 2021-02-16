@@ -3,7 +3,7 @@
     <el-card>
       <div slot="header">
         <span>{{menu.name}}</span>
-        <el-button size="small" type="primary">编辑</el-button>
+        <el-button size="small" type="primary" @click="onEdit">编辑</el-button>
         <el-button size="small" type="danger" @click="onDelete">删除</el-button>
       </div>
     </el-card>
@@ -11,22 +11,29 @@
 </template>
 
 <script>
+  import {mapMutations} from 'vuex'
   export default {
     name: "ProjectMenu",
     props: {
       menu: {
         type: Object
       },
-      isDialogShow: {
-        type: Boolean
+      index: {
+        type: Number
       }
     },
     methods: {
-      onSave() {
-        this.$emit('on-save')
+      ...mapMutations(['deleteMenu']),
+      onEdit() {
+        this.$router.push({
+          name: 'MenuEdit',
+          params: {
+            menu: this.menu
+          }
+        })
       },
       onDelete() {
-        this.$emit('delete-menu')
+        this.deleteMenu(this.index)
       }
     }
   }
