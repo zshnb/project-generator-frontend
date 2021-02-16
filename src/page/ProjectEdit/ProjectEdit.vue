@@ -41,18 +41,12 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
-    <menu-dialog :menu="menu"
-                 :tables="tables"
-                 v-if="isMenuDialogShow"
-                 :is-dialog-show.sync="isMenuDialogShow"
-                 @on-save="onSaveMenu"/>
   </div>
 </template>
 
 <script>
   import ProjectConfig from "../ProjectConfig/ProjectConfig";
   import ProjectTable from "../ProjectTable/ProjectTable";
-  import MenuDialog from "../../components/MenuDialog/MenuDialog";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
@@ -60,7 +54,7 @@
 
   export default {
     name: "ProjectEdit",
-    components: {ProjectRole, ProjectMenu, MenuDialog, ProjectTable, ProjectConfig},
+    components: {ProjectRole, ProjectMenu, ProjectTable, ProjectConfig},
     data() {
       return {
         config: {
@@ -140,17 +134,13 @@
           }
         })
       },
-      onSaveMenu(event) {
-        this.menus.push(event)
-        Object.assign(this.menu, {
-          name: '',
-          icon: '',
-          href: '',
-          tableName: ''
-        })
-      },
       showCreateMenuDialog() {
-        this.isMenuDialogShow = true
+        this.$router.push({
+          name: 'MenuEdit',
+          params: {
+            menu: this.menu
+          }
+        })
       },
       onDeleteMenu(index) {
         this.menus.splice(index, 1)
