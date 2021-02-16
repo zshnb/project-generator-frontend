@@ -80,8 +80,12 @@ const store = new Vuex.Store({
     deleteTable(state, index) {
       state.tables.splice(index, 1)
     },
-    saveRole(state, role) {
-      state.roles.push(role)
+    saveRole(state, payload) {
+      let role = payload.role
+      let overwrite = payload.overwrite
+      if (!overwrite) {
+        state.roles.push(role)
+      }
       let table = state.tables.find(t => t.name === 'user')
       if (table !== undefined) {
         let roleColumnIndex = table.columns.findIndex(c => c.name === 'role')

@@ -138,7 +138,6 @@
     methods: {
       ...mapMutations(['deleteTable']),
       showCreateTableDialog() {
-        console.log(this.tables)
         this.$router.push({
           name: 'TableEdit',
           params: {
