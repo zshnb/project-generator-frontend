@@ -56,8 +56,12 @@ const store = new Vuex.Store({
     menus: state => state.menus
   },
   mutations: {
-    saveTable(state, table) {
-      state.tables.push(table)
+    saveTable(state, payload) {
+      let overwrite = payload.overwrite
+      let table = payload.table
+      if (!overwrite) {
+        state.tables.push(table)
+      }
     },
     deleteTable(state, index) {
       state.tables.splice(index, 1)

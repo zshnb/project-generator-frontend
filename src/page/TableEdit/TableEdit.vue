@@ -149,6 +149,9 @@
       axios.get('/column/types').then(res => this.columnTypes = res.list)
       axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
       axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
+      if (this.table.name !== '') {
+        this.overwrite = true
+      }
     },
     props: {
       table: {
@@ -161,7 +164,8 @@
         formItemTypes: [],
         needOptionFormItemTypes: [],
         showEditOptions: false,
-        column: {}
+        column: {},
+        overwrite: false
       }
     },
     computed: {
@@ -244,7 +248,10 @@
           })
         let newTable = JSON.parse(JSON.stringify(this.table))
         newTable.id = Math.random()
-        this.saveTable(newTable)
+        this.saveTable({
+          table: newTable,
+          overwrite: this.overwrite
+        })
         this.$router.back()
       },
       onClose() {
