@@ -127,36 +127,7 @@
       ...mapState(['tables', 'menus', 'roles'])
     },
     watch: {
-      table: {
-        handler(newValue, oldValue) {
-          let index = newValue.columns.length - 1
-          switch (oldValue.columns[index].type) {
-            case 'int': {
-              newValue.columns[index].length = 11
-              break
-            }
-            case 'varchar': {
-              newValue.columns[index].length = 255
-              break
-            }
-            case 'tinyint': {
-              newValue.columns[index].length = 1
-              break
-            }
-            case 'date':
-            case 'text':
-            case 'datetime': {
-              newValue.columns[index].length = 0
-              break
-            }
-            case 'double': {
-              newValue.columns[index].length = 11
-              break
-            }
-          }
-        },
-        deep: true
-      },
+
       config: {
         handler(newValue, oldValue) {
           newValue.rootPackageName = `${newValue.groupId}.${newValue.artifactId}`
