@@ -102,8 +102,12 @@ const store = new Vuex.Store({
     deleteRole(state, index) {
       state.roles.splice(index, 1)
     },
-    saveMenu(state, menu) {
-      state.menus.push(menu)
+    saveMenu(state, payload) {
+      let menu = payload.menu
+      let overwrite = payload.overwrite
+      if (!overwrite) {
+        state.menus.push(menu)
+      }
     },
     deleteMenu(state, index) {
       state.menus.splice(index, 1)

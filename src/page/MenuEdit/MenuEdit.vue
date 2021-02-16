@@ -35,9 +35,15 @@
         type: Object
       }
     },
+    created() {
+      if (this.menu.name !== '') {
+        this.overwrite = true
+      }
+    },
     data() {
       return {
-        bindTable: true
+        bindTable: true,
+        overwrite: false
       }
     },
     computed: {
@@ -52,7 +58,10 @@
           newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
         }
         newMenu.id = Math.random()
-        this.saveMenu(newMenu)
+        this.saveMenu({
+          menu: newMenu,
+          overwrite: this.overwrite
+        })
         this.$router.back()
       },
       onClose() {
