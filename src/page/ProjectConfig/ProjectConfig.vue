@@ -10,42 +10,42 @@
       <el-form-item label="version">
         <el-input placeholder="version" v-model="config.version"></el-input>
       </el-form-item>
-      <el-form-item label="rootPackageName">
+      <el-form-item label="java根包名">
         <el-input placeholder="rootPackageName" v-model="config.rootPackageName"></el-input>
       </el-form-item>
-      <el-form-item label="entityPackageName">
+      <el-form-item label="实体类包名">
         <el-input placeholder="entityPackageName" v-model="config.entityPackageName"></el-input>
       </el-form-item>
-      <el-form-item label="servicePackageName">
+      <el-form-item label="service接口包名">
         <el-input placeholder="servicePackageName" v-model="config.servicePackageName"></el-input>
       </el-form-item>
-      <el-form-item label="serviceImplPackageName">
+      <el-form-item label="service实现包名">
         <el-input placeholder="serviceImplPackageName"
                   v-model="config.serviceImplPackageName"></el-input>
       </el-form-item>
-      <el-form-item label="mapperPackageName">
+      <el-form-item label="mapper包名">
         <el-input placeholder="mapperPackageName" v-model="config.mapperPackageName"></el-input>
       </el-form-item>
-      <el-form-item label="controllerPackageName">
+      <el-form-item label="controller包名">
         <el-input placeholder="controllerPackageName"
                   v-model="config.controllerPackageName"></el-input>
       </el-form-item>
-      <el-form-item label="jdbcHost">
+      <el-form-item label="jdbc地址">
         <el-input placeholder="jdbcHost" v-model="config.jdbcHost"></el-input>
       </el-form-item>
-      <el-form-item label="jdbcPort">
+      <el-form-item label="jdbc端口">
         <el-input placeholder="jdbcPort" v-model="config.jdbcPort"></el-input>
       </el-form-item>
-      <el-form-item label="jdbcUser">
+      <el-form-item label="jdbc用户">
         <el-input placeholder="jdbcUser" v-model="config.jdbcUser"></el-input>
       </el-form-item>
-      <el-form-item label="jdbcPassword">
+      <el-form-item label="jdbc密码">
         <el-input placeholder="jdbcPassword" v-model="config.jdbcPassword"></el-input>
       </el-form-item>
-      <el-form-item label="jdbcDatabase">
+      <el-form-item label="数据库名">
         <el-input placeholder="jdbcDatabase" v-model="config.jdbcDatabase"></el-input>
       </el-form-item>
-      <el-form-item label="UI">
+      <el-form-item label="UI库">
         <el-select v-model="config.type">
           <el-option v-for="item in projectTypes"
                      :key="item.value"

@@ -6,10 +6,10 @@
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content">
         <el-row :gutter="20">
-          <el-col :span="3" v-for="(table, index) in tables" :key="table.id">
+          <el-col :span="4" v-for="(table, index) in tables" :key="table.id">
             <project-table :table.sync="table" :index="index"/>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="4">
             <el-card class="create-table-card" @click.native="onCreateTable">
               <i class="el-icon-plus"/>
             </el-card>
