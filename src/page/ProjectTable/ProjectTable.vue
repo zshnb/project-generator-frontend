@@ -2,9 +2,22 @@
   <div id="project-table">
     <el-card>
       <div slot="header">
-        <span>{{table.name}}</span>
-        <el-button size="small" type="primary" @click="onEdit">编辑</el-button>
-        <el-button size="small" type="danger" @click="onDelete">删除</el-button>
+        <div class="card-header">
+          <p>{{table.name}}</p>
+          <div>
+            <el-button size="small" type="primary" @click="onEdit" icon="el-icon-edit"></el-button>
+            <el-button size="small" type="danger" @click="onDelete" icon="el-icon-delete"></el-button>
+          </div>
+        </div>
+      </div>
+      <div class="table-body">
+        <ul>
+          <li v-for="column in table.columns" :key="column.id">
+            <span>{{column.name}}</span>
+            <span>{{column.type}}</span>
+            <span>({{column.length}})</span>
+          </li>
+        </ul>
       </div>
     </el-card>
   </div>
@@ -44,4 +57,9 @@
 </script>
 
 <style scoped lang="stylus">
+  #project-table
+    .card-header
+      display flex
+      justify-content space-between
+      align-items center
 </style>
