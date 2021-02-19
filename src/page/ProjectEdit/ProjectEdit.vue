@@ -86,7 +86,8 @@
             enableFormItem: true,
             formItemType: '',
             require: false,
-            options: []
+            options: [],
+            enableAssociate: false
           }],
           permissions: [{
             role: '',
@@ -107,9 +108,7 @@
           name: '',
           description: '',
           menus: []
-        },
-        isMenuDialogShow: false,
-        isRoleDialogShow: false
+        }
       }
     },
     computed: {

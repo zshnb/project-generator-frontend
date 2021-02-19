@@ -67,6 +67,9 @@
                 <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
               </el-form-item>
             </div>
+            <el-form-item label="关联">
+              <el-switch v-model="column.enableAssociate"/>
+            </el-form-item>
           </el-row>
         </el-form>
       </el-form-item>
