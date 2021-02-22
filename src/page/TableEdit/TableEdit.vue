@@ -83,7 +83,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="表单项列">
-                  <el-select v-model="table.associate.formItemName">
+                  <el-select v-model="table.associate.formItemColumnName">
                     <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                   </el-select>
                 </el-form-item>
@@ -338,12 +338,13 @@
       onDeleteOption(index) {
         this.column.options.splice(index, 1)
       },
-      onChangeAssociateStatus() {
+      onChangeAssociateStatus(status, column) {
         if (this.table.associate === undefined) {
           this.$set(this.table, 'associate', {
+            sourceColumnName: column.name,
             targetTableName: '',
             targetColumnName: '',
-            formItemName: '',
+            formItemColumnName: '',
             associateResultColumns: []
           })
         }
