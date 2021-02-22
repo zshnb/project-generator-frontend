@@ -203,6 +203,7 @@
 <script>
   import axios from "../../util/Axios";
   import {mapMutations, mapState} from 'vuex'
+  import {generateDefaultColumns} from '../../util/TableUtils'
 
   export default {
     name: "TableEdit",
@@ -213,6 +214,7 @@
       if (this.table.name !== '') {
         this.overwrite = true
       }
+      generateDefaultColumns().forEach(it => this.table.columns.push(it))
     },
     props: {
       table: {
@@ -347,6 +349,7 @@
             formItemColumnName: '',
             associateResultColumns: []
           })
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
         }
       },
       onChangeAssociateTable(tableName) {
