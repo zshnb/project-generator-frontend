@@ -68,7 +68,29 @@
               </el-form-item>
             </div>
             <el-form-item label="关联">
-              <el-switch v-model="column.enableAssociate"/>
+              <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
+            </el-form-item>
+            <el-form-item v-if="column.enableAssociate">
+              <el-form :inline="true" :model="table.associate">
+                <el-form-item label="选择关联表">
+                  <el-select v-model="table.associate.targetTableName" @change="onChangeAssociateTable">
+                    <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="关联的列">
+                  <el-select v-model="table.associate.targetColumnName">
+                    <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="表单项列">
+                  <el-select v-model="table.associate.formItemName">
+                    <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="onEditAssociateResultColumns">编辑关联的筛选列</el-button>
+                </el-form-item>
+              </el-form>
             </el-form-item>
           </el-row>
         </el-form>
@@ -139,12 +161,48 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+    <el-drawer v-if="showEditAssociateResultColumns" :visible.sync="showEditAssociateResultColumns"
+               class="option-drawer">
+      <el-form :model="table.associate">
+        <el-form-item v-for="(column, index) in table.associate.associateResultColumns" :key="column.originColumnName">
+          <el-form :inline="true" :model="column">
+            <el-col :span="11">
+              <el-form-item label="列名">
+                <el-select v-model="column.originColumnName" @change="onChangeAssociateResultColumn($event, column)">
+                  <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="11">
+              <el-form-item label="列别名">
+                <el-input v-model="column.aliasColumnName"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="11">
+              <el-form-item label="表格列描述">
+                <el-input v-model="column.tableFieldTitle"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item>
+                <el-button type="danger"
+                           icon="el-icon-remove-outline"
+                           @click="onDeleteOption(index)"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-form-item>
+        <el-form-item class="add-btn-form-item">
+          <el-button type="primary" @click="onAddResultColumn">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
 <script>
   import axios from "../../util/Axios";
-  import { mapMutations, mapState } from 'vuex'
+  import {mapMutations, mapState} from 'vuex'
 
   export default {
     name: "TableEdit",
@@ -167,16 +225,19 @@
         formItemTypes: [],
         needOptionFormItemTypes: [],
         showEditOptions: false,
+        showEditAssociateResultColumns: false,
         column: {},
-        overwrite: false
+        overwrite: false,
+        associateTableColumns: []
       }
     },
     computed: {
-      ...mapState(['roles'])
+      ...mapState(['roles', 'tables'])
     },
     watch: {
       table: {
         handler(newValue, oldValue) {
+          // fixme: 只会在最后一列生效，中间列不生效
           let index = newValue.columns.length - 1
           switch (oldValue.columns[index].type) {
             case 'int': {
@@ -276,6 +337,34 @@
       },
       onDeleteOption(index) {
         this.column.options.splice(index, 1)
+      },
+      onChangeAssociateStatus() {
+        if (this.table.associate === undefined) {
+          this.$set(this.table, 'associate', {
+            targetTableName: '',
+            targetColumnName: '',
+            formItemName: '',
+            associateResultColumns: []
+          })
+        }
+      },
+      onChangeAssociateTable(tableName) {
+        let table = this.tables.find(it => it.name === tableName)
+        this.associateTableColumns = table.columns
+      },
+      onChangeAssociateResultColumn(originColumnName, column) {
+        const camelcase = require('camelcase')
+        column.aliasColumnName = camelcase(`${this.table.associate.targetTableName}_${originColumnName}`)
+      },
+      onEditAssociateResultColumns() {
+        this.showEditAssociateResultColumns = true
+      },
+      onAddResultColumn() {
+        this.table.associate.associateResultColumns.push({
+          originColumnName: '',
+          aliasColumnName: '',
+          tableFieldTitle: ''
+        })
       },
       ...mapMutations(['saveTable'])
     }

@@ -150,7 +150,7 @@
         })
       },
       onGenerate() {
-        const project = {
+        let project = {
           config: this.config,
           tables: this.tables,
           pages: this.tables.map(t => {
