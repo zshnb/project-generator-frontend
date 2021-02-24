@@ -150,13 +150,25 @@
         })
       },
       onGenerate() {
+        let roles = this.roles.map(it => {
+          let role = JSON.parse(JSON.stringify(it))
+          delete role.id
+          role.menus.forEach(m => delete m.id)
+          return role
+        })
+        let tables = this.tables.map(it => {
+          let table = JSON.parse(JSON.stringify(it))
+          delete table.id
+          delete table.form
+          return table
+        })
         let project = {
           config: this.config,
-          tables: this.tables,
+          tables: tables,
           pages: this.tables.map(t => {
             return { form: t.form }
           }),
-          roles: this.roles
+          roles: roles
         }
         axios.post('/project/generate', JSON.stringify(project), {
           responseType: 'blob'

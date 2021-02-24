@@ -30,7 +30,7 @@
               <el-input v-model="column.name"/>
             </el-form-item>
             <el-form-item label="类型">
-              <el-select v-model="column.type">
+              <el-select v-model="column.type" @change="onChangeType($event, column)">
                 <el-option v-for="type in columnTypes" :key="type" :label="type" :value="type"/>
               </el-select>
             </el-form-item>
@@ -214,7 +214,9 @@
       if (this.table.name !== '') {
         this.overwrite = true
       }
-      generateDefaultColumns().forEach(it => this.table.columns.push(it))
+      if (this.table.columns.length < 3) {
+        generateDefaultColumns().forEach(it => this.table.columns.push(it))
+      }
     },
     props: {
       table: {
@@ -236,39 +238,6 @@
     computed: {
       ...mapState(['roles', 'tables'])
     },
-    watch: {
-      table: {
-        handler(newValue, oldValue) {
-          // fixme: 只会在最后一列生效，中间列不生效
-          let index = newValue.columns.length - 1
-          switch (oldValue.columns[index].type) {
-            case 'int': {
-              newValue.columns[index].length = 11
-              break
-            }
-            case 'varchar': {
-              newValue.columns[index].length = 255
-              break
-            }
-            case 'tinyint': {
-              newValue.columns[index].length = 1
-              break
-            }
-            case 'date':
-            case 'text':
-            case 'datetime': {
-              newValue.columns[index].length = 0
-              break
-            }
-            case 'double': {
-              newValue.columns[index].length = 11
-              break
-            }
-          }
-        },
-        deep: true
-      },
-    },
     methods: {
       onAddColumn(index) {
         let column = {
@@ -285,6 +254,32 @@
         }
         column.id = Math.random()
         this.table.columns.splice(index + 1, 0, column)
+      },
+      onChangeType(event, column) {
+        switch (column.type) {
+          case 'int': {
+            column.length = 11
+            break
+          }
+          case 'varchar': {
+            column.length = 255
+            break
+          }
+          case 'tinyint': {
+            column.length = 1
+            break
+          }
+          case 'date':
+          case 'text':
+          case 'datetime': {
+            column.length = 0
+            break
+          }
+          case 'double': {
+            column.length = 11
+            break
+          }
+        }
       },
       onDeleteColumn(index) {
         this.table.columns.splice(index, 1)
