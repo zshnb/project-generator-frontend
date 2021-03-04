@@ -53,7 +53,7 @@
       ...mapMutations(['saveMenu']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
-        if (this.tableName !== '') {
+        if (this.bindTable) {
           const camelcase = require('camelcase')
           newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
         }
