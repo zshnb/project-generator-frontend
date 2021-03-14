@@ -148,6 +148,18 @@ const store = new Vuex.Store({
     deleteMenu(state, index) {
       state.menus.splice(index, 1)
     },
+    addMenuInRole(state, payload) {
+      let role = state.roles.find(it => it.name === payload.roleName)
+      if (role === undefined) {
+        throw Error(`role: ${payload.roleName} not found`)
+      }
+      let menu = payload.menu
+      role.menus.push({
+        name: menu.name,
+        href: menu.href,
+        icon: menu.icon
+      })
+    }
   }
 })
 

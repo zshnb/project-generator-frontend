@@ -17,6 +17,11 @@
             <el-option v-for="table in tables" :key="table.id" :label="table.name" :value="table.name"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属角色">
+          <el-select v-model="roleName">
+            <el-option v-for="role in roles" :key="role.id" :label="role.name" :value="role.name"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSave">保存</el-button>
           <el-button @click="onClose">取消</el-button>
@@ -27,7 +32,8 @@
 </template>
 
 <script>
-  import { mapMutations, mapState } from 'vuex'
+  import {mapMutations, mapState} from 'vuex'
+
   export default {
     name: "MenuEdit",
     props: {
@@ -43,20 +49,25 @@
     data() {
       return {
         bindTable: true,
-        overwrite: false
+        overwrite: false,
+        roleName: ''
       }
     },
     computed: {
-      ...mapState(['tables'])
+      ...mapState(['tables', 'roles'])
     },
     methods: {
-      ...mapMutations(['saveMenu']),
+      ...mapMutations(['saveMenu', 'addMenuInRole']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
         if (this.bindTable) {
           const camelcase = require('camelcase')
           newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
         }
+        this.addMenuInRole({
+          roleName: this.roleName,
+          menu: newMenu
+        })
         newMenu.id = Math.random()
         this.saveMenu({
           menu: newMenu,
