@@ -8,14 +8,14 @@
         <el-form-item label="角色名称">
           <el-input v-model="role.name"/>
         </el-form-item>
-        <el-form-item label="角色菜单">
-          <el-select v-model="role.menus" multiple value-key="name">
-            <el-option v-for="menu in menus"
-                       :key="menu.name"
-                       :label="menu.name"
-                       :value="menu"/>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="角色菜单">-->
+<!--          <el-select v-model="role.menus" multiple value-key="name">-->
+<!--            <el-option v-for="menu in menus"-->
+<!--                       :key="menu.name"-->
+<!--                       :label="menu.name"-->
+<!--                       :value="menu"/>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="onSave">保存</el-button>
           <el-button @click="onClose">取消</el-button>
