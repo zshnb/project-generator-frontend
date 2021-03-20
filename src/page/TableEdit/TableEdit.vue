@@ -61,7 +61,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="表单项标签">
-                <el-input v-model="column.comment"/>
+                <el-input v-model="column.label" @input="onInputLabel($event, column)"/>
               </el-form-item>
               <el-form-item v-if="isOptionalFormItem(column.formItemType)">
                 <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
@@ -72,7 +72,7 @@
                 <el-switch v-model="column.enableTableField"/>
               </el-form-item>
               <el-form-item label="列标题" v-if="column.enableTableField">
-                <el-input v-model="column.tableFieldTitle"/>
+                <el-input v-model="column.title"/>
               </el-form-item>
             </div>
             <div>
@@ -174,11 +174,13 @@
     <el-drawer v-if="showEditAssociateResultColumns" :visible.sync="showEditAssociateResultColumns"
                class="option-drawer">
       <el-form :model="column.associate">
-        <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns" :key="resultColumn.originColumnName">
+        <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
+                      :key="resultColumn.originColumnName">
           <el-form :inline="true" :model="column">
             <el-col :span="11">
               <el-form-item label="列名">
-                <el-select v-model="resultColumn.originColumnName" @change="onChangeAssociateResultColumn($event, resultColumn)">
+                <el-select v-model="resultColumn.originColumnName"
+                           @change="onChangeAssociateResultColumn($event, resultColumn)">
                   <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                 </el-select>
               </el-form-item>
@@ -211,192 +213,212 @@
 </template>
 
 <script>
-  import axios from "../../util/Axios";
-  import {mapMutations, mapState} from 'vuex'
-  import {generateDefaultColumns} from '../../util/TableUtils'
+import axios from "../../util/Axios";
+import {mapMutations, mapState} from 'vuex'
+import {generateDefaultColumns} from '../../util/TableUtils'
 
-  export default {
-    name: "TableEdit",
-    created() {
-      axios.get('/column/types').then(res => this.columnTypes = res.list)
-      axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
-      axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
-      if (this.table.name !== '') {
-        this.overwrite = true
+export default {
+  name: "TableEdit",
+  created() {
+    axios.get('/column/types').then(res => this.columnTypes = res.list)
+    axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
+    axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
+    if (this.table.name !== '') {
+      this.overwrite = true
+    }
+    if (this.table.columns.length < 3) {
+      generateDefaultColumns().forEach(it => this.table.columns.push(it))
+    }
+  },
+  props: {
+    table: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      columnTypes: [],
+      formItemTypes: [],
+      needOptionFormItemTypes: [],
+      showEditOptions: false,
+      showEditAssociateResultColumns: false,
+      column: {},
+      overwrite: false,
+      associateTableColumns: []
+    }
+  },
+  computed: {
+    ...mapState(['roles', 'tables'])
+  },
+  methods: {
+    onAddColumn(index) {
+      let column = {
+        name: '',
+        type: '',
+        length: 0,
+        label: '',
+        title: '',
+        primary: false,
+        searchable: false,
+        enableFormItem: true,
+        enableTableField: true,
+        formItemType: '',
+        require: false,
+        options: []
       }
-      if (this.table.columns.length < 3) {
-        generateDefaultColumns().forEach(it => this.table.columns.push(it))
-      }
+      column.id = Math.random()
+      this.table.columns.splice(index + 1, 0, column)
     },
-    props: {
-      table: {
-        type: Object
-      }
+    onChangeColumn(column) {
+      this.column = column
     },
-    data() {
-      return {
-        columnTypes: [],
-        formItemTypes: [],
-        needOptionFormItemTypes: [],
-        showEditOptions: false,
-        showEditAssociateResultColumns: false,
-        column: {},
-        overwrite: false,
-        associateTableColumns: []
-      }
-    },
-    computed: {
-      ...mapState(['roles', 'tables'])
-    },
-    methods: {
-      onAddColumn(index) {
-        let column = {
-          name: '',
-          type: '',
-          length: 0,
-          comment: '',
-          primary: false,
-          searchable: false,
-          enableFormItem: true,
-          enableTableField: true,
-          formItemType: '',
-          require: false,
-          options: []
+    onChangeType(event, column) {
+      switch (column.type) {
+        case 'int': {
+          column.length = 11
+          break
         }
-        column.id = Math.random()
-        this.table.columns.splice(index + 1, 0, column)
-      },
-      onChangeColumn(column) {
-        this.column = column
-      },
-      onChangeType(event, column) {
-        switch (column.type) {
-          case 'int': {
-            column.length = 11
-            break
-          }
-          case 'varchar': {
-            column.length = 255
-            break
-          }
-          case 'tinyint': {
-            column.length = 1
-            break
-          }
-          case 'date':
-          case 'text':
-          case 'datetime': {
-            column.length = 0
-            break
-          }
-          case 'double': {
-            column.length = 11
-            break
-          }
+        case 'varchar': {
+          column.length = 255
+          break
         }
-      },
-      onDeleteColumn(index) {
-        this.table.columns.splice(index, 1)
-      },
-      onAddPermission() {
-        let permission = {
-          role: '',
-          operations: []
+        case 'tinyint': {
+          column.length = 1
+          break
         }
-        permission.id = Math.random()
-        this.table.permissions.push(permission)
-      },
-      onDeletePermission(index) {
-        this.table.permissions.splice(index, 1)
-      },
-      onSave() {
-        this.table.form.formItems = this.table.columns.filter(it => it.enableFormItem)
+        case 'date':
+        case 'text':
+        case 'datetime': {
+          column.length = 0
+          break
+        }
+        case 'double': {
+          column.length = 11
+          break
+        }
+      }
+    },
+    onDeleteColumn(index) {
+      this.table.columns.splice(index, 1)
+    },
+    onAddPermission() {
+      let permission = {
+        role: '',
+        operations: []
+      }
+      permission.id = Math.random()
+      this.table.permissions.push(permission)
+    },
+    onDeletePermission(index) {
+      this.table.permissions.splice(index, 1)
+    },
+    onSave() {
+      let newTable = JSON.parse(JSON.stringify(this.table))
+      newTable.id = Math.random()
+      if (this.table.enablePage) {
+        let formItems = this.table.columns.filter(it => it.enableFormItem)
           .map(it => {
-            let formItem = {
+            let obj = {
               formItemClassName: it.formItemType,
-              require: it.require
+              require: it.require,
+              label: it.label
             }
             if (this.isOptionalFormItem(it.formItemType)) {
-              formItem.options = it.options
+              obj.options = it.options
             }
-            return formItem
+            return obj
           })
-        let newTable = JSON.parse(JSON.stringify(this.table))
-        newTable.id = Math.random()
-        this.saveTable({
-          table: newTable,
-          overwrite: this.overwrite
-        })
-        this.$router.back()
-      },
-      onClose() {
-        this.$router.back()
-      },
-      isOptionalFormItem(formItemType) {
-        return this.needOptionFormItemTypes.includes(formItemType)
-      },
-      onEditOptions(column) {
-        this.column = column
-        this.showEditOptions = true
-      },
-      onAddOption() {
-        this.column.options.push({
-          id: Math.random(),
-          title: '',
-          value: ''
-        })
-      },
-      onDeleteOption(index) {
-        this.column.options.splice(index, 1)
-      },
-      onChangeAssociateStatus(status, column) {
-        if (column.associate === undefined) {
-          this.$set(column, 'associate', {
-            sourceColumnName: column.name,
-            targetTableName: '',
-            targetColumnName: '',
-            formItemColumnName: '',
-            associateResultColumns: []
+        let tableFields = this.table.columns.filter(it => it.enableFormItem)
+          .map(it => {
+            return {
+              formItemClassName: it.formItemType,
+              title: it.title
+            }
           })
+        newTable.form = {
+          items: formItems
         }
-        column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
-        this.column = column
-      },
-      onChangeAssociateTable(tableName) {
-        let table = this.tables.find(it => it.name === tableName)
-        this.associateTableColumns = table.columns
-      },
-      onChangeAssociateResultColumn(originColumnName, column) {
-        const camelcase = require('camelcase')
-        column.aliasColumnName = camelcase(`${this.column.associate.targetTableName}_${originColumnName}`)
-      },
-      onEditAssociateResultColumns() {
-        this.showEditAssociateResultColumns = true
-      },
-      onAddResultColumn() {
-        this.column.associate.associateResultColumns.push({
-          originColumnName: '',
-          aliasColumnName: '',
-          tableFieldTitle: ''
+        newTable.table = {
+          fields: tableFields
+        }
+      }
+      this.saveTable({
+        table: newTable,
+        overwrite: this.overwrite
+      })
+      this.$router.back()
+    },
+    onClose() {
+      this.$router.back()
+    },
+    isOptionalFormItem(formItemType) {
+      return this.needOptionFormItemTypes.includes(formItemType)
+    },
+    onEditOptions(column) {
+      this.column = column
+      this.showEditOptions = true
+    },
+    onAddOption() {
+      this.column.options.push({
+        id: Math.random(),
+        title: '',
+        value: ''
+      })
+    },
+    onDeleteOption(index) {
+      this.column.options.splice(index, 1)
+    },
+    onChangeAssociateStatus(status, column) {
+      if (column.associate === undefined) {
+        this.$set(column, 'associate', {
+          sourceColumnName: column.name,
+          targetTableName: '',
+          targetColumnName: '',
+          formItemColumnName: '',
+          associateResultColumns: []
         })
-      },
-      onDeleteResultColumn(index) {
-        this.column.associate.associateResultColumns.splice(index, 1)
-      },
-      ...mapMutations(['saveTable'])
-    }
+      }
+      column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+      this.column = column
+    },
+    onInputLabel(value, column) {
+      column.title = value
+    },
+    onChangeAssociateTable(tableName) {
+      let table = this.tables.find(it => it.name === tableName)
+      this.associateTableColumns = table.columns
+    },
+    onChangeAssociateResultColumn(originColumnName, column) {
+      const camelcase = require('camelcase')
+      column.aliasColumnName = camelcase(`${this.column.associate.targetTableName}_${originColumnName}`)
+    },
+    onEditAssociateResultColumns() {
+      this.showEditAssociateResultColumns = true
+    },
+    onAddResultColumn() {
+      this.column.associate.associateResultColumns.push({
+        originColumnName: '',
+        aliasColumnName: '',
+        tableFieldTitle: ''
+      })
+    },
+    onDeleteResultColumn(index) {
+      this.column.associate.associateResultColumns.splice(index, 1)
+    },
+    ...mapMutations(['saveTable'])
   }
+}
 </script>
 
 <style scoped lang="stylus">
-  #table-edit
-    .el-row
-      margin-bottom 20px
+#table-edit
+  .el-row
+    margin-bottom 20px
 
-    .option-drawer
-      .el-form
-        padding 0 10px
+  .option-drawer
+    .el-form
+      padding 0 10px
 
-    .add-btn-form-item
-      text-align center
+  .add-btn-form-item
+    text-align center
 </style>

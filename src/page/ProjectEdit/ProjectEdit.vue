@@ -80,7 +80,8 @@
             name: '',
             type: '',
             length: 0,
-            comment: '',
+            label: '',
+            title: '',
             primary: false,
             searchable: false,
             enableFormItem: true,
@@ -94,10 +95,7 @@
             role: '',
             operations: []
           }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
+          enablePage: true
         },
         menu: {
           name: '',
@@ -167,7 +165,10 @@
           config: this.config,
           tables: tables,
           pages: this.tables.map(t => {
-            return { form: t.form }
+            return {
+              form: t.form,
+              table: t.table
+            }
           }),
           roles: roles
         }
