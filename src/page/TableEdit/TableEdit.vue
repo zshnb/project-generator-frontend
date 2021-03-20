@@ -37,9 +37,6 @@
             <el-form-item class="length-form-item" label="长度">
               <el-input v-model="column.length"/>
             </el-form-item>
-            <el-form-item label="描述">
-              <el-input v-model="column.comment"/>
-            </el-form-item>
           </el-row>
           <el-row>
             <el-form-item label="主键">
@@ -63,13 +60,26 @@
                              :value="formItemType.className"/>
                 </el-select>
               </el-form-item>
+              <el-form-item label="表单项标签">
+                <el-input v-model="column.comment"/>
+              </el-form-item>
               <el-form-item v-if="isOptionalFormItem(column.formItemType)">
                 <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
               </el-form-item>
             </div>
-            <el-form-item label="关联">
-              <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
-            </el-form-item>
+            <div v-if="table.enablePage">
+              <el-form-item label="表格列">
+                <el-switch v-model="column.enableTableField"/>
+              </el-form-item>
+              <el-form-item label="列标题" v-if="column.enableTableField">
+                <el-input v-model="column.tableFieldTitle"/>
+              </el-form-item>
+            </div>
+            <div>
+              <el-form-item label="关联">
+                <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
+              </el-form-item>
+            </div>
             <el-form-item v-if="column.enableAssociate" @click.native="onChangeColumn(column)">
               <el-form :inline="true" :model="column.associate">
                 <el-form-item label="选择关联表">
@@ -248,6 +258,7 @@
           primary: false,
           searchable: false,
           enableFormItem: true,
+          enableTableField: true,
           formItemType: '',
           require: false,
           options: []
@@ -256,7 +267,6 @@
         this.table.columns.splice(index + 1, 0, column)
       },
       onChangeColumn(column) {
-        console.log(column)
         this.column = column
       },
       onChangeType(event, column) {

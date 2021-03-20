@@ -84,6 +84,7 @@
             primary: false,
             searchable: false,
             enableFormItem: true,
+            enableTableField: true,
             formItemType: '',
             require: false,
             options: [],
