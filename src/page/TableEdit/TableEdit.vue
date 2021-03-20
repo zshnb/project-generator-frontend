@@ -328,7 +328,7 @@ export default {
             }
             return obj
           })
-        let tableFields = this.table.columns.filter(it => it.enableFormItem)
+        let tableFields = this.table.columns.filter(it => it.enableTableField)
           .map(it => {
             return {
               formItemClassName: it.formItemType,
