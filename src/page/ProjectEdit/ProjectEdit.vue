@@ -165,6 +165,7 @@
           let table = JSON.parse(JSON.stringify(it))
           delete table.id
           delete table.form
+          delete table.table
           return table
         })
         let project = {
