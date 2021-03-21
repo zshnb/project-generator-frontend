@@ -71,7 +71,7 @@
           jdbcPort: 3306,
           jdbcUser: 'root',
           jdbcPassword: 'root',
-          jdbcDatabase: '',
+          jdbcDatabase: 'demo',
           type: 1
         },
         table: {
@@ -101,6 +101,9 @@
           name: '',
           icon: '',
           href: '',
+          bindTable: true,
+          overwrite: false,
+          roleNames: [],
           tableName: ''
         },
         role: {
@@ -152,7 +155,10 @@
         let roles = this.roles.map(it => {
           let role = JSON.parse(JSON.stringify(it))
           delete role.id
-          role.menus.forEach(m => delete m.id)
+          role.menus.forEach(m => {
+            m.role = role.name
+            delete m.id
+          })
           return role
         })
         let tables = this.tables.map(it => {
@@ -170,7 +176,8 @@
               table: t.table
             }
           }),
-          roles: roles
+          roles: roles,
+          type: this.config.type
         }
         axios.post('/project/generate', JSON.stringify(project), {
           responseType: 'blob'

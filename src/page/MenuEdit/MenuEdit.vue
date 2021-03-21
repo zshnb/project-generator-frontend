@@ -9,16 +9,16 @@
           <el-input v-model="menu.icon"/>
         </el-form-item>
         <el-form-item label="绑定表">
-          <el-switch v-model="bindTable"/>
+          <el-switch v-model="menu.bindTable"/>
         </el-form-item>
         <el-form-item label="路径">
-          <el-input v-if="!bindTable" v-model="menu.href"/>
-          <el-select v-if="bindTable" v-model="menu.tableName">
+          <el-input v-if="!menu.bindTable" v-model="menu.href"/>
+          <el-select v-if="menu.bindTable" v-model="menu.tableName">
             <el-option v-for="table in tables" :key="table.id" :label="table.name" :value="table.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="所属角色">
-          <el-select v-model="roleName">
+          <el-select v-model="menu.roleNames" multiple>
             <el-option v-for="role in roles" :key="role.id" :label="role.name" :value="role.name"/>
           </el-select>
         </el-form-item>
@@ -46,13 +46,6 @@
         this.overwrite = true
       }
     },
-    data() {
-      return {
-        bindTable: true,
-        overwrite: false,
-        roleName: ''
-      }
-    },
     computed: {
       ...mapState(['tables', 'roles'])
     },
@@ -60,13 +53,15 @@
       ...mapMutations(['saveMenu', 'addMenuInRole']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
-        if (this.bindTable) {
+        if (this.menu.bindTable) {
           const camelcase = require('camelcase')
           newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
         }
-        this.addMenuInRole({
-          roleName: this.roleName,
-          menu: newMenu
+        this.menu.roleNames.forEach(name => {
+          this.addMenuInRole({
+            roleName: name,
+            menu: newMenu
+          })
         })
         newMenu.id = Math.random()
         this.saveMenu({

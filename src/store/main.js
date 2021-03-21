@@ -155,7 +155,7 @@ const store = new Vuex.Store({
           }
         })
         table.columns[roleColumnIndex].options = options
-        table.form.formItems[roleColumnIndex].options = options
+        table.form.items[roleColumnIndex].options = options
       }
     },
     deleteRole(state, index) {
