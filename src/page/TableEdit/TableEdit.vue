@@ -43,14 +43,11 @@
               <el-switch v-model="column.primary"/>
             </el-form-item>
             <div v-if="table.enablePage">
-              <el-form-item label="搜索">
-                <el-switch v-model="column.searchable"/>
-              </el-form-item>
-              <el-form-item label="必选项">
-                <el-switch v-model="column.require"/>
-              </el-form-item>
               <el-form-item label="表单项">
                 <el-switch v-model="column.enableFormItem"/>
+              </el-form-item>
+              <el-form-item label="必选项" v-if="column.enableFormItem">
+                <el-switch v-model="column.require"/>
               </el-form-item>
               <el-form-item label="表单项类型" v-if="column.enableFormItem">
                 <el-select v-model="column.formItemType">
@@ -60,7 +57,7 @@
                              :value="formItemType.className"/>
                 </el-select>
               </el-form-item>
-              <el-form-item label="表单项标签">
+              <el-form-item label="表单项标签" v-if="column.enableFormItem">
                 <el-input v-model="column.label" @input="onInputLabel($event, column)"/>
               </el-form-item>
               <el-form-item v-if="isOptionalFormItem(column.formItemType)">
@@ -68,6 +65,9 @@
               </el-form-item>
             </div>
             <div v-if="table.enablePage">
+              <el-form-item label="搜索">
+                <el-switch v-model="column.searchable"/>
+              </el-form-item>
               <el-form-item label="表格列">
                 <el-switch v-model="column.enableTableField"/>
               </el-form-item>
@@ -79,29 +79,29 @@
               <el-form-item label="关联">
                 <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
               </el-form-item>
+              <el-form-item v-if="column.enableAssociate" @click.native="onChangeColumn(column)">
+                <el-form :inline="true" :model="column.associate">
+                  <el-form-item label="选择关联表">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
+                      <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="关联的列">
+                    <el-select v-model="column.associate.targetColumnName">
+                      <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="表单项列">
+                    <el-select v-model="column.associate.formItemColumnName">
+                      <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="onEditAssociateResultColumns">编辑关联的筛选列</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-form-item>
             </div>
-            <el-form-item v-if="column.enableAssociate" @click.native="onChangeColumn(column)">
-              <el-form :inline="true" :model="column.associate">
-                <el-form-item label="选择关联表">
-                  <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
-                    <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="关联的列">
-                  <el-select v-model="column.associate.targetColumnName">
-                    <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="表单项列">
-                  <el-select v-model="column.associate.formItemColumnName">
-                    <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
-                  </el-select>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="onEditAssociateResultColumns">编辑关联的筛选列</el-button>
-                </el-form-item>
-              </el-form>
-            </el-form-item>
           </el-row>
         </el-form>
       </el-form-item>
@@ -377,6 +377,8 @@ export default {
           formItemColumnName: '',
           associateResultColumns: []
         })
+        column.enableFormItem = true
+        column.enableTableField = false
       }
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
       this.column = column
