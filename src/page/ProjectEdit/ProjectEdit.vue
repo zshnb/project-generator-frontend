@@ -89,6 +89,7 @@
             formItemType: '',
             require: false,
             options: [],
+            mappings: [],
             enableAssociate: false
           }],
           permissions: [{

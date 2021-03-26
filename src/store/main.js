@@ -132,6 +132,7 @@ const store = new Vuex.Store({
     saveTable(state, payload) {
       let overwrite = payload.overwrite
       let table = payload.table
+      console.log(table)
       if (!overwrite) {
         state.tables.push(table)
       }

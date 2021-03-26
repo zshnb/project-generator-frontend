@@ -9,7 +9,7 @@
           <el-input v-model="table.name" placeholder="请输入表名"/>
         </el-col>
       </el-form-item>
-      <el-form-item v-for="(column, index) in table.columns" :key="column.id">
+      <el-form-item v-for="(column, index) in table.columns" :key="column.id" @click.native="onClickColumnItem(column)">
         <div slot="label">
           <el-button type="primary"
                      size="small"
@@ -69,17 +69,20 @@
                 <el-switch v-model="column.searchable"/>
               </el-form-item>
               <el-form-item label="表格列">
-                <el-switch v-model="column.enableTableField"/>
+                <el-switch v-model="column.enableTableField" @change="onChangeTableFieldStatus($event, column)"/>
               </el-form-item>
               <el-form-item label="列标题" v-if="column.enableTableField">
                 <el-input v-model="column.title"/>
+              </el-form-item>
+              <el-form-item v-if="column.enableTableField">
+                <el-button type="primary" @click="onEditFieldMapping">编辑列映射</el-button>
               </el-form-item>
             </div>
             <div>
               <el-form-item label="关联">
                 <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
               </el-form-item>
-              <el-form-item v-if="column.enableAssociate" @click.native="onChangeColumn(column)">
+              <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
                     <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
@@ -176,7 +179,7 @@
       <el-form :model="column.associate">
         <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
                       :key="resultColumn.originColumnName">
-          <el-form :inline="true" :model="column">
+          <el-form :inline="true" :model="resultColumn">
             <el-col :span="11">
               <el-form-item label="列名">
                 <el-select v-model="resultColumn.originColumnName"
@@ -206,6 +209,37 @@
         </el-form-item>
         <el-form-item class="add-btn-form-item">
           <el-button type="primary" @click="onAddResultColumn">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
+
+    <el-drawer v-if="showEditFieldMapping" :visible.sync="showEditFieldMapping"
+               class="option-drawer">
+      <el-form :model="column">
+        <el-form-item v-for="(mapping, index) in column.mappings"
+                      :key="mapping.source">
+          <el-form :inline="true" :model="mapping">
+            <el-col :span="11">
+              <el-form-item label="数据库值">
+                <el-input v-model="mapping.source"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="11">
+              <el-form-item label="页面显示">
+                <el-input v-model="mapping.target"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item>
+                <el-button type="danger"
+                           icon="el-icon-remove-outline"
+                           @click="onDeleteMapping(index)"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-form-item>
+        <el-form-item class="add-btn-form-item">
+          <el-button type="primary" @click="onAddMapping">添加</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -242,6 +276,7 @@ export default {
       needOptionFormItemTypes: [],
       showEditOptions: false,
       showEditAssociateResultColumns: false,
+      showEditFieldMapping: false,
       column: {},
       overwrite: false,
       associateTableColumns: []
@@ -251,6 +286,9 @@ export default {
     ...mapState(['roles', 'tables'])
   },
   methods: {
+    onClickColumnItem(column) {
+      this.column = column
+    },
     onAddColumn(index) {
       let column = {
         name: '',
@@ -264,13 +302,11 @@ export default {
         enableTableField: true,
         formItemType: '',
         require: false,
-        options: []
+        options: [],
+        mappings: [],
       }
       column.id = Math.random()
       this.table.columns.splice(index + 1, 0, column)
-    },
-    onChangeColumn(column) {
-      this.column = column
     },
     onChangeType(event, column) {
       switch (column.type) {
@@ -332,7 +368,8 @@ export default {
           .map(it => {
             return {
               formItemClassName: it.formItemType,
-              title: it.title
+              title: it.title,
+              mappings: it.mappings
             }
           })
         newTable.form = {
@@ -382,6 +419,27 @@ export default {
       }
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
       this.column = column
+    },
+    onChangeTableFieldStatus(status, column) {
+      if (column.mappings === undefined) {
+        this.$set(column, 'mappings', [{
+          source: '',
+          target: ''
+        }])
+      }
+    },
+    onEditFieldMapping() {
+      this.showEditFieldMapping = true
+    },
+    onAddMapping() {
+      console.log(this.column)
+      this.column.mappings.push({
+        source: '',
+        target: ''
+      })
+    },
+    onDeleteMapping(index) {
+      this.column.mappings.splice(index, 1)
     },
     onInputLabel(value, column) {
       column.title = value
