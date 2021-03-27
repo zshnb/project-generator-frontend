@@ -12,30 +12,36 @@ const store = new Vuex.Store({
           name: 'username',
           type: 'varchar',
           length: 255,
-          comment: '用户名',
+          label: '用户名',
+          title: '用户名',
           primary: false,
           searchable: false,
           enableFormItem: true,
+          enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
           enableAssociate: false
         }, {
           name: 'password',
           type: 'varchar',
           length: 255,
-          comment: '密码',
+          label: '密码',
+          title: '密码',
           primary: false,
           searchable: false,
           enableFormItem: true,
+          enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.PasswordFormItem',
           enableAssociate: false
         }, {
           name: 'role',
           type: 'varchar',
           length: 255,
-          comment: '角色',
+          label: '角色',
+          title: '角色',
           primary: false,
           searchable: false,
           enableFormItem: true,
+          enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
           options: [],
           enableAssociate: false
@@ -47,8 +53,8 @@ const store = new Vuex.Store({
           primary: true,
           searchable: false,
           enableFormItem: false,
+          enableTableField: false,
           formItemType: '',
-          options: [],
           enableAssociate: false
         }, {
           name: 'create_at',
@@ -58,8 +64,8 @@ const store = new Vuex.Store({
           primary: false,
           searchable: false,
           enableFormItem: false,
+          enableTableField: false,
           formItemType: '',
-          options: [],
           enableAssociate: false
         }, {
           name: 'update_at',
@@ -69,6 +75,7 @@ const store = new Vuex.Store({
           primary: false,
           searchable: false,
           enableFormItem: false,
+          enableTableField: false,
           formItemType: '',
           options: [],
           enableAssociate: false
@@ -79,7 +86,7 @@ const store = new Vuex.Store({
         }],
         enablePage: true,
         form: {
-          formItems: [
+          items: [
             {
               formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
               require: true
@@ -92,6 +99,22 @@ const store = new Vuex.Store({
               formItemClassName: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
               require: true,
               options: []
+            }
+          ]
+        },
+        table: {
+          fields: [
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+              title: "用户名"
+            },
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+              title: "密码"
+            },
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.SelectFormItem",
+              title: "角色"
             }
           ]
         }
@@ -109,6 +132,7 @@ const store = new Vuex.Store({
     saveTable(state, payload) {
       let overwrite = payload.overwrite
       let table = payload.table
+      console.log(table)
       if (!overwrite) {
         state.tables.push(table)
       }
@@ -132,7 +156,7 @@ const store = new Vuex.Store({
           }
         })
         table.columns[roleColumnIndex].options = options
-        table.form.formItems[roleColumnIndex].options = options
+        table.form.items[roleColumnIndex].options = options
       }
     },
     deleteRole(state, index) {

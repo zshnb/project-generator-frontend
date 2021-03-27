@@ -10,6 +10,7 @@ function generateDefaultColumns() {
       enableFormItem: false,
       formItemType: '',
       options: [],
+      mappings: [],
       enableAssociate: false
     }, {
       name: 'create_at',
@@ -21,6 +22,7 @@ function generateDefaultColumns() {
       enableFormItem: false,
       formItemType: '',
       options: [],
+      mappings: [],
       enableAssociate: false
     }, {
       name: 'update_at',
@@ -32,6 +34,7 @@ function generateDefaultColumns() {
       enableFormItem: false,
       formItemType: '',
       options: [],
+      mappings: [],
       enableAssociate: false
     }
   ]

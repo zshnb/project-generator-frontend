@@ -71,7 +71,7 @@
           jdbcPort: 3306,
           jdbcUser: 'root',
           jdbcPassword: 'root',
-          jdbcDatabase: '',
+          jdbcDatabase: 'demo',
           type: 1
         },
         table: {
@@ -80,28 +80,31 @@
             name: '',
             type: '',
             length: 0,
-            comment: '',
+            label: '',
+            title: '',
             primary: false,
             searchable: false,
             enableFormItem: true,
+            enableTableField: true,
             formItemType: '',
             require: false,
             options: [],
+            mappings: [],
             enableAssociate: false
           }],
           permissions: [{
             role: '',
             operations: []
           }],
-          enablePage: true,
-          form: {
-            formItems: []
-          },
+          enablePage: true
         },
         menu: {
           name: '',
           icon: '',
           href: '',
+          bindTable: true,
+          overwrite: false,
+          roleNames: [],
           tableName: ''
         },
         role: {
@@ -153,22 +156,30 @@
         let roles = this.roles.map(it => {
           let role = JSON.parse(JSON.stringify(it))
           delete role.id
-          role.menus.forEach(m => delete m.id)
+          role.menus.forEach(m => {
+            m.role = role.name
+            delete m.id
+          })
           return role
         })
         let tables = this.tables.map(it => {
           let table = JSON.parse(JSON.stringify(it))
           delete table.id
           delete table.form
+          delete table.table
           return table
         })
         let project = {
           config: this.config,
           tables: tables,
           pages: this.tables.map(t => {
-            return { form: t.form }
+            return {
+              form: t.form,
+              table: t.table
+            }
           }),
-          roles: roles
+          roles: roles,
+          type: this.config.type
         }
         axios.post('/project/generate', JSON.stringify(project), {
           responseType: 'blob'
