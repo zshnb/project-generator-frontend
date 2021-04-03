@@ -102,9 +102,9 @@
           name: '',
           icon: '',
           href: '',
-          bindTable: true,
+          bind: true,
           overwrite: false,
-          roleNames: [],
+          roleDescriptions: [],
           tableName: ''
         },
         role: {
