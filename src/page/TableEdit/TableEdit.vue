@@ -131,11 +131,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作">
-            <el-checkbox-group v-model="permission.operations">
-              <el-checkbox label="add"/>
-              <el-checkbox label="edit"/>
-              <el-checkbox label="detail"/>
-              <el-checkbox label="delete"/>
+            <el-checkbox v-model="permission.checkAll"
+                         @change="onChangeCheckAll($event, permission)">全选</el-checkbox>
+            <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
+              <el-checkbox v-for="operation in operations"
+                           :key="operation.value"
+                           :label="operation">{{ operation.description }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
@@ -279,7 +280,25 @@ export default {
       showEditFieldMapping: false,
       column: {},
       overwrite: false,
-      associateTableColumns: []
+      associateTableColumns: [],
+      operations: [
+        {
+          description: '添加',
+          value: 'add'
+        },
+        {
+          description: '编辑',
+          value: 'edit'
+        },
+        {
+          description: '查看',
+          value: 'detail'
+        },
+        {
+          description: '删除',
+          value: 'delete'
+        }
+      ]
     }
   },
   computed: {
@@ -340,10 +359,23 @@ export default {
     onAddPermission() {
       let permission = {
         role: '',
-        operations: []
+        operations: [],
+        checkAll: false
       }
       permission.id = Math.random()
       this.table.permissions.push(permission)
+    },
+    onChangeCheckAll(value, permission) {
+      permission.checkAll = value
+      if (value) {
+        permission.operations = this.operations
+      } else {
+        permission.operations = []
+      }
+    },
+    onChangeOperation(value, permission) {
+      let checkedCount = value.length;
+      permission.checkAll = checkedCount === this.operations.length
     },
     onDeletePermission(index) {
       this.table.permissions.splice(index, 1)
@@ -481,4 +513,7 @@ export default {
 
   .add-btn-form-item
     text-align center
+
+  .el-checkbox-group
+    display inline-block
 </style>
