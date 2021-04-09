@@ -94,7 +94,8 @@
           }],
           permissions: [{
             role: '',
-            operations: []
+            operations: [],
+            checkAll: false
           }],
           enablePage: true
         },

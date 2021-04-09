@@ -131,12 +131,17 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作">
-            <el-checkbox-group v-model="permission.operations">
-              <el-checkbox label="add"/>
-              <el-checkbox label="edit"/>
-              <el-checkbox label="detail"/>
-              <el-checkbox label="delete"/>
+            <el-checkbox v-model="permission.checkAll"
+                         @change="onChangeCheckAll($event, permission)">全选</el-checkbox>
+            <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
+              <el-checkbox v-for="operation in operations"
+                           :key="operation.value"
+                           :label="operation">
+                {{ operation.description }}
+                <el-button type="danger" size="mini" icon="el-icon-delete" @click="onDeleteOperation(permission, operation)"/>
+              </el-checkbox>
             </el-checkbox-group>
+            <el-button type="primary" size="mini" @click="onShowOperationDialog(permission.role)">添加</el-button>
           </el-form-item>
         </el-form>
       </el-form-item>
@@ -243,6 +248,19 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+    <el-dialog :visible.sync="showOperation">
+      <el-form :model="operation" ref="operationForm">
+        <el-form-item label="描述">
+          <el-input v-model="operation.description"/>
+        </el-form-item>
+        <el-form-item label="值">
+          <el-input v-model="operation.value"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onAddOperation">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -277,9 +295,33 @@ export default {
       showEditOptions: false,
       showEditAssociateResultColumns: false,
       showEditFieldMapping: false,
+      showOperation: false,
       column: {},
+      operation: {
+        description: '',
+        value: ''
+      },
+      role: '',
       overwrite: false,
-      associateTableColumns: []
+      associateTableColumns: [],
+      operations: [
+        {
+          description: '添加',
+          value: 'add'
+        },
+        {
+          description: '编辑',
+          value: 'edit'
+        },
+        {
+          description: '查看',
+          value: 'detail'
+        },
+        {
+          description: '删除',
+          value: 'delete'
+        }
+      ]
     }
   },
   computed: {
@@ -340,10 +382,23 @@ export default {
     onAddPermission() {
       let permission = {
         role: '',
-        operations: []
+        operations: [],
+        checkAll: false
       }
       permission.id = Math.random()
       this.table.permissions.push(permission)
+    },
+    onChangeCheckAll(value, permission) {
+      permission.checkAll = value
+      if (value) {
+        permission.operations = this.operations
+      } else {
+        permission.operations = []
+      }
+    },
+    onChangeOperation(value, permission) {
+      let checkedCount = value.length;
+      permission.checkAll = checkedCount === this.operations.length
     },
     onDeletePermission(index) {
       this.table.permissions.splice(index, 1)
@@ -465,6 +520,25 @@ export default {
     onDeleteResultColumn(index) {
       this.column.associate.associateResultColumns.splice(index, 1)
     },
+    onShowOperationDialog(role) {
+      this.role = role
+      this.showOperation = true
+    },
+    onAddOperation() {
+      let newOperation = JSON.parse(JSON.stringify(this.operation))
+      let permission = this.table.permissions.find(it => it.role === this.role)
+      permission.operations.push(newOperation)
+      this.operations.push(newOperation)
+      this.operation = {}
+      this.showOperation = false
+    },
+    onDeleteOperation(permission, operation) {
+      console.log()
+      this.operations.splice(this.operations.findIndex(it => it === operation), 1)
+      permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
+      console.log(operation)
+      console.log(this.operations)
+    },
     ...mapMutations(['saveTable'])
   }
 }
@@ -481,4 +555,7 @@ export default {
 
   .add-btn-form-item
     text-align center
+
+  .el-checkbox-group
+    display inline-block
 </style>
