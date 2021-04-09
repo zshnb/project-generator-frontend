@@ -136,8 +136,12 @@
             <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
               <el-checkbox v-for="operation in operations"
                            :key="operation.value"
-                           :label="operation">{{ operation.description }}</el-checkbox>
+                           :label="operation">
+                {{ operation.description }}
+                <el-button type="danger" size="mini" icon="el-icon-delete" @click="onDeleteOperation(permission, operation)"/>
+              </el-checkbox>
             </el-checkbox-group>
+            <el-button type="primary" size="mini" @click="onShowOperationDialog(permission.role)">添加</el-button>
           </el-form-item>
         </el-form>
       </el-form-item>
@@ -244,6 +248,19 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+    <el-dialog :visible.sync="showOperation">
+      <el-form :model="operation" ref="operationForm">
+        <el-form-item label="描述">
+          <el-input v-model="operation.description"/>
+        </el-form-item>
+        <el-form-item label="值">
+          <el-input v-model="operation.value"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onAddOperation">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -278,7 +295,13 @@ export default {
       showEditOptions: false,
       showEditAssociateResultColumns: false,
       showEditFieldMapping: false,
+      showOperation: false,
       column: {},
+      operation: {
+        description: '',
+        value: ''
+      },
+      role: '',
       overwrite: false,
       associateTableColumns: [],
       operations: [
@@ -496,6 +519,25 @@ export default {
     },
     onDeleteResultColumn(index) {
       this.column.associate.associateResultColumns.splice(index, 1)
+    },
+    onShowOperationDialog(role) {
+      this.role = role
+      this.showOperation = true
+    },
+    onAddOperation() {
+      let newOperation = JSON.parse(JSON.stringify(this.operation))
+      let permission = this.table.permissions.find(it => it.role === this.role)
+      permission.operations.push(newOperation)
+      this.operations.push(newOperation)
+      this.operation = {}
+      this.showOperation = false
+    },
+    onDeleteOperation(permission, operation) {
+      console.log()
+      this.operations.splice(this.operations.findIndex(it => it === operation), 1)
+      permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
+      console.log(operation)
+      console.log(this.operations)
     },
     ...mapMutations(['saveTable'])
   }
