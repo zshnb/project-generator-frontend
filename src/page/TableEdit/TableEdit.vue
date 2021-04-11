@@ -256,6 +256,12 @@
         <el-form-item label="值">
           <el-input v-model="operation.value"/>
         </el-form-item>
+        <el-form-item label="位置">
+          <el-select v-model="operation.position">
+            <el-option value="toolbar" label="工具栏"/>
+            <el-option value="toolColumn" label="工具列"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onAddOperation">添加</el-button>
         </el-form-item>
@@ -307,19 +313,23 @@ export default {
       operations: [
         {
           description: '添加',
-          value: 'add'
+          value: 'add',
+          position: 'toolbar'
         },
         {
           description: '编辑',
-          value: 'edit'
+          value: 'edit',
+          position: 'toolColumn'
         },
         {
           description: '查看',
-          value: 'detail'
+          value: 'detail',
+          position: 'toolColumn'
         },
         {
           description: '删除',
-          value: 'delete'
+          value: 'delete',
+          position: 'toolColumn'
         }
       ]
     }
@@ -533,11 +543,8 @@ export default {
       this.showOperation = false
     },
     onDeleteOperation(permission, operation) {
-      console.log()
       this.operations.splice(this.operations.findIndex(it => it === operation), 1)
       permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
-      console.log(operation)
-      console.log(this.operations)
     },
     ...mapMutations(['saveTable'])
   }
