@@ -90,7 +90,13 @@
             require: false,
             options: [],
             mappings: [],
-            enableAssociate: false
+            enableAssociate: false,
+            associate: {
+              targetTableName: '',
+              targetColumnName: '',
+              formItemColumnName: '',
+              associateResultColumns: []
+            }
           }],
           permissions: [{
             role: '',

@@ -69,7 +69,7 @@
                 <el-switch v-model="column.searchable"/>
               </el-form-item>
               <el-form-item label="表格列">
-                <el-switch v-model="column.enableTableField" @change="onChangeTableFieldStatus($event, column)"/>
+                <el-switch v-model="column.enableTableField"/>
               </el-form-item>
               <el-form-item label="列标题" v-if="column.enableTableField">
                 <el-input v-model="column.title"/>
@@ -90,7 +90,8 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="关联的列">
-                    <el-select v-model="column.associate.targetColumnName">
+                    <el-select v-model="column.associate.targetColumnName"
+                               @visible-change="onUpdateTargetColumnNames($event, column)">
                       <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                     </el-select>
                   </el-form-item>
@@ -132,13 +133,15 @@
           </el-form-item>
           <el-form-item label="操作">
             <el-checkbox v-model="permission.checkAll"
-                         @change="onChangeCheckAll($event, permission)">全选</el-checkbox>
+                         @change="onChangeCheckAll($event, permission)">全选
+            </el-checkbox>
             <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
               <el-checkbox v-for="operation in operations"
                            :key="operation.value"
                            :label="operation">
                 {{ operation.description }}
-                <el-button type="danger" size="mini" icon="el-icon-delete" @click="onDeleteOperation(permission, operation)"/>
+                <el-button type="danger" size="mini" icon="el-icon-delete"
+                           @click="onDeleteOperation(permission, operation)"/>
               </el-checkbox>
             </el-checkbox-group>
             <el-button type="primary" size="mini" @click="onShowOperationDialog(permission.role)">添加</el-button>
@@ -272,8 +275,8 @@
 
 <script>
 import axios from "../../util/Axios";
-import {mapMutations, mapState} from 'vuex'
-import {generateDefaultColumns} from '../../util/TableUtils'
+import { mapMutations, mapState } from 'vuex'
+import { generateDefaultColumns } from '../../util/TableUtils'
 
 export default {
   name: "TableEdit",
@@ -284,7 +287,7 @@ export default {
     if (this.table.name !== '') {
       this.overwrite = true
     }
-    if (this.table.columns.length < 3) {
+    if (this.table.columns.map(it => it.name).indexOf('id') === -1) {
       generateDefaultColumns().forEach(it => this.table.columns.push(it))
     }
   },
@@ -340,6 +343,9 @@ export default {
   methods: {
     onClickColumnItem(column) {
       this.column = column
+      if (this.column.enableAssociate && this.column.associate.targetTableName !== '') {
+        let table = this.tables.find(it => it.name === this.column.associate.targetTableName)
+      }
     },
     onAddColumn(index) {
       let column = {
@@ -356,6 +362,12 @@ export default {
         require: false,
         options: [],
         mappings: [],
+        associate: {
+          targetTableName: '',
+          targetColumnName: '',
+          formItemColumnName: '',
+          associateResultColumns: []
+        }
       }
       column.id = Math.random()
       this.table.columns.splice(index + 1, 0, column)
@@ -418,25 +430,28 @@ export default {
       newTable.id = Math.random()
       if (this.table.enablePage) {
         let formItems = this.table.columns.filter(it => it.enableFormItem)
-          .map(it => {
-            let obj = {
-              formItemClassName: it.formItemType,
-              require: it.require,
-              label: it.label
-            }
-            if (this.isOptionalFormItem(it.formItemType)) {
-              obj.options = it.options
-            }
-            return obj
-          })
+        .map(it => {
+          let obj = {
+            formItemClassName: it.formItemType,
+            require: it.require,
+            label: it.label
+          }
+          if (this.isOptionalFormItem(it.formItemType)) {
+            obj.options = it.options
+          }
+          return obj
+        })
         let tableFields = this.table.columns.filter(it => it.enableTableField || it.associate !== undefined)
-          .map(it => {
-            return {
-              formItemClassName: it.formItemType,
-              title: it.title,
-              mappings: it.mappings
-            }
-          })
+        .map(it => {
+          let object = {
+            formItemClassName: it.formItemType,
+            title: it.title,
+          }
+          if (it.mappings.length > 0) {
+            object.mappings = it.mappings
+          }
+          return object
+        })
         newTable.form = {
           items: formItems
         }
@@ -471,33 +486,21 @@ export default {
       this.column.options.splice(index, 1)
     },
     onChangeAssociateStatus(status, column) {
-      if (column.associate === undefined) {
-        this.$set(column, 'associate', {
-          sourceColumnName: column.name,
-          targetTableName: '',
-          targetColumnName: '',
-          formItemColumnName: '',
-          associateResultColumns: []
-        })
-        column.enableFormItem = true
-        column.enableTableField = false
-      }
+      column.enableFormItem = true
+      column.enableTableField = false
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
-      this.column = column
     },
-    onChangeTableFieldStatus(status, column) {
-      if (column.mappings === undefined) {
-        this.$set(column, 'mappings', [{
-          source: '',
-          target: ''
-        }])
+    onUpdateTargetColumnNames(value, column) {
+      if (value) {
+        let tableName = column.associate.targetTableName
+        let table = this.tables.find(it => it.name === tableName)
+        this.associateTableColumns = table.columns
       }
     },
     onEditFieldMapping() {
       this.showEditFieldMapping = true
     },
     onAddMapping() {
-      console.log(this.column)
       this.column.mappings.push({
         source: '',
         target: ''
@@ -515,7 +518,7 @@ export default {
     },
     onChangeAssociateResultColumn(originColumnName, column) {
       const camelcase = require('camelcase')
-      column.aliasColumnName = camelcase(`${this.column.associate.targetTableName}_${originColumnName}`)
+      column.aliasColumnName = camelcase(`${ this.column.associate.targetTableName }_${ originColumnName }`)
     },
     onEditAssociateResultColumns() {
       this.showEditAssociateResultColumns = true
