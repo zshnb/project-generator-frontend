@@ -15,6 +15,7 @@ const store = new Vuex.Store({
           label: '用户名',
           title: '用户名',
           primary: false,
+          require: true,
           searchable: false,
           enableFormItem: true,
           enableTableField: true,
@@ -27,6 +28,7 @@ const store = new Vuex.Store({
           label: '密码',
           title: '密码',
           primary: false,
+          require: true,
           searchable: false,
           enableFormItem: true,
           enableTableField: true,
@@ -39,6 +41,7 @@ const store = new Vuex.Store({
           label: '角色',
           title: '角色',
           primary: false,
+          require: true,
           searchable: false,
           enableFormItem: true,
           enableTableField: true,
@@ -134,6 +137,9 @@ const store = new Vuex.Store({
       let table = payload.table
       if (!overwrite) {
         state.tables.push(table)
+      } else {
+        let index = state.tables.findIndex(it => it.name === table.name)
+        state.tables.splice(index, 1, table)
       }
     },
     deleteTable(state, index) {
@@ -144,6 +150,9 @@ const store = new Vuex.Store({
       let overwrite = payload.overwrite
       if (!overwrite) {
         state.roles.push(role)
+      } else {
+        let index = state.roles.findIndex(it => it.name === role.name )
+        state.roles.splice(index, 1, role)
       }
       let table = state.tables.find(t => t.name === 'user')
       if (table !== undefined) {
@@ -166,6 +175,9 @@ const store = new Vuex.Store({
       let overwrite = payload.overwrite
       if (!overwrite) {
         state.menus.push(menu)
+      } else {
+        let index = state.menus.findIndex(it => it.name === menu.name )
+        state.menus.splice(index, 1, menu)
       }
     },
     deleteMenu(state, index) {
