@@ -431,26 +431,20 @@ export default {
       if (this.table.enablePage) {
         let formItems = this.table.columns.filter(it => it.enableFormItem)
         .map(it => {
-          let obj = {
+          return {
             formItemClassName: it.formItemType,
             require: it.require,
-            label: it.label
+            label: it.label,
+            options: it.options
           }
-          if (this.isOptionalFormItem(it.formItemType)) {
-            obj.options = it.options
-          }
-          return obj
         })
-        let tableFields = this.table.columns.filter(it => it.enableTableField || it.associate !== undefined)
+        let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
         .map(it => {
-          let object = {
+          return {
             formItemClassName: it.formItemType,
             title: it.title,
+            mappings: it.mappings
           }
-          if (it.mappings.length > 0) {
-            object.mappings = it.mappings
-          }
-          return object
         })
         newTable.form = {
           items: formItems

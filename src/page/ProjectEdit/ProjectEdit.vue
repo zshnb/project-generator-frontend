@@ -171,11 +171,29 @@
         })
         let tables = this.tables.map(it => {
           let table = JSON.parse(JSON.stringify(it))
+          table.columns.forEach(c => {
+            if (c.associate && c.associate.targetTableName === '') {
+              delete c.associate
+            }
+            if (c.mappings && c.mappings.length === 0) {
+              delete c.mappings
+            }
+            if (c.options && c.options.length === 0) {
+              delete c.options
+            }
+            delete c.id
+            delete c.label
+            delete c.title
+            delete c.require
+            delete c.formItemType
+            delete c.enableAssociate
+          })
           delete table.id
           delete table.form
           delete table.table
           return table
         })
+        console.log(tables)
         let project = {
           config: this.config,
           tables: tables,
