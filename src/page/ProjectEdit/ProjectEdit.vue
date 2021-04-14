@@ -175,12 +175,8 @@
             if (c.associate && c.associate.targetTableName === '') {
               delete c.associate
             }
-            if (c.mappings && c.mappings.length === 0) {
-              delete c.mappings
-            }
-            if (c.options && c.options.length === 0) {
-              delete c.options
-            }
+            delete c.options
+            delete c.mappings
             delete c.id
             delete c.label
             delete c.title
@@ -193,14 +189,25 @@
           delete table.table
           return table
         })
-        console.log(tables)
         let project = {
           config: this.config,
           tables: tables,
-          pages: this.tables.map(t => {
+          pages: this.tables.filter(t => t.enablePage).map(t => {
+            let form = JSON.parse(JSON.stringify(t.form))
+            form.items.forEach(it => {
+              if (it.options.length === 0) {
+                delete it.options
+              }
+            })
+            let tableComponent = JSON.parse(JSON.stringify(t.table))
+            tableComponent.fields.forEach(it => {
+              if (it.mappings.length === 0) {
+                delete it.mappings
+              }
+            })
             return {
-              form: t.form,
-              table: t.table
+              form: form,
+              table: tableComponent
             }
           }),
           roles: roles,

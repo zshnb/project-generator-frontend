@@ -428,30 +428,28 @@ export default {
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
       newTable.id = Math.random()
-      if (this.table.enablePage) {
-        let formItems = this.table.columns.filter(it => it.enableFormItem)
-        .map(it => {
-          return {
-            formItemClassName: it.formItemType,
-            require: it.require,
-            label: it.label,
-            options: it.options
-          }
-        })
-        let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
-        .map(it => {
-          return {
-            formItemClassName: it.formItemType,
-            title: it.title,
-            mappings: it.mappings
-          }
-        })
-        newTable.form = {
-          items: formItems
+      let formItems = this.table.columns.filter(it => it.enableFormItem)
+      .map(it => {
+        return {
+          formItemClassName: it.formItemType,
+          require: it.require,
+          label: it.label,
+          options: it.options
         }
-        newTable.table = {
-          fields: tableFields
+      })
+      let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
+      .map(it => {
+        return {
+          formItemClassName: it.formItemType,
+          title: it.title,
+          mappings: it.mappings
         }
+      })
+      newTable.form = {
+        items: formItems
+      }
+      newTable.table = {
+        fields: tableFields
       }
       this.saveTable({
         table: newTable,
