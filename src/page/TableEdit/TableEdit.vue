@@ -85,7 +85,7 @@
               <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
-                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column)">
                       <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
                     </el-select>
                   </el-form-item>
@@ -343,9 +343,6 @@ export default {
   methods: {
     onClickColumnItem(column) {
       this.column = column
-      if (this.column.enableAssociate && this.column.associate.targetTableName !== '') {
-        let table = this.tables.find(it => it.name === this.column.associate.targetTableName)
-      }
     },
     onAddColumn(index) {
       let column = {
@@ -504,9 +501,10 @@ export default {
     onInputLabel(value, column) {
       column.title = value
     },
-    onChangeAssociateTable(tableName) {
+    onChangeAssociateTable(tableName, column) {
       let table = this.tables.find(it => it.name === tableName)
       this.associateTableColumns = table.columns
+      this.column.associate.sourceColumnName = column.name
     },
     onChangeAssociateResultColumn(originColumnName, column) {
       const camelcase = require('camelcase')

@@ -195,13 +195,13 @@
           pages: this.tables.filter(t => t.enablePage).map(t => {
             let form = JSON.parse(JSON.stringify(t.form))
             form.items.forEach(it => {
-              if (it.options.length === 0) {
+              if (it.options && it.options.length === 0) {
                 delete it.options
               }
             })
             let tableComponent = JSON.parse(JSON.stringify(t.table))
             tableComponent.fields.forEach(it => {
-              if (it.mappings.length === 0) {
+              if (it.mappings && it.mappings.length === 0) {
                 delete it.mappings
               }
             })
