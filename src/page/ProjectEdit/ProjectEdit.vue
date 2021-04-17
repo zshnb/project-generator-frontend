@@ -100,8 +100,29 @@
           }],
           permissions: [{
             role: '',
-            operations: [],
-            checkAll: false
+            operations: [
+              {
+                description: '添加',
+                value: 'add',
+                position: 'toolbar'
+              },
+              {
+                description: '编辑',
+                value: 'edit',
+                position: 'toolColumn'
+              },
+              {
+                description: '查看',
+                value: 'detail',
+                position: 'toolColumn'
+              },
+              {
+                description: '删除',
+                value: 'delete',
+                position: 'toolColumn'
+              }
+            ],
+            checkAll: true
           }],
           enablePage: true
         },

@@ -85,7 +85,7 @@
               <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
-                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column)">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
                       <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
                     </el-select>
                   </el-form-item>
@@ -136,7 +136,7 @@
                          @change="onChangeCheckAll($event, permission)">全选
             </el-checkbox>
             <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
-              <el-checkbox v-for="operation in operations"
+              <el-checkbox v-for="operation in permission.operations"
                            :key="operation.value"
                            :label="operation">
                 {{ operation.description }}
@@ -313,28 +313,7 @@ export default {
       role: '',
       overwrite: false,
       associateTableColumns: [],
-      operations: [
-        {
-          description: '添加',
-          value: 'add',
-          position: 'toolbar'
-        },
-        {
-          description: '编辑',
-          value: 'edit',
-          position: 'toolColumn'
-        },
-        {
-          description: '查看',
-          value: 'detail',
-          position: 'toolColumn'
-        },
-        {
-          description: '删除',
-          value: 'delete',
-          position: 'toolColumn'
-        }
-      ]
+
     }
   },
   computed: {
@@ -401,19 +380,35 @@ export default {
     onAddPermission() {
       let permission = {
         role: '',
-        operations: [],
-        checkAll: false
+        operations: [
+          {
+            description: '添加',
+            value: 'add',
+            position: 'toolbar'
+          },
+          {
+            description: '编辑',
+            value: 'edit',
+            position: 'toolColumn'
+          },
+          {
+            description: '查看',
+            value: 'detail',
+            position: 'toolColumn'
+          },
+          {
+            description: '删除',
+            value: 'delete',
+            position: 'toolColumn'
+          }
+        ],
+        checkAll: true
       }
       permission.id = Math.random()
       this.table.permissions.push(permission)
     },
     onChangeCheckAll(value, permission) {
       permission.checkAll = value
-      if (value) {
-        permission.operations = this.operations
-      } else {
-        permission.operations = []
-      }
     },
     onChangeOperation(value, permission) {
       let checkedCount = value.length;
@@ -448,6 +443,7 @@ export default {
       newTable.table = {
         fields: tableFields
       }
+      console.log(newTable)
       this.saveTable({
         table: newTable,
         overwrite: this.overwrite
@@ -456,6 +452,9 @@ export default {
     },
     onClose() {
       this.$router.back()
+    },
+    onInputLabel(value, column) {
+      column.title = value
     },
     isOptionalFormItem(formItemType) {
       return this.needOptionFormItemTypes.includes(formItemType)
@@ -478,33 +477,11 @@ export default {
       column.enableFormItem = true
       column.enableTableField = false
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+      column.associate.sourceColumnName = column.name
     },
-    onUpdateTargetColumnNames(value, column) {
-      if (value) {
-        let tableName = column.associate.targetTableName
-        let table = this.tables.find(it => it.name === tableName)
-        this.associateTableColumns = table.columns
-      }
-    },
-    onEditFieldMapping() {
-      this.showEditFieldMapping = true
-    },
-    onAddMapping() {
-      this.column.mappings.push({
-        source: '',
-        target: ''
-      })
-    },
-    onDeleteMapping(index) {
-      this.column.mappings.splice(index, 1)
-    },
-    onInputLabel(value, column) {
-      column.title = value
-    },
-    onChangeAssociateTable(tableName, column) {
+    onChangeAssociateTable(tableName) {
       let table = this.tables.find(it => it.name === tableName)
       this.associateTableColumns = table.columns
-      this.column.associate.sourceColumnName = column.name
     },
     onChangeAssociateResultColumn(originColumnName, column) {
       const camelcase = require('camelcase')
@@ -520,8 +497,27 @@ export default {
         tableFieldTitle: ''
       })
     },
+    onUpdateTargetColumnNames(value, column) {
+      if (value) {
+        let tableName = column.associate.targetTableName
+        let table = this.tables.find(it => it.name === tableName)
+        this.associateTableColumns = table.columns
+      }
+    },
     onDeleteResultColumn(index) {
       this.column.associate.associateResultColumns.splice(index, 1)
+    },
+    onEditFieldMapping() {
+      this.showEditFieldMapping = true
+    },
+    onAddMapping() {
+      this.column.mappings.push({
+        source: '',
+        target: ''
+      })
+    },
+    onDeleteMapping(index) {
+      this.column.mappings.splice(index, 1)
     },
     onShowOperationDialog(role) {
       this.role = role
@@ -530,7 +526,9 @@ export default {
     onAddOperation() {
       let newOperation = JSON.parse(JSON.stringify(this.operation))
       let permission = this.table.permissions.find(it => it.role === this.role)
-      permission.operations.push(newOperation)
+      if (permission.role !== '') {
+        permission.operations.push(newOperation)
+      }
       this.operations.push(newOperation)
       this.operation = {}
       this.showOperation = false
