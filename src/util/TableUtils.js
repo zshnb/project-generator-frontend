@@ -1,3 +1,28 @@
+function getDefaultOperations() {
+  return [
+    {
+      description: '添加',
+      value: 'add',
+      position: 'toolbar'
+    },
+    {
+      description: '编辑',
+      value: 'edit',
+      position: 'toolColumn'
+    },
+    {
+      description: '查看',
+      value: 'detail',
+      position: 'toolColumn'
+    },
+    {
+      description: '删除',
+      value: 'delete',
+      position: 'toolColumn'
+    }
+  ]
+}
+
 function generateDefaultColumns() {
   return [
     {
@@ -41,5 +66,6 @@ function generateDefaultColumns() {
 }
 
 export {
-  generateDefaultColumns
+  generateDefaultColumns,
+  getDefaultOperations
 }

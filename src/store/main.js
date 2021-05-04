@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getDefaultOperations } from "../util/TableUtils";
 
 Vue.use(Vuex)
 
@@ -81,29 +82,8 @@ const store = new Vuex.Store({
         }],
         permissions: [{
           role: '',
-          operations: [
-            {
-              description: '添加',
-              value: 'add',
-              position: 'toolbar'
-            },
-            {
-              description: '编辑',
-              value: 'edit',
-              position: 'toolColumn'
-            },
-            {
-              description: '查看',
-              value: 'detail',
-              position: 'toolColumn'
-            },
-            {
-              description: '删除',
-              value: 'delete',
-              position: 'toolColumn'
-            }
-          ],
-          checkAll: true
+          operations: getDefaultOperations(),
+          checkAll: false
         }],
         enablePage: true,
         form: {

@@ -51,6 +51,7 @@
   import ProjectRole from "../ProjectRole/ProjectRole";
   import axios from '../../util/Axios'
   import { mapState } from 'vuex'
+  import { getDefaultOperations } from "../../util/TableUtils";
 
   export default {
     name: "ProjectEdit",
@@ -100,29 +101,8 @@
           }],
           permissions: [{
             role: '',
-            operations: [
-              {
-                description: '添加',
-                value: 'add',
-                position: 'toolbar'
-              },
-              {
-                description: '编辑',
-                value: 'edit',
-                position: 'toolColumn'
-              },
-              {
-                description: '查看',
-                value: 'detail',
-                position: 'toolColumn'
-              },
-              {
-                description: '删除',
-                value: 'delete',
-                position: 'toolColumn'
-              }
-            ],
-            checkAll: true
+            operations: getDefaultOperations(),
+            checkAll: false
           }],
           enablePage: true
         },

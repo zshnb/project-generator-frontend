@@ -111,6 +111,7 @@
       </el-form-item>
       <el-form-item v-if="table.enablePage"
                     v-for="(permission, index) in table.permissions"
+                    @click.native=onClickPermission(permission)
                     :key="permission.id">
         <div slot="label">
           <el-button type="primary"
@@ -277,6 +278,7 @@
 import axios from "../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
 import { generateDefaultColumns } from '../../util/TableUtils'
+import { getDefaultOperations } from "../../util/TableUtils";
 
 export default {
   name: "TableEdit",
@@ -306,14 +308,16 @@ export default {
       showEditFieldMapping: false,
       showOperation: false,
       column: {},
+      defaultOperations: getDefaultOperations(),
       operation: {
         description: '',
-        value: ''
+        value: '',
+        position: ''
       },
       role: '',
       overwrite: false,
       associateTableColumns: [],
-
+      permission: {}
     }
   },
   computed: {
@@ -380,39 +384,14 @@ export default {
     onAddPermission() {
       let permission = {
         role: '',
-        operations: [
-          {
-            description: '添加',
-            value: 'add',
-            position: 'toolbar'
-          },
-          {
-            description: '编辑',
-            value: 'edit',
-            position: 'toolColumn'
-          },
-          {
-            description: '查看',
-            value: 'detail',
-            position: 'toolColumn'
-          },
-          {
-            description: '删除',
-            value: 'delete',
-            position: 'toolColumn'
-          }
-        ],
-        checkAll: true
+        operations: getDefaultOperations(),
+        checkAll: false
       }
       permission.id = Math.random()
       this.table.permissions.push(permission)
     },
-    onChangeCheckAll(value, permission) {
-      permission.checkAll = value
-    },
-    onChangeOperation(value, permission) {
-      let checkedCount = value.length;
-      permission.checkAll = checkedCount === this.operations.length
+    onClickPermission(permission) {
+      this.permission = permission
     },
     onDeletePermission(index) {
       this.table.permissions.splice(index, 1)
@@ -443,7 +422,6 @@ export default {
       newTable.table = {
         fields: tableFields
       }
-      console.log(newTable)
       this.saveTable({
         table: newTable,
         overwrite: this.overwrite
@@ -525,17 +503,21 @@ export default {
     },
     onAddOperation() {
       let newOperation = JSON.parse(JSON.stringify(this.operation))
-      let permission = this.table.permissions.find(it => it.role === this.role)
-      if (permission.role !== '') {
-        permission.operations.push(newOperation)
-      }
-      this.operations.push(newOperation)
+      this.permission.operations.push(newOperation)
       this.operation = {}
       this.showOperation = false
     },
     onDeleteOperation(permission, operation) {
       this.operations.splice(this.operations.findIndex(it => it === operation), 1)
       permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
+    },
+    onChangeCheckAll(value, permission) {
+      permission.checkAll = value
+    },
+    onChangeOperation(value, permission) {
+      console.log(value)
+      let checkedCount = value.length;
+      permission.checkAll = checkedCount === permission.operations.length
     },
     ...mapMutations(['saveTable'])
   }
