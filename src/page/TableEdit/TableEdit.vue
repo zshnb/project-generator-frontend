@@ -368,15 +368,13 @@ export default {
         }
         case 'date':
         case 'text':
+        case 'double':
         case 'datetime': {
           column.length = 0
           break
         }
-        case 'double': {
-          column.length = 11
-          break
-        }
       }
+      column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
     },
     onDeleteColumn(index) {
       this.table.columns.splice(index, 1)
