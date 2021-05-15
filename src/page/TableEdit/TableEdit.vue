@@ -39,9 +39,14 @@
             </el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="主键">
-              <el-switch v-model="column.primary"/>
-            </el-form-item>
+            <div>
+              <el-form-item label="主键">
+                <el-switch v-model="column.primary"/>
+              </el-form-item>
+              <el-form-item label="可空">
+                <el-switch v-model="column.nullable"/>
+              </el-form-item>
+            </div>
             <div v-if="table.enablePage">
               <el-form-item label="表单项">
                 <el-switch v-model="column.enableFormItem"/>
@@ -330,15 +335,16 @@ export default {
     onAddColumn(index) {
       let column = {
         name: '',
-        type: '',
-        length: 0,
+        type: 'varchar',
+        length: 255,
         label: '',
         title: '',
         primary: false,
+        nullable: true,
         searchable: false,
         enableFormItem: true,
         enableTableField: true,
-        formItemType: '',
+        formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
         require: false,
         options: [],
         mappings: [],
