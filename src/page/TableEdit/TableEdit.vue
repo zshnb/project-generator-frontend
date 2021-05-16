@@ -46,6 +46,9 @@
               <el-form-item label="可空">
                 <el-switch v-model="column.nullable"/>
               </el-form-item>
+              <el-form-item label="重复">
+                <el-switch v-model="column.repeatable"/>
+              </el-form-item>
             </div>
             <div v-if="table.enablePage">
               <el-form-item label="表单项">
@@ -341,6 +344,7 @@ export default {
         title: '',
         primary: false,
         nullable: true,
+        repeatable: true,
         searchable: false,
         enableFormItem: true,
         enableTableField: true,

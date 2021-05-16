@@ -85,6 +85,7 @@
             title: '',
             primary: false,
             nullable: true,
+            repeatable: true,
             searchable: false,
             enableFormItem: true,
             enableTableField: true,

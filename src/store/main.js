@@ -16,6 +16,7 @@ const store = new Vuex.Store({
           label: '用户名',
           title: '用户名',
           primary: false,
+          repeatable: false,
           require: true,
           searchable: false,
           enableFormItem: true,
