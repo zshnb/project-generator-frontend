@@ -4,6 +4,11 @@
       <el-form-item class="name-form-item" label="开启页面">
         <el-switch v-model="table.enablePage"/>
       </el-form-item>
+      <el-form-item label="绑定角色">
+        <el-select v-model="table.bindRoles" multiple>
+          <el-option v-for="role in roles" :key="role.id" :label="role.description" :value="role.name"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="表名">
         <el-col :span="8">
           <el-input v-model="table.name" placeholder="请输入表名"/>

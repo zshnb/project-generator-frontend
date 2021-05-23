@@ -77,6 +77,7 @@
         },
         table: {
           name: '',
+          bindRoles: [],
           columns: [{
             name: '',
             type: 'varchar',
@@ -174,6 +175,9 @@
         })
         let tables = this.tables.map(it => {
           let table = JSON.parse(JSON.stringify(it))
+          if (table.bindRoles.length === 0) {
+            delete table.bindRoles
+          }
           table.columns.forEach(c => {
             if (c.associate && c.associate.targetTableName === '') {
               delete c.associate
