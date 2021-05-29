@@ -371,25 +371,40 @@ export default {
       switch (column.type) {
         case 'int': {
           column.length = 11
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
           break
         }
         case 'varchar': {
           column.length = 255
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
           break
         }
         case 'tinyint': {
           column.length = 1
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
           break
         }
-        case 'date':
-        case 'text':
-        case 'double':
+        case 'date': {
+          column.length = 0
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateFormItem'
+          break;
+        }
+        case 'text': {
+          column.length = 0
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.TextAreaFormItem'
+          break;
+        }
+        case 'double': {
+          column.length = 0
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          break;
+        }
         case 'datetime': {
           column.length = 0
+          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem'
           break
         }
       }
-      column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
     },
     onDeleteColumn(index) {
       this.table.columns.splice(index, 1)
@@ -465,6 +480,8 @@ export default {
       this.column.options.splice(index, 1)
     },
     onChangeAssociateStatus(status, column) {
+      column.type = 'int'
+      column.length = 11
       column.enableFormItem = true
       column.enableTableField = false
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'

@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     tables: [
       {
         name: 'user',
+        bindRoles: [],
         columns: [{
           name: 'username',
           type: 'varchar',
