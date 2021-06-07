@@ -31,6 +31,7 @@ const store = new Vuex.Store({
           label: '密码',
           title: '密码',
           primary: false,
+          repeatable: true,
           require: true,
           searchable: false,
           enableFormItem: true,
@@ -44,6 +45,7 @@ const store = new Vuex.Store({
           label: '角色',
           title: '角色',
           primary: false,
+          repeatable: true,
           require: true,
           searchable: false,
           enableFormItem: true,
@@ -55,7 +57,11 @@ const store = new Vuex.Store({
           name: 'id',
           type: 'int',
           length: 11,
+          label: 'ID',
+          title: 'ID',
           primary: true,
+          repeatable: true,
+          require: false,
           searchable: false,
           enableFormItem: false,
           enableTableField: false,
@@ -65,21 +71,29 @@ const store = new Vuex.Store({
           name: 'create_at',
           type: 'datetime',
           length: 0,
+          label: '创建时间',
+          title: '创建时间',
           primary: false,
+          repeatable: true,
+          require: false,
           searchable: false,
           enableFormItem: false,
           enableTableField: false,
-          formItemType: '',
+          formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
           enableAssociate: false
         }, {
-          name: 'update_at',
+          name: 'create_at',
           type: 'datetime',
           length: 0,
+          label: '更新时间',
+          title: '更新时间',
           primary: false,
+          repeatable: true,
+          require: false,
           searchable: false,
           enableFormItem: false,
           enableTableField: false,
-          formItemType: '',
+          formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
           enableAssociate: false
         }],
         permissions: [{
@@ -88,39 +102,6 @@ const store = new Vuex.Store({
           checkAll: false
         }],
         enablePage: true,
-        form: {
-          items: [
-            {
-              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-              require: true
-            },
-            {
-              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-              require: true
-            },
-            {
-              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
-              require: true,
-              options: []
-            }
-          ]
-        },
-        table: {
-          fields: [
-            {
-              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
-              title: "用户名"
-            },
-            {
-              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
-              title: "密码"
-            },
-            {
-              formItemClassName: "com.zshnb.projectgenerator.generator.entity.SelectFormItem",
-              title: "角色"
-            }
-          ]
-        }
       }
     ],
     roles: [],

@@ -428,14 +428,14 @@ export default {
       let newTable = JSON.parse(JSON.stringify(this.table))
       newTable.id = Math.random()
       let formItems = this.table.columns.filter(it => it.enableFormItem)
-      .map(it => {
-        return {
-          formItemClassName: it.formItemType,
-          require: it.require,
-          label: it.label,
-          options: it.options
-        }
-      })
+        .map(it => {
+          return {
+            formItemClassName: it.formItemType,
+            require: it.require,
+            label: it.label,
+            options: it.options
+          }
+        })
       let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
       .map(it => {
         return {
