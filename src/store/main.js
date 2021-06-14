@@ -23,7 +23,8 @@ const store = new Vuex.Store({
           enableFormItem: true,
           enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-          enableAssociate: false
+          enableAssociate: false,
+          mappings: []
         }, {
           name: 'password',
           type: 'varchar',
@@ -37,7 +38,8 @@ const store = new Vuex.Store({
           enableFormItem: true,
           enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.PasswordFormItem',
-          enableAssociate: false
+          enableAssociate: false,
+          mappings: []
         }, {
           name: 'role',
           type: 'varchar',
@@ -52,7 +54,8 @@ const store = new Vuex.Store({
           enableTableField: true,
           formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
           options: [],
-          enableAssociate: false
+          enableAssociate: false,
+          mappings: []
         }, {
           name: 'id',
           type: 'int',
@@ -102,6 +105,23 @@ const store = new Vuex.Store({
           checkAll: false
         }],
         enablePage: true,
+        form: {
+          items: [
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+              require: true
+            },
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+              require: true
+            },
+            {
+              formItemClassName: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
+              require: true,
+              options: []
+            }
+          ]
+        },
       }
     ],
     roles: [],

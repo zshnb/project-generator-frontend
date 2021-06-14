@@ -172,14 +172,14 @@
       <el-form :model="column">
         <el-form-item v-for="(option, index) in column.options" :key="option.id">
           <el-form :inline="true" :model="option">
-            <el-col :span="11">
-              <el-form-item label="选项名">
-                <el-input v-model="option.title"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="option.title" placeholder="选项描述"/>
               </el-form-item>
             </el-col>
-            <el-col :span="11">
-              <el-form-item label="选项值">
-                <el-input v-model="option.value"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="option.value" placeholder="选项值"/>
               </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -202,7 +202,7 @@
         <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
                       :key="resultColumn.originColumnName">
           <el-form :inline="true" :model="resultColumn">
-            <el-col :span="11">
+            <el-col :span="10">
               <el-form-item label="列名">
                 <el-select v-model="resultColumn.originColumnName"
                            @change="onChangeAssociateResultColumn($event, resultColumn)">
@@ -210,14 +210,14 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="11">
-              <el-form-item label="列别名">
-                <el-input v-model="resultColumn.aliasColumnName"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="resultColumn.aliasColumnName" placeholder="列别名"/>
               </el-form-item>
             </el-col>
-            <el-col :span="11">
-              <el-form-item label="表格列描述">
-                <el-input v-model="resultColumn.tableFieldTitle"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="resultColumn.tableFieldTitle" placeholder="列描述"/>
               </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -239,16 +239,16 @@
                class="option-drawer">
       <el-form :model="column">
         <el-form-item v-for="(mapping, index) in column.mappings"
-                      :key="mapping.source">
+                      :key="mapping.source + index">
           <el-form :inline="true" :model="mapping">
-            <el-col :span="11">
-              <el-form-item label="数据库值">
-                <el-input v-model="mapping.source"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="mapping.source" placeholder="数据库值"/>
               </el-form-item>
             </el-col>
-            <el-col :span="11">
-              <el-form-item label="页面显示">
-                <el-input v-model="mapping.target"/>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="mapping.target" placeholder="页面显示"/>
               </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -568,4 +568,6 @@ export default {
 
   .el-checkbox-group
     display inline-block
+  >>>.el-drawer.rtl
+    overflow scroll
 </style>
