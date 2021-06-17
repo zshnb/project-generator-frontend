@@ -108,7 +108,7 @@
                       <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="表单项列">
+                  <el-form-item v-if="column.enableFormItem" label="表单项列">
                     <el-select v-model="column.associate.formItemColumnName">
                       <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                     </el-select>

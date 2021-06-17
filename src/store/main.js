@@ -122,6 +122,22 @@ const store = new Vuex.Store({
             }
           ]
         },
+        table: {
+          fields: [
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+              title: "用户名"
+            },
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+              title: "密码"
+            },
+            {
+              formItemClassName: "com.zshnb.projectgenerator.generator.entity.SelectFormItem",
+              title: "角色"
+            }
+          ]
+        }
       }
     ],
     roles: [],
