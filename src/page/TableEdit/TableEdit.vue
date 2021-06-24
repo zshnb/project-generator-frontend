@@ -14,6 +14,11 @@
           <el-input v-model="table.name" placeholder="请输入表名"/>
         </el-col>
       </el-form-item>
+      <el-form-item label="表描述">
+        <el-col :span="8">
+          <el-input v-model="table.comment" placeholder="请输入表名"/>
+        </el-col>
+      </el-form-item>
       <el-form-item v-for="(column, index) in table.columns" :key="column.id" @click.native="onClickColumnItem(column)">
         <div slot="label">
           <el-button type="primary"
@@ -41,6 +46,9 @@
             </el-form-item>
             <el-form-item class="length-form-item" label="长度">
               <el-input v-model="column.length"/>
+            </el-form-item>
+            <el-form-item label="列描述" class="name-form-item">
+              <el-input v-model="column.comment"/>
             </el-form-item>
           </el-row>
           <el-row>
@@ -344,6 +352,7 @@ export default {
       let column = {
         name: '',
         type: 'varchar',
+        comment: '',
         length: 255,
         label: '',
         title: '',
@@ -461,6 +470,7 @@ export default {
     },
     onInputLabel(value, column) {
       column.title = value
+      column.comment = value
     },
     isOptionalFormItem(formItemType) {
       return this.needOptionFormItemTypes.includes(formItemType)
