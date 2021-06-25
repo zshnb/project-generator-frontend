@@ -182,7 +182,7 @@
           <el-form :inline="true" :model="option">
             <el-col :span="10">
               <el-form-item>
-                <el-input v-model="option.title" placeholder="选项描述"/>
+                <el-input v-model="option.title" placeholder="选项描述" @input="onInputOptionTitle($event, option)"/>
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -201,6 +201,7 @@
         </el-form-item>
         <el-form-item class="add-btn-form-item">
           <el-button type="primary" @click="onAddOption">添加</el-button>
+          <el-button type="primary" @click="onFillFieldMapping">填充映射选项</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -210,20 +211,21 @@
         <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
                       :key="resultColumn.originColumnName">
           <el-form :inline="true" :model="resultColumn">
-            <el-col :span="10">
-              <el-form-item label="列名">
+            <el-col :span="6">
+              <el-form-item>
                 <el-select v-model="resultColumn.originColumnName"
+                           placeholder="列名"
                            @change="onChangeAssociateResultColumn($event, resultColumn)">
                   <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="6">
               <el-form-item>
                 <el-input v-model="resultColumn.aliasColumnName" placeholder="列别名"/>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="6">
               <el-form-item>
                 <el-input v-model="resultColumn.tableFieldTitle" placeholder="列描述"/>
               </el-form-item>
@@ -475,6 +477,9 @@ export default {
     isOptionalFormItem(formItemType) {
       return this.needOptionFormItemTypes.includes(formItemType)
     },
+    onInputOptionTitle(value, option) {
+      option.value = value
+    },
     onEditOptions(column) {
       this.column = column
       this.showEditOptions = true
@@ -488,6 +493,15 @@ export default {
     },
     onDeleteOption(index) {
       this.column.options.splice(index, 1)
+    },
+    onFillFieldMapping() {
+      this.column.options.forEach(it => {
+        this.column.mappings.push({
+          source: it.value,
+          target: it.title
+        })
+      })
+      this.$message.success('填充成功')
     },
     onChangeAssociateStatus(status, column) {
       column.type = 'int'
