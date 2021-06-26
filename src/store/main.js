@@ -10,9 +10,11 @@ const store = new Vuex.Store({
       {
         name: 'user',
         bindRoles: [],
+        comment: '用户',
         columns: [{
           name: 'username',
           type: 'varchar',
+          comment: '用户名',
           length: 255,
           label: '用户名',
           title: '用户名',
@@ -28,6 +30,7 @@ const store = new Vuex.Store({
         }, {
           name: 'password',
           type: 'varchar',
+          comment: '密码',
           length: 255,
           label: '密码',
           title: '密码',
@@ -43,6 +46,7 @@ const store = new Vuex.Store({
         }, {
           name: 'role',
           type: 'varchar',
+          comment: '角色',
           length: 255,
           label: '角色',
           title: '角色',
@@ -59,6 +63,7 @@ const store = new Vuex.Store({
         }, {
           name: 'id',
           type: 'int',
+          comment: 'id主键',
           length: 11,
           label: 'ID',
           title: 'ID',
@@ -73,6 +78,7 @@ const store = new Vuex.Store({
         }, {
           name: 'create_at',
           type: 'datetime',
+          comment: '创建时间',
           length: 0,
           label: '创建时间',
           title: '创建时间',
@@ -87,6 +93,7 @@ const store = new Vuex.Store({
         }, {
           name: 'create_at',
           type: 'datetime',
+          comment: '更新时间',
           length: 0,
           label: '更新时间',
           title: '更新时间',

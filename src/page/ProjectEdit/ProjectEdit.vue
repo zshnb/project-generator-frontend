@@ -78,9 +78,11 @@
         table: {
           name: '',
           bindRoles: [],
+          comment: '',
           columns: [{
             name: '',
             type: 'varchar',
+            comment: '',
             length:255,
             label: '',
             title: '',

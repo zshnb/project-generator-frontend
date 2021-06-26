@@ -10,8 +10,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="表名">
-        <el-col :span="8">
+        <el-col :span="3">
           <el-input v-model="table.name" placeholder="请输入表名"/>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="表描述">
+        <el-col :span="3">
+          <el-input v-model="table.comment" placeholder="请输入表名"/>
         </el-col>
       </el-form-item>
       <el-form-item v-for="(column, index) in table.columns" :key="column.id" @click.native="onClickColumnItem(column)">
@@ -32,7 +37,7 @@
                  class="column-form">
           <el-row>
             <el-form-item label="列名" class="name-form-item">
-              <el-input v-model="column.name"/>
+              <el-input v-model="column.name" placeholder="列名"/>
             </el-form-item>
             <el-form-item label="类型">
               <el-select v-model="column.type" @change="onChangeType($event, column)">
@@ -41,6 +46,9 @@
             </el-form-item>
             <el-form-item class="length-form-item" label="长度">
               <el-input v-model="column.length"/>
+            </el-form-item>
+            <el-form-item label="列描述" class="name-form-item">
+              <el-input v-model="column.comment"/>
             </el-form-item>
           </el-row>
           <el-row>
@@ -174,7 +182,7 @@
           <el-form :inline="true" :model="option">
             <el-col :span="10">
               <el-form-item>
-                <el-input v-model="option.title" placeholder="选项描述"/>
+                <el-input v-model="option.title" placeholder="选项描述" @input="onInputOptionTitle($event, option)"/>
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -193,6 +201,7 @@
         </el-form-item>
         <el-form-item class="add-btn-form-item">
           <el-button type="primary" @click="onAddOption">添加</el-button>
+          <el-button type="primary" @click="onFillFieldMapping">填充映射选项</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -202,20 +211,21 @@
         <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
                       :key="resultColumn.originColumnName">
           <el-form :inline="true" :model="resultColumn">
-            <el-col :span="10">
-              <el-form-item label="列名">
+            <el-col :span="6">
+              <el-form-item>
                 <el-select v-model="resultColumn.originColumnName"
+                           placeholder="列名"
                            @change="onChangeAssociateResultColumn($event, resultColumn)">
                   <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="6">
               <el-form-item>
                 <el-input v-model="resultColumn.aliasColumnName" placeholder="列别名"/>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="6">
               <el-form-item>
                 <el-input v-model="resultColumn.tableFieldTitle" placeholder="列描述"/>
               </el-form-item>
@@ -344,6 +354,7 @@ export default {
       let column = {
         name: '',
         type: 'varchar',
+        comment: '',
         length: 255,
         label: '',
         title: '',
@@ -461,9 +472,13 @@ export default {
     },
     onInputLabel(value, column) {
       column.title = value
+      column.comment = value
     },
     isOptionalFormItem(formItemType) {
       return this.needOptionFormItemTypes.includes(formItemType)
+    },
+    onInputOptionTitle(value, option) {
+      option.value = value
     },
     onEditOptions(column) {
       this.column = column
@@ -478,6 +493,15 @@ export default {
     },
     onDeleteOption(index) {
       this.column.options.splice(index, 1)
+    },
+    onFillFieldMapping() {
+      this.column.options.forEach(it => {
+        this.column.mappings.push({
+          source: it.value,
+          target: it.title
+        })
+      })
+      this.$message.success('填充成功')
     },
     onChangeAssociateStatus(status, column) {
       column.type = 'int'
