@@ -10,12 +10,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="表名">
-        <el-col :span="8">
+        <el-col :span="3">
           <el-input v-model="table.name" placeholder="请输入表名"/>
         </el-col>
       </el-form-item>
       <el-form-item label="表描述">
-        <el-col :span="8">
+        <el-col :span="3">
           <el-input v-model="table.comment" placeholder="请输入表名"/>
         </el-col>
       </el-form-item>
@@ -37,7 +37,7 @@
                  class="column-form">
           <el-row>
             <el-form-item label="列名" class="name-form-item">
-              <el-input v-model="column.name"/>
+              <el-input v-model="column.name" placeholder="列名"/>
             </el-form-item>
             <el-form-item label="类型">
               <el-select v-model="column.type" @change="onChangeType($event, column)">
