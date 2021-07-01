@@ -113,16 +113,16 @@
                   <el-form-item label="关联的列">
                     <el-select v-model="column.associate.targetColumnName"
                                @visible-change="onUpdateTargetColumnNames($event, column)">
-                      <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                      <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
                     </el-select>
                   </el-form-item>
                   <el-form-item v-if="column.enableFormItem" label="表单项列">
                     <el-select v-model="column.associate.formItemColumnName">
-                      <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                      <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="onEditAssociateResultColumns">编辑关联的筛选列</el-button>
+                    <el-button type="primary" @click="onEditAssociateResultColumns(column)">编辑关联的筛选列</el-button>
                   </el-form-item>
                 </el-form>
               </el-form-item>
@@ -205,6 +205,7 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+
     <el-drawer v-if="showEditAssociateResultColumns" :visible.sync="showEditAssociateResultColumns"
                class="option-drawer">
       <el-form :model="column.associate">
@@ -216,7 +217,7 @@
                 <el-select v-model="resultColumn.originColumnName"
                            placeholder="列名"
                            @change="onChangeAssociateResultColumn($event, resultColumn)">
-                  <el-option v-for="column in associateTableColumns" :key="column.id" :value="column.name"/>
+                  <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -300,8 +301,7 @@
 <script>
 import axios from "../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
-import { generateDefaultColumns } from '../../util/TableUtils'
-import { getDefaultOperations } from "../../util/TableUtils";
+import { generateDefaultColumns, getDefaultOperations } from '../../util/TableUtils'
 
 export default {
   name: "TableEdit",
@@ -339,7 +339,7 @@ export default {
       },
       role: '',
       overwrite: false,
-      associateTableColumns: [],
+      associateTable: {},
       permission: {}
     }
   },
@@ -435,41 +435,6 @@ export default {
     onDeletePermission(index) {
       this.table.permissions.splice(index, 1)
     },
-    onSave() {
-      let newTable = JSON.parse(JSON.stringify(this.table))
-      newTable.id = Math.random()
-      let formItems = this.table.columns.filter(it => it.enableFormItem)
-        .map(it => {
-          return {
-            formItemClassName: it.formItemType,
-            require: it.require,
-            label: it.label,
-            options: it.options
-          }
-        })
-      let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
-      .map(it => {
-        return {
-          formItemClassName: it.formItemType,
-          title: it.title,
-          mappings: it.mappings
-        }
-      })
-      newTable.form = {
-        items: formItems
-      }
-      newTable.table = {
-        fields: tableFields
-      }
-      this.saveTable({
-        table: newTable,
-        overwrite: this.overwrite
-      })
-      this.$router.back()
-    },
-    onClose() {
-      this.$router.back()
-    },
     onInputLabel(value, column) {
       column.title = value
       column.comment = value
@@ -512,15 +477,18 @@ export default {
       column.associate.sourceColumnName = column.name
     },
     onChangeAssociateTable(tableName) {
-      let table = this.tables.find(it => it.name === tableName)
-      this.associateTableColumns = table.columns
+      this.associateTable = this.tables.find(it => it.name === tableName)
     },
-    onChangeAssociateResultColumn(originColumnName, column) {
+    onChangeAssociateResultColumn(originColumnName, resultColumn) {
       const camelcase = require('camelcase')
-      column.aliasColumnName = camelcase(`${ this.column.associate.targetTableName }_${ originColumnName }`)
+      let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
+      resultColumn.aliasColumnName = camelcase(`${ this.column.associate.targetTableName }_${ originColumnName }`)
+      resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
     },
-    onEditAssociateResultColumns() {
+    onEditAssociateResultColumns(column) {
+      this.column = column
       this.showEditAssociateResultColumns = true
+      this.associateTable = this.tables.find(it => it.name === this.column.associate.targetTableName)
     },
     onAddResultColumn() {
       this.column.associate.associateResultColumns.push({
@@ -533,7 +501,7 @@ export default {
       if (value) {
         let tableName = column.associate.targetTableName
         let table = this.tables.find(it => it.name === tableName)
-        this.associateTableColumns = table.columns
+        this.associateTable = table
       }
     },
     onDeleteResultColumn(index) {
@@ -569,9 +537,43 @@ export default {
       permission.checkAll = value
     },
     onChangeOperation(value, permission) {
-      console.log(value)
       let checkedCount = value.length;
       permission.checkAll = checkedCount === permission.operations.length
+    },
+    onSave() {
+      let newTable = JSON.parse(JSON.stringify(this.table))
+      newTable.id = Math.random()
+      let formItems = this.table.columns.filter(it => it.enableFormItem)
+      .map(it => {
+        return {
+          formItemClassName: it.formItemType,
+          require: it.require,
+          label: it.label,
+          options: it.options
+        }
+      })
+      let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
+      .map(it => {
+        return {
+          formItemClassName: it.formItemType,
+          title: it.title,
+          mappings: it.mappings
+        }
+      })
+      newTable.form = {
+        items: formItems
+      }
+      newTable.table = {
+        fields: tableFields
+      }
+      this.saveTable({
+        table: newTable,
+        overwrite: this.overwrite
+      })
+      this.$router.back()
+    },
+    onClose() {
+      this.$router.back()
     },
     ...mapMutations(['saveTable'])
   }

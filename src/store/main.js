@@ -91,7 +91,7 @@ const store = new Vuex.Store({
           formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
           enableAssociate: false
         }, {
-          name: 'create_at',
+          name: 'update_at',
           type: 'datetime',
           comment: '更新时间',
           length: 0,
