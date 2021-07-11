@@ -381,7 +381,7 @@ export default {
     onChangeType(event, column) {
       switch (column.type) {
         case 'int': {
-          column.length = 11
+          column.length = 0
           column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
           break
         }
@@ -470,7 +470,7 @@ export default {
     },
     onChangeAssociateStatus(status, column) {
       column.type = 'int'
-      column.length = 11
+      column.length = 0
       column.enableFormItem = true
       column.enableTableField = false
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'

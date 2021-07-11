@@ -68,6 +68,7 @@
           serviceImplPackageName: 'serviceImpl',
           mapperPackageName: 'mapper',
           controllerPackageName: 'controller',
+          database: 'mysql',
           jdbcHost: 'localhost',
           jdbcPort: 3306,
           jdbcUser: 'root',

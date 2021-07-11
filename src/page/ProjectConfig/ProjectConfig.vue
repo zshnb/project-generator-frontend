@@ -30,6 +30,14 @@
         <el-input placeholder="controllerPackageName"
                   v-model="config.controllerPackageName"></el-input>
       </el-form-item>
+      <el-form-item label="数据库">
+        <el-select v-model="config.database" @change="onChangeDatabase">
+          <el-option v-for="item in databases"
+                     :key="item"
+                     :label="item"
+                     :value="item"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="jdbc地址">
         <el-input placeholder="jdbcHost" v-model="config.jdbcHost"></el-input>
       </el-form-item>
@@ -61,6 +69,7 @@
 </template>
 
 <script>
+  import {databaseConfigs} from '../../util/Constant'
   export default {
     name: "ProjectConfig",
     props: {
@@ -73,12 +82,17 @@
         projectTypes: [{
           name: 'layui',
           value: 1
-        }]
+        }],
+        databases: ['mysql', 'sqlserver']
       }
     },
     methods: {
       onGenerate() {
         this.$emit('generate')
+      },
+      onChangeDatabase(database) {
+        const databaseConfig = databaseConfigs[database]
+        Object.assign(this.config, databaseConfig)
       }
     }
   }
