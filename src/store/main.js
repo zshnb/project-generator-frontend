@@ -73,7 +73,7 @@ const store = new Vuex.Store({
           searchable: false,
           enableFormItem: false,
           enableTableField: false,
-          formItemType: '',
+          formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
           enableAssociate: false
         }, {
           name: 'create_at',

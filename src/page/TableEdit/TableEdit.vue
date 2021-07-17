@@ -154,9 +154,6 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作">
-            <el-checkbox v-model="permission.checkAll"
-                         @change="onChangeCheckAll($event, permission)">全选
-            </el-checkbox>
             <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
               <el-checkbox v-for="operation in permission.operations"
                            :key="operation.value"
@@ -493,6 +490,7 @@ export default {
     },
     onAddResultColumn() {
       this.column.associate.associateResultColumns.push({
+        columnType: '',
         originColumnName: '',
         aliasColumnName: '',
         tableFieldTitle: ''
@@ -533,9 +531,6 @@ export default {
       this.operations.splice(this.operations.findIndex(it => it === operation), 1)
       permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
     },
-    onChangeCheckAll(value, permission) {
-      permission.checkAll = value
-    },
     onChangeOperation(value, permission) {
       let checkedCount = value.length;
       permission.checkAll = checkedCount === permission.operations.length
@@ -543,8 +538,7 @@ export default {
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
       newTable.id = Math.random()
-      let formItems = this.table.columns.filter(it => it.enableFormItem)
-      .map(it => {
+      let formItems = this.table.columns.map(it => {
         return {
           formItemClassName: it.formItemType,
           require: it.require,
