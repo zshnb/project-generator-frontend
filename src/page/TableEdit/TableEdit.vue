@@ -106,7 +106,7 @@
               <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
-                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column.associate)">
                       <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
                     </el-select>
                   </el-form-item>
@@ -474,14 +474,15 @@ export default {
       column.enableFormItem = true
       column.enableTableField = false
       column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
-      column.associate.sourceColumnName = column.name
     },
-    onChangeAssociateTable(tableName) {
+    onChangeAssociateTable(tableName, columnAssociate) {
       this.associateTable = this.tables.find(it => it.name === tableName)
+      columnAssociate.targetColumnName = 'id'
     },
     onChangeAssociateResultColumn(originColumnName, resultColumn) {
       const camelcase = require('camelcase')
       let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
+      resultColumn.columnType = targetColumn.type
       resultColumn.aliasColumnName = camelcase(`${ this.column.associate.targetTableName }_${ originColumnName }`)
       resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
     },
@@ -500,8 +501,7 @@ export default {
     onUpdateTargetColumnNames(value, column) {
       if (value) {
         let tableName = column.associate.targetTableName
-        let table = this.tables.find(it => it.name === tableName)
-        this.associateTable = table
+        this.associateTable = this.tables.find(it => it.name === tableName)
       }
     },
     onDeleteResultColumn(index) {

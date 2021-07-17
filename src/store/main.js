@@ -64,7 +64,7 @@ const store = new Vuex.Store({
           name: 'id',
           type: 'int',
           comment: 'id主键',
-          length: 11,
+          length: 0,
           label: 'ID',
           title: 'ID',
           primary: true,
