@@ -79,6 +79,7 @@
         table: {
           name: '',
           bindRoles: [],
+          bindUser: '',
           comment: '',
           columns: [{
             name: '',
@@ -180,6 +181,9 @@
           let table = JSON.parse(JSON.stringify(it))
           if (table.bindRoles.length === 0) {
             delete table.bindRoles
+          }
+          if (table.bindUser === '') {
+            delete table.bindUser
           }
           table.columns.forEach(c => {
             if (c.associate && c.associate.targetTableName === '') {
