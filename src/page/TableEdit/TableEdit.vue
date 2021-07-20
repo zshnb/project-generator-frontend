@@ -9,6 +9,14 @@
           <el-option v-for="role in roles" :key="role.id" :label="role.description" :value="role.name"/>
         </el-select>
       </el-form-item>
+      <el-form-item label="绑定用户">
+        <el-switch v-model="enableBindUser"/>
+      </el-form-item>
+      <el-form-item label="绑定列" v-if="enableBindUser">
+        <el-select v-model="table.bindUser">
+          <el-option v-for="column in table.columns" :key="column.id" :label="column.name" :value="column.name"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="表名">
         <el-col :span="3">
           <el-input v-model="table.name" placeholder="请输入表名"/>
@@ -327,6 +335,7 @@ export default {
       showEditAssociateResultColumns: false,
       showEditFieldMapping: false,
       showOperation: false,
+      enableBindUser: false,
       column: {},
       defaultOperations: getDefaultOperations(),
       operation: {
@@ -546,8 +555,7 @@ export default {
           options: it.options
         }
       })
-      let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate)
-      .map(it => {
+      let tableFields = this.table.columns.filter(it => it.enableTableField || it.enableAssociate).map(it => {
         return {
           formItemClassName: it.formItemType,
           title: it.title,
