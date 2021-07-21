@@ -295,6 +295,25 @@
             <el-option value="toolColumn" label="工具列"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="行为">
+          <el-select v-model="operation.type">
+            <el-option value="NEW_PAGE" label="打开新页面"/>
+            <el-option value="AJAX" label="ajax请求"/>
+          </el-select>
+        </el-form-item>
+        <div v-if="operation.type === 'AJAX'">
+          <el-form-item label="方法类型">
+            <el-select v-model="operation.detail.httpMethod">
+              <el-option value="GET" label="GET"/>
+              <el-option value="POST" label="POST"/>
+              <el-option value="PUT" label="PUT"/>
+              <el-option value="DELETE" label="DELETE"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="开启路径参数">
+            <el-switch v-model="operation.detail.pathVariable"/>
+          </el-form-item>
+        </div>
         <el-form-item>
           <el-button type="primary" @click="onAddOperation">添加</el-button>
         </el-form-item>
@@ -306,7 +325,7 @@
 <script>
 import axios from "../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
-import { generateDefaultColumns, getDefaultOperations } from '../../util/TableUtils'
+import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../util/TableUtils'
 
 export default {
   name: "TableEdit",
@@ -341,7 +360,13 @@ export default {
       operation: {
         description: '',
         value: '',
-        position: ''
+        position: '',
+        type: '',
+        custom: true,
+        detail: {
+          httpMethod: 'GET',
+          pathVariable: false
+        }
       },
       role: '',
       overwrite: false,
@@ -357,31 +382,7 @@ export default {
       this.column = column
     },
     onAddColumn(index) {
-      let column = {
-        name: '',
-        type: 'varchar',
-        comment: '',
-        length: 255,
-        label: '',
-        title: '',
-        primary: false,
-        nullable: true,
-        repeatable: true,
-        searchable: false,
-        enableFormItem: true,
-        enableTableField: true,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-        require: false,
-        options: [],
-        mappings: [],
-        associate: {
-          targetTableName: '',
-          targetColumnName: '',
-          formItemColumnName: '',
-          associateResultColumns: []
-        }
-      }
-      column.id = Math.random()
+      let column = getColumn()
       this.table.columns.splice(index + 1, 0, column)
     },
     onChangeType(event, column) {
