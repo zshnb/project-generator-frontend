@@ -3,22 +3,26 @@ function getDefaultOperations() {
     {
       description: '添加',
       value: 'add',
-      position: 'toolbar'
+      position: 'toolbar',
+      type: 'NEW_PAGE'
     },
     {
       description: '编辑',
       value: 'edit',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     },
     {
       description: '查看',
       value: 'detail',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     },
     {
       description: '删除',
       value: 'delete',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     }
   ]
 }
@@ -74,7 +78,36 @@ function generateDefaultColumns() {
   ]
 }
 
+function getColumn() {
+  return {
+    id: Math.random(),
+    name: '',
+    type: 'varchar',
+    comment: '',
+    length: 255,
+    label: '',
+    title: '',
+    primary: false,
+    nullable: true,
+    repeatable: true,
+    searchable: false,
+    enableFormItem: true,
+    enableTableField: true,
+    formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+    require: false,
+    options: [],
+    mappings: [],
+    associate: {
+      targetTableName: '',
+      targetColumnName: '',
+      formItemColumnName: '',
+      associateResultColumns: []
+    }
+  }
+}
+
 export {
   generateDefaultColumns,
-  getDefaultOperations
+  getDefaultOperations,
+  getColumn
 }
