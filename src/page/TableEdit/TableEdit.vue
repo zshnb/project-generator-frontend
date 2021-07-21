@@ -167,8 +167,8 @@
                            :key="operation.value"
                            :label="operation">
                 {{ operation.description }}
-                <el-button type="danger" size="mini" icon="el-icon-delete"
-                           @click="onDeleteOperation(permission, operation)"/>
+                <el-button type="primary" size="mini" icon="el-icon-edit"
+                           @click="onEditOperation(operation)"/>
               </el-checkbox>
             </el-checkbox-group>
             <el-button type="primary" size="mini" @click="onShowOperationDialog(permission.role)">添加</el-button>
@@ -537,9 +537,9 @@ export default {
       this.operation = {}
       this.showOperation = false
     },
-    onDeleteOperation(permission, operation) {
-      this.operations.splice(this.operations.findIndex(it => it === operation), 1)
-      permission.operations.splice(permission.operations.findIndex(it => it === operation), 1)
+    onEditOperation(operation) {
+      this.operation = operation
+      this.showOperation = true
     },
     onChangeOperation(value, permission) {
       let checkedCount = value.length;

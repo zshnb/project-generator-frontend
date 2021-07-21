@@ -3,22 +3,26 @@ function getDefaultOperations() {
     {
       description: '添加',
       value: 'add',
-      position: 'toolbar'
+      position: 'toolbar',
+      type: 'NEW_PAGE'
     },
     {
       description: '编辑',
       value: 'edit',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     },
     {
       description: '查看',
       value: 'detail',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     },
     {
       description: '删除',
       value: 'delete',
-      position: 'toolColumn'
+      position: 'toolColumn',
+      type: 'NEW_PAGE'
     }
   ]
 }
