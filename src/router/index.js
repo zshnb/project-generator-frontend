@@ -5,6 +5,7 @@ import TableEdit from "../page/TableEdit/TableEdit";
 import RoleEdit from "../page/RoleEdit/RoleEdit";
 import MenuEdit from "../page/MenuEdit/MenuEdit";
 import Home from "../page/Home/Home";
+import ProjectManage from "../page/ProjectManage/ProjectManage";
 
 Vue.use(Router)
 
@@ -13,7 +14,14 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      children: [
+        {
+          name: 'ProjectManage',
+          path: 'project-manage',
+          component: ProjectManage
+        }
+      ]
     },
     {
       path: '/project-edit',
