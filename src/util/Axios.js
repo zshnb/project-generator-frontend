@@ -2,7 +2,7 @@ import axios from "axios";
 import {Message} from "element-ui";
 
 const service = axios.create({
-  baseURL: 'http://localhost:8888/api'
+  baseURL: process.env.BASE_API
 })
 
 service.interceptors.request.use(config => {

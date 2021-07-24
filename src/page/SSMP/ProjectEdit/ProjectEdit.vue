@@ -53,6 +53,7 @@
   import { mapState } from 'vuex'
   import { getDefaultOperations } from "../../../util/TableUtils";
   import { getColumn } from "../../../util/TableUtils";
+  import { Loading } from 'element-ui';
 
   export default {
     name: "ProjectEdit",
@@ -216,10 +217,15 @@
           roles: roles,
           type: this.config.type
         }
+        let loadingInstance = Loading.service({
+          fullscreen: true,
+          text: '项目生成中...'
+        });
         axios.post('/project/generate', JSON.stringify({ webProject: project }), {
           responseType: 'blob'
         }).then(data => {
           if (!data) {
+            loadingInstance.close()
             return
           }
           let url = window.URL.createObjectURL(new Blob([data]))
@@ -231,6 +237,7 @@
           a.click() //执行下载
           window.URL.revokeObjectURL(a.href)
           document.body.removeChild(a)
+          loadingInstance.close()
         })
       }
     }
