@@ -52,6 +52,7 @@
   import axios from '../../../util/Axios'
   import { mapState } from 'vuex'
   import { getDefaultOperations } from "../../../util/TableUtils";
+  import { getColumn } from "../../../util/TableUtils";
 
   export default {
     name: "ProjectEdit",
@@ -81,31 +82,7 @@
           bindRoles: [],
           bindUser: '',
           comment: '',
-          columns: [{
-            name: '',
-            type: 'varchar',
-            comment: '',
-            length:255,
-            label: '',
-            title: '',
-            primary: false,
-            nullable: true,
-            repeatable: true,
-            searchable: false,
-            enableFormItem: true,
-            enableTableField: true,
-            formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-            require: false,
-            options: [],
-            mappings: [],
-            enableAssociate: false,
-            associate: {
-              targetTableName: '',
-              targetColumnName: '',
-              formItemColumnName: '',
-              associateResultColumns: []
-            }
-          }],
+          columns: [getColumn()],
           permissions: [{
             role: '',
             operations: getDefaultOperations(),

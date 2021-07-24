@@ -42,7 +42,7 @@ function generateDefaultColumns() {
       searchable: false,
       enableFormItem: false,
       enableTableField: false,
-      formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+      formItemType: 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem',
       enableAssociate: false
     }, {
       name: 'create_at',
@@ -57,7 +57,7 @@ function generateDefaultColumns() {
       searchable: false,
       enableFormItem: false,
       enableTableField: false,
-      formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
+      formItemType: 'com.zshnb.projectgenerator.generator.web.entity.DateTimeFormItem',
       enableAssociate: false
     }, {
       name: 'update_at',
@@ -72,7 +72,7 @@ function generateDefaultColumns() {
       searchable: false,
       enableFormItem: false,
       enableTableField: false,
-      formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
+      formItemType: 'com.zshnb.projectgenerator.generator.web.entity.DateTimeFormItem',
       enableAssociate: false
     }
   ]
@@ -93,7 +93,7 @@ function getColumn() {
     searchable: false,
     enableFormItem: true,
     enableTableField: true,
-    formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+    formItemType: 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem',
     require: false,
     options: [],
     mappings: [],

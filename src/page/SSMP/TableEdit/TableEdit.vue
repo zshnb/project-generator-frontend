@@ -389,37 +389,37 @@ export default {
       switch (column.type) {
         case 'int': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem'
           break
         }
         case 'varchar': {
           column.length = 255
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem'
           break
         }
         case 'tinyint': {
           column.length = 1
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem'
           break
         }
         case 'date': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.DateFormItem'
           break;
         }
         case 'text': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.TextAreaFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.TextAreaFormItem'
           break;
         }
         case 'double': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.InputFormItem'
           break;
         }
         case 'datetime': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem'
+          column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.DateTimeFormItem'
           break
         }
       }
@@ -480,7 +480,7 @@ export default {
       column.length = 0
       column.enableFormItem = true
       column.enableTableField = false
-      column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+      column.formItemType = 'com.zshnb.projectgenerator.generator.web.entity.SelectFormItem'
     },
     onChangeAssociateTable(tableName, columnAssociate) {
       this.associateTable = this.tables.find(it => it.name === tableName)
