@@ -130,7 +130,7 @@
       }
     },
     computed: {
-      ...mapState(['menus', 'roles', 'tables'])
+      ...mapState('ssmp', ['menus', 'roles', 'tables'])
     },
     watch: {
       config: {
