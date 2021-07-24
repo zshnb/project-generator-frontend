@@ -323,9 +323,9 @@
 </template>
 
 <script>
-import axios from "../../util/Axios";
+import axios from "../../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
-import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../util/TableUtils'
+import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../../util/TableUtils'
 
 export default {
   name: "TableEdit",

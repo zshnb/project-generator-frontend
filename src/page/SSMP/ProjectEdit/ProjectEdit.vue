@@ -49,9 +49,9 @@
   import ProjectTable from "../ProjectTable/ProjectTable";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
-  import axios from '../../util/Axios'
+  import axios from '../../../util/Axios'
   import { mapState } from 'vuex'
-  import { getDefaultOperations } from "../../util/TableUtils";
+  import { getDefaultOperations } from "../../../util/TableUtils";
 
   export default {
     name: "ProjectEdit",

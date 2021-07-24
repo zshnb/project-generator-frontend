@@ -39,7 +39,8 @@ export default {
         },
         {
           name: 'Spring Boot',
-          type: 'SSMP'
+          type: 'SSMP',
+          routerName: 'SSMPProjectEdit'
         }
       ],
       showAddProjectDialog: false
@@ -67,4 +68,5 @@ export default {
         width 45%
         display inline-block
         margin-left 20px
+        cursor pointer
 </style>
