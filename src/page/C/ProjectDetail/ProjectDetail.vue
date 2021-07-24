@@ -78,19 +78,19 @@ export default {
     ...mapState('c', ["entities"])
   },
   methods: {
-    onAddEntity() {
-      this.$router.push({
-        name: 'CEntityEdit',
-        params: {
-          entity: this.entity
-        }
-      })
-    },
     onChangeTabPane(tab) {
       this.$router.push({
         path: this.$route.path,
         query: {
           activeName: tab.name
+        }
+      })
+    },
+    onAddEntity() {
+      this.$router.push({
+        name: 'CEntityEdit',
+        params: {
+          entity: this.entity
         }
       })
     },
