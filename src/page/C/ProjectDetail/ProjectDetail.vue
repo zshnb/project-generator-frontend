@@ -16,14 +16,14 @@
           <el-button type="primary" @click="onAddEntity">添加结构体</el-button>
         </div>
         <el-row :gutter="20">
-          <el-col :span="6" v-for="entity in entities" :key="entity.id" >
+          <el-col :span="6" v-for="(entity, index) in entities" :key="entity.id" >
             <el-card class="entity-card">
               <div slot="header">
                 <div class="card-header">
                   <p>{{ entity.name }}</p>
                   <div>
-                    <el-button size="small" type="primary" @click="onEdit" icon="el-icon-edit"></el-button>
-                    <el-button size="small" type="danger" @click="onDelete" icon="el-icon-delete"></el-button>
+                    <el-button size="small" type="primary" @click="onEditEntity" icon="el-icon-edit"></el-button>
+                    <el-button size="small" type="danger" @click="onDeleteEntity(index)" icon="el-icon-delete"></el-button>
                   </div>
                 </div>
               </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import axios from "../../../util/Axios";
 
 export default {
@@ -78,10 +78,10 @@ export default {
         }
       })
     },
-    onDelete() {
-      this.deleteTable(this.index)
+    onDeleteEntity(index) {
+      this.deleteEntity(index)
     },
-    onEdit() {
+    onEditEntity() {
       this.$router.push({
         name: 'TableEdit',
         params: {
@@ -111,7 +111,8 @@ export default {
         window.URL.revokeObjectURL(a.href)
         document.body.removeChild(a)
       })
-    }
+    },
+    ...mapMutations('c', ['deleteEntity'])
   }
 }
 </script>
