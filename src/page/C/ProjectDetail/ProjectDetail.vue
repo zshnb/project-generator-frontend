@@ -47,6 +47,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import axios from "../../../util/Axios";
+import { Loading } from "element-ui";
 
 export default {
   name: "ProjectEdit",
@@ -108,12 +109,17 @@ export default {
     onGenerate() {
       let project = JSON.parse(JSON.stringify(this.project))
       project.entities = this.entities
+      let loadingInstance = Loading.service({
+        fullscreen: true,
+        text: '项目生成中...'
+      });
       axios.post('/project/generate', JSON.stringify({
         cProject: project
       }), {
         responseType: 'blob'
       }).then(data => {
         if (!data) {
+          loadingInstance.close()
           return
         }
         let url = window.URL.createObjectURL(new Blob([data]))
@@ -125,6 +131,7 @@ export default {
         a.click() //执行下载
         window.URL.revokeObjectURL(a.href)
         document.body.removeChild(a)
+        loadingInstance.close()
       })
     },
     ...mapMutations('c', ['deleteEntity'])
