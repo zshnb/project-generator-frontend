@@ -1,4 +1,5 @@
-import { getDefaultOperations } from "../util/TableUtils";
+import { getDefaultOperations, generateDefaultColumns } from "../util/TableUtils";
+import { formItemClassNames } from "../util/Constant";
 
 const state = {
   tables: [
@@ -19,7 +20,7 @@ const state = {
         searchable: false,
         enableFormItem: true,
         enableTableField: true,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+        formItemType: formItemClassNames.inputFormItem,
         enableAssociate: false,
         mappings: []
       }, {
@@ -35,7 +36,7 @@ const state = {
         searchable: false,
         enableFormItem: true,
         enableTableField: true,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.PasswordFormItem',
+        formItemType: formItemClassNames.passwordFormItem,
         enableAssociate: false,
         mappings: []
       }, {
@@ -51,74 +52,28 @@ const state = {
         searchable: false,
         enableFormItem: true,
         enableTableField: true,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
+        formItemType: formItemClassNames.selectFormItem,
         options: [],
         enableAssociate: false,
         mappings: []
-      }, {
-        name: 'id',
-        type: 'int',
-        comment: 'id主键',
-        length: 0,
-        label: 'ID',
-        title: 'ID',
-        primary: true,
-        repeatable: true,
-        require: false,
-        searchable: false,
-        enableFormItem: false,
-        enableTableField: false,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-        enableAssociate: false
-      }, {
-        name: 'create_at',
-        type: 'datetime',
-        comment: '创建时间',
-        length: 0,
-        label: '创建时间',
-        title: '创建时间',
-        primary: false,
-        repeatable: true,
-        require: false,
-        searchable: false,
-        enableFormItem: false,
-        enableTableField: false,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
-        enableAssociate: false
-      }, {
-        name: 'update_at',
-        type: 'datetime',
-        comment: '更新时间',
-        length: 0,
-        label: '更新时间',
-        title: '更新时间',
-        primary: false,
-        repeatable: true,
-        require: false,
-        searchable: false,
-        enableFormItem: false,
-        enableTableField: false,
-        formItemType: 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem',
-        enableAssociate: false
-      }],
+      }, ...generateDefaultColumns()],
       permissions: [{
         role: '',
-        operations: getDefaultOperations(),
-        checkAll: false
+        operations: getDefaultOperations()
       }],
       enablePage: true,
       form: {
         items: [
           {
-            formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+            formItemClassName: formItemClassNames.inputFormItem,
             require: true
           },
           {
-            formItemClassName: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
+            formItemClassName: formItemClassNames.inputFormItem,
             require: true
           },
           {
-            formItemClassName: 'com.zshnb.projectgenerator.generator.entity.SelectFormItem',
+            formItemClassName: formItemClassNames.selectFormItem,
             require: true,
             options: []
           }
@@ -127,15 +82,15 @@ const state = {
       table: {
         fields: [
           {
-            formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+            formItemClassName: formItemClassNames.inputFormItem,
             title: "用户名"
           },
           {
-            formItemClassName: "com.zshnb.projectgenerator.generator.entity.InputFormItem",
+            formItemClassName: formItemClassNames.inputFormItem,
             title: "密码"
           },
           {
-            formItemClassName: "com.zshnb.projectgenerator.generator.entity.SelectFormItem",
+            formItemClassName: formItemClassNames.selectFormItem,
             title: "角色"
           }
         ]

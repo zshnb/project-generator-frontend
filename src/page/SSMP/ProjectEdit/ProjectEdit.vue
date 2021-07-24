@@ -204,7 +204,7 @@
           roles: roles,
           type: this.config.type
         }
-        axios.post('/project/generate', JSON.stringify(project), {
+        axios.post('/project/generate', JSON.stringify({ webProject: project }), {
           responseType: 'blob'
         }).then(data => {
           if (!data) {
