@@ -12,7 +12,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="结构体配置" name="entity-setting">
-        <div>
+        <div style="margin-bottom: 10px">
           <el-button type="primary" @click="onAddEntity">添加结构体</el-button>
         </div>
         <el-row :gutter="20">
