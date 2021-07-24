@@ -5,38 +5,32 @@
         <project-config :config="config" @generate="onGenerate"/>
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content" name="table-setting">
+        <div style="margin-bottom: 10px">
+          <el-button type="primary" @click="onCreateTable">添加表</el-button>
+        </div>
         <el-row :gutter="20">
-          <el-col :span="4" v-for="(table, index) in tables" :key="table.id">
+          <el-col :span="6" v-for="(table, index) in tables" :key="table.id">
             <project-table :table.sync="table" :index="index"/>
-          </el-col>
-          <el-col :span="4">
-            <el-card class="create-table-card" @click.native="onCreateTable">
-              <i class="el-icon-plus"/>
-            </el-card>
           </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="菜单配置" class="content" name="menu-setting">
+        <div style="margin-bottom: 10px">
+          <el-button type="primary" @click="onCreateMenu">添加菜单</el-button>
+        </div>
         <el-row :gutter="20">
           <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
             <project-menu :menu="menu" :index="index"/>
           </el-col>
-          <el-col :span="3">
-            <el-card class="create-menu-card" @click.native="onCreateMenu">
-              <i class="el-icon-plus"/>
-            </el-card>
-          </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="角色配置" class="content" name="role-setting">
+        <div style="margin-bottom: 10px">
+          <el-button type="primary" @click="onCreateRole">添加角色</el-button>
+        </div>
         <el-row :gutter="20">
           <el-col :span="3" v-for="(role, index) in roles" :key="role.id">
             <project-role :role="role" :index="index"/>
-          </el-col>
-          <el-col :span="3">
-            <el-card class="create-role-card" @click.native="onCreateRole">
-              <i class="el-icon-plus"/>
-            </el-card>
           </el-col>
         </el-row>
       </el-tab-pane>
