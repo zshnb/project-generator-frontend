@@ -38,7 +38,7 @@
       }
     },
     computed: {
-      ...mapState(['menus'])
+      ...mapState('ssmp', ['menus'])
     },
     methods: {
       ...mapMutations(['saveRole']),

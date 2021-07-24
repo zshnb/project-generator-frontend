@@ -22,7 +22,7 @@
       }
     },
     methods: {
-      ...mapMutations(['deleteRole']),
+      ...mapMutations('ssmp', ['deleteRole']),
       onDelete() {
         this.deleteRole(this.index)
       },

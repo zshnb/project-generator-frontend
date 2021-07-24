@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ProjectEdit from "../page/ProjectEdit/ProjectEdit";
-import TableEdit from "../page/TableEdit/TableEdit";
-import RoleEdit from "../page/RoleEdit/RoleEdit";
-import MenuEdit from "../page/MenuEdit/MenuEdit";
+import ProjectEdit from "../page/SSMP/ProjectEdit/ProjectEdit";
+import TableEdit from "../page/SSMP/TableEdit/TableEdit";
+import RoleEdit from "../page/SSMP/RoleEdit/RoleEdit";
+import MenuEdit from "../page/SSMP/MenuEdit/MenuEdit";
 import Home from "../page/Home/Home";
 import ProjectManage from "../page/ProjectManage/ProjectManage";
 import CProjectDetail from "../page/C/ProjectDetail/ProjectDetail";
@@ -31,27 +31,28 @@ export default new Router({
         {
           name: 'CEntityEdit',
           path: 'c-entity-edit',
-          component: EntityEdit
+          component: EntityEdit,
+          props: true
         },
         {
-          path: '/project-edit',
-          name: 'ProjectEdit',
+          path: 'project-edit',
+          name: 'SSMPProjectEdit',
           component: ProjectEdit
         },
         {
-          path: '/table-edit',
+          path: 'table-edit',
           name: 'TableEdit',
           component: TableEdit,
           props: true
         },
         {
-          path: '/role-edit',
+          path: 'role-edit',
           name: 'RoleEdit',
           component: RoleEdit,
           props: true
         },
         {
-          path: '/menu-edit',
+          path: 'menu-edit',
           name: 'MenuEdit',
           component: MenuEdit,
           props: true

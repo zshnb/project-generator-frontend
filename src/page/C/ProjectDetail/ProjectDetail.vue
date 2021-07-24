@@ -16,14 +16,15 @@
           <el-button type="primary" @click="onAddEntity">添加结构体</el-button>
         </div>
         <el-row :gutter="20">
-          <el-col :span="6" v-for="entity in entities" :key="entity.id" >
+          <el-col :span="6" v-for="(entity, index) in entities" :key="entity.id">
             <el-card class="entity-card">
               <div slot="header">
                 <div class="card-header">
                   <p>{{ entity.name }}</p>
                   <div>
-                    <el-button size="small" type="primary" @click="onEdit" icon="el-icon-edit"></el-button>
-                    <el-button size="small" type="danger" @click="onDelete" icon="el-icon-delete"></el-button>
+                    <el-button size="small" type="primary" @click="onEditEntity(entity)" icon="el-icon-edit"></el-button>
+                    <el-button size="small" type="danger" @click="onDeleteEntity(index)"
+                               icon="el-icon-delete"></el-button>
                   </div>
                 </div>
               </div>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import axios from "../../../util/Axios";
 
 export default {
@@ -54,6 +55,18 @@ export default {
       project: {
         name: '',
         type: 'C'
+      },
+      entity: {
+        name: '',
+        comment: '',
+        fileOperation: false,
+        operations: [],
+        fields: [{
+          name: '',
+          type: '',
+          comment: '',
+          searchable: false
+        }]
       },
       activeName: 'project-setting'
     }
@@ -65,11 +78,6 @@ export default {
     ...mapState('c', ["entities"])
   },
   methods: {
-    onAddEntity() {
-      this.$router.push({
-        name: 'CEntityEdit',
-      })
-    },
     onChangeTabPane(tab) {
       this.$router.push({
         path: this.$route.path,
@@ -78,15 +86,22 @@ export default {
         }
       })
     },
-    onDelete() {
-      this.deleteTable(this.index)
-    },
-    onEdit() {
+    onAddEntity() {
       this.$router.push({
-        name: 'TableEdit',
+        name: 'CEntityEdit',
         params: {
-          table: this.table,
-          roles: this.roles
+          entity: this.entity
+        }
+      })
+    },
+    onDeleteEntity(index) {
+      this.deleteEntity(index)
+    },
+    onEditEntity(entity) {
+      this.$router.push({
+        name: 'CEntityEdit',
+        params: {
+          entity
         }
       })
     },
@@ -105,13 +120,14 @@ export default {
         let a = document.createElement('a')
         a.style.display = 'none'
         a.href = url
-        a.setAttribute('download', `${this.project.name}.c`)
+        a.setAttribute('download', `${ this.project.name }.c`)
         document.body.appendChild(a)
         a.click() //执行下载
         window.URL.revokeObjectURL(a.href)
         document.body.removeChild(a)
       })
-    }
+    },
+    ...mapMutations('c', ['deleteEntity'])
   }
 }
 </script>
@@ -120,9 +136,11 @@ export default {
 #c-project-edit
   .el-row
     padding 10px
+
   .entity-card
     height 300px
     margin-top 20px
+
     .card-header
       display flex
       justify-content space-between

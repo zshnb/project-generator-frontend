@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import {databaseConfigs} from '../../util/Constant'
+  import {databaseConfigs} from '../../../util/Constant'
   export default {
     name: "ProjectConfig",
     props: {

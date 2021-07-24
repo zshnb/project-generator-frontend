@@ -323,9 +323,10 @@
 </template>
 
 <script>
-import axios from "../../util/Axios";
+import axios from "../../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
-import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../util/TableUtils'
+import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../../util/TableUtils'
+import { formItemClassNames } from "../../../util/Constant";
 
 export default {
   name: "TableEdit",
@@ -375,7 +376,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['roles', 'tables'])
+    ...mapState('ssmp', ['roles', 'tables'])
   },
   methods: {
     onClickColumnItem(column) {
@@ -389,37 +390,37 @@ export default {
       switch (column.type) {
         case 'int': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = formItemClassNames.inputFormItem
           break
         }
         case 'varchar': {
           column.length = 255
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = formItemClassNames.inputFormItem
           break
         }
         case 'tinyint': {
           column.length = 1
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = formItemClassNames.inputFormItem
           break
         }
         case 'date': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateFormItem'
+          column.formItemType = formItemClassNames.dateFormItem
           break;
         }
         case 'text': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.TextAreaFormItem'
+          column.formItemType = formItemClassNames.textAreaFormItem
           break;
         }
         case 'double': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.InputFormItem'
+          column.formItemType = formItemClassNames.inputFormItem
           break;
         }
         case 'datetime': {
           column.length = 0
-          column.formItemType = 'com.zshnb.projectgenerator.generator.entity.DateTimeFormItem'
+          column.formItemType = formItemClassNames.dateTimeFormItem
           break
         }
       }
@@ -480,7 +481,7 @@ export default {
       column.length = 0
       column.enableFormItem = true
       column.enableTableField = false
-      column.formItemType = 'com.zshnb.projectgenerator.generator.entity.SelectFormItem'
+      column.formItemType = formItemClassNames.selectFormItem
     },
     onChangeAssociateTable(tableName, columnAssociate) {
       this.associateTable = this.tables.find(it => it.name === tableName)
@@ -574,7 +575,7 @@ export default {
     onClose() {
       this.$router.back()
     },
-    ...mapMutations(['saveTable'])
+    ...mapMutations('ssmp', ['saveTable'])
   }
 }
 </script>

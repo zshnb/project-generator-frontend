@@ -1,5 +1,10 @@
 <template>
   <div id="home">
+    <el-header class="header">
+      <el-row class="row">
+        <el-col :span="4">项目生成器</el-col>
+      </el-row>
+    </el-header>
     <el-row>
       <el-col :span="2">
         <el-menu :router="true">
@@ -21,6 +26,13 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+#home
+  .header
+    .row
+      background-color #409EFF
+      height 50px
+      color white
+      line-height 50px
+      padding-left 10px
 </style>

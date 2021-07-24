@@ -45,16 +45,16 @@
         </el-form>
       </el-form-item>
       <el-form-item label="操作">
-        <el-checkbox-group v-model="checkOperations">
+        <el-checkbox-group v-model="entity.operations">
           <el-checkbox v-for="operation in operations"
                        :key="operation.value"
-                       :label="operation">
+                       :label="operation.name">
             {{ operation.name }}
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="small" @click="onAddEntity">添加</el-button>
+        <el-button type="primary" size="small" @click="onAddEntity">{{ buttonText }}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -72,21 +72,18 @@ export default {
     axios.get('/field/types').then(res => this.fieldTypes = res.list)
     if (this.entity.name !== '') {
       this.overwrite = true
+      this.buttonText = '修改'
+    } else {
+      this.buttonText = '添加'
+    }
+  },
+  props: {
+    entity: {
+      type: Object
     }
   },
   data() {
     return {
-      entity: {
-        name: '',
-        comment: '',
-        fileOperation: false,
-        fields: [{
-          name: '',
-          type: '',
-          comment: '',
-          searchable: false
-        }]
-      },
       fieldTypes: [],
       field: {},
       overwrite: false,
@@ -108,7 +105,7 @@ export default {
           value: 'delete',
         }
       ],
-      checkOperations: []
+      buttonText: ''
     }
   },
   methods: {
@@ -123,7 +120,7 @@ export default {
     },
     onAddEntity() {
       let menus = []
-      this.checkOperations.forEach(it => {
+      this.entity.operations.forEach(it => {
         switch (it.value) {
           case 'add': {
             menus.push({

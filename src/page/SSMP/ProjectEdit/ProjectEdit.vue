@@ -1,10 +1,10 @@
 <template>
   <div id="project-edit">
-    <el-tabs>
-      <el-tab-pane class="content" label="基础配置">
+    <el-tabs :active-name="activeName" @tab-click="onChangeTabPane">
+      <el-tab-pane class="content" label="基础配置" name="base-setting">
         <project-config :config="config" @generate="onGenerate"/>
       </el-tab-pane>
-      <el-tab-pane label="表结构配置" class="content">
+      <el-tab-pane label="表结构配置" class="content" name="table-setting">
         <el-row :gutter="20">
           <el-col :span="4" v-for="(table, index) in tables" :key="table.id">
             <project-table :table.sync="table" :index="index"/>
@@ -16,7 +16,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="菜单配置" class="content">
+      <el-tab-pane label="菜单配置" class="content" name="menu-setting">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
             <project-menu :menu="menu" :index="index"/>
@@ -28,7 +28,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="角色配置" class="content">
+      <el-tab-pane label="角色配置" class="content" name="role-setting">
         <el-row :gutter="20">
           <el-col :span="3" v-for="(role, index) in roles" :key="role.id">
             <project-role :role="role" :index="index"/>
@@ -49,9 +49,10 @@
   import ProjectTable from "../ProjectTable/ProjectTable";
   import ProjectMenu from "../ProjectMenu/ProjectMenu";
   import ProjectRole from "../ProjectRole/ProjectRole";
-  import axios from '../../util/Axios'
+  import axios from '../../../util/Axios'
   import { mapState } from 'vuex'
-  import { getDefaultOperations } from "../../util/TableUtils";
+  import { getDefaultOperations } from "../../../util/TableUtils";
+  import { getColumn } from "../../../util/TableUtils";
 
   export default {
     name: "ProjectEdit",
@@ -81,31 +82,7 @@
           bindRoles: [],
           bindUser: '',
           comment: '',
-          columns: [{
-            name: '',
-            type: 'varchar',
-            comment: '',
-            length:255,
-            label: '',
-            title: '',
-            primary: false,
-            nullable: true,
-            repeatable: true,
-            searchable: false,
-            enableFormItem: true,
-            enableTableField: true,
-            formItemType: 'com.zshnb.projectgenerator.generator.entity.InputFormItem',
-            require: false,
-            options: [],
-            mappings: [],
-            enableAssociate: false,
-            associate: {
-              targetTableName: '',
-              targetColumnName: '',
-              formItemColumnName: '',
-              associateResultColumns: []
-            }
-          }],
+          columns: [getColumn()],
           permissions: [{
             role: '',
             operations: getDefaultOperations(),
@@ -126,11 +103,15 @@
           name: '',
           description: '',
           menus: []
-        }
+        },
+        activeName: 'project-setting'
       }
     },
     computed: {
-      ...mapState(['menus', 'roles', 'tables'])
+      ...mapState('ssmp', ['menus', 'roles', 'tables'])
+    },
+    mounted() {
+      this.activeName = this.$route.query.activeName || 'base-setting'
     },
     watch: {
       config: {
@@ -164,6 +145,14 @@
           name: 'RoleEdit',
           params: {
             role: this.role
+          }
+        })
+      },
+      onChangeTabPane(tab) {
+        this.$router.push({
+          path: this.$route.path,
+          query: {
+            activeName: tab.name
           }
         })
       },
@@ -227,7 +216,7 @@
           roles: roles,
           type: this.config.type
         }
-        axios.post('/project/generate', JSON.stringify(project), {
+        axios.post('/project/generate', JSON.stringify({ webProject: project }), {
           responseType: 'blob'
         }).then(data => {
           if (!data) {
