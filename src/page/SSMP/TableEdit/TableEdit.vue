@@ -195,7 +195,7 @@
                 <el-input v-model="option.value" placeholder="选项值"/>
               </el-form-item>
             </el-col>
-            <el-col :span="1">
+            <el-col :span="4">
               <el-form-item>
                 <el-button type="danger"
                            icon="el-icon-remove-outline"
@@ -217,7 +217,7 @@
         <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
                       :key="resultColumn.originColumnName">
           <el-form :inline="true" :model="resultColumn">
-            <el-col :span="6">
+            <el-col :span="10">
               <el-form-item>
                 <el-select v-model="resultColumn.originColumnName"
                            placeholder="列名"
@@ -226,17 +226,12 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item>
-                <el-input v-model="resultColumn.aliasColumnName" placeholder="列别名"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="10">
               <el-form-item>
                 <el-input v-model="resultColumn.tableFieldTitle" placeholder="列描述"/>
               </el-form-item>
             </el-col>
-            <el-col :span="1">
+            <el-col :span="4">
               <el-form-item>
                 <el-button type="danger"
                            icon="el-icon-remove-outline"
@@ -488,10 +483,8 @@ export default {
       columnAssociate.targetColumnName = 'id'
     },
     onChangeAssociateResultColumn(originColumnName, resultColumn) {
-      const camelcase = require('camelcase')
       let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
       resultColumn.columnType = targetColumn.type
-      resultColumn.aliasColumnName = camelcase(`${ this.column.associate.targetTableName }_${ originColumnName }`)
       resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
     },
     onEditAssociateResultColumns(column) {
@@ -503,7 +496,6 @@ export default {
       this.column.associate.associateResultColumns.push({
         columnType: '',
         originColumnName: '',
-        aliasColumnName: '',
         tableFieldTitle: ''
       })
     },
