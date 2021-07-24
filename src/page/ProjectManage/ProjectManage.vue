@@ -18,7 +18,7 @@
       <el-card class="project-type-card"
                v-for="projectType in projectTypes"
                :key="projectType.type"
-               @click="onConfirmProjectType(projectType)"
+               @click.native="onConfirmProjectType(projectType)"
       >
         <p>{{ projectType.name }}</p>
       </el-card>
@@ -35,7 +35,7 @@ export default {
         {
           name: 'C语言',
           type: 'C',
-          routerName: 'CProjectEdit'
+          routerName: 'CProjectDetail'
         },
         {
           name: 'Spring Boot',

@@ -8,7 +8,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="22">
+      <el-col :span="20" style="margin-left: 20px">
         <router-view/>
       </el-col>
     </el-row>

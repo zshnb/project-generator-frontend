@@ -162,7 +162,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作">
-            <el-checkbox-group v-model="permission.operations" @change="onChangeOperation($event, permission)">
+            <el-checkbox-group v-model="permission.operations">
               <el-checkbox v-for="operation in permission.operations"
                            :key="operation.value"
                            :label="operation">
@@ -540,10 +540,6 @@ export default {
     onEditOperation(operation) {
       this.operation = operation
       this.showOperation = true
-    },
-    onChangeOperation(value, permission) {
-      let checkedCount = value.length;
-      permission.checkAll = checkedCount === permission.operations.length
     },
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
