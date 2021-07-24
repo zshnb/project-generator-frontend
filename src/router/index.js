@@ -31,7 +31,8 @@ export default new Router({
         {
           name: 'CEntityEdit',
           path: 'c-entity-edit',
-          component: EntityEdit
+          component: EntityEdit,
+          props: true
         },
         {
           path: '/project-edit',
