@@ -41,7 +41,7 @@
       ...mapState('ssmp', ['menus'])
     },
     methods: {
-      ...mapMutations(['saveRole']),
+      ...mapMutations('ssmp', ['saveRole']),
       onSave() {
         this.role.menus.forEach(it => it.role = this.role.name)
         let newRole = JSON.parse(JSON.stringify(this.role))
