@@ -19,8 +19,8 @@ const state = {
     jdbcUser: databaseConfigs.mysql.jdbcUser,
     jdbcPassword: databaseConfigs.mysql.jdbcPassword,
     jdbcDatabase: 'demo',
-    type: ''
   },
+  type: '',
   tables: [
     {
       name: 'user',
@@ -124,7 +124,7 @@ const getters = {
   tables: state => state.tables,
   roles: state => state.roles,
   menus: state => state.menus,
-  config: state => state.config
+  type: state => state.type
 }
 
 const mutations = {
@@ -191,6 +191,9 @@ const mutations = {
       icon: menu.icon,
       bind: menu.bind
     })
+  },
+  setType(state, type) {
+    state.type = type
   }
 }
 

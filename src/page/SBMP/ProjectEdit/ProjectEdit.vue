@@ -85,7 +85,7 @@
       }
     },
     computed: {
-      ...mapState('sbmp', ['menus', 'roles', 'tables', 'config'])
+      ...mapState('sbmp', ['menus', 'roles', 'tables', 'config', 'type'])
     },
     mounted() {
       this.activeName = this.$route.query.activeName || 'base-setting'
@@ -191,7 +191,7 @@
             }
           }),
           roles: roles,
-          type: this.config.type
+          type: this.type
         }
         let loadingInstance = Loading.service({
           fullscreen: true,
@@ -213,6 +213,8 @@
           a.click() //执行下载
           window.URL.revokeObjectURL(a.href)
           document.body.removeChild(a)
+          loadingInstance.close()
+        }).catch(res => {
           loadingInstance.close()
         })
       }
