@@ -39,7 +39,7 @@ export default {
         },
         {
           name: 'Spring Boot',
-          type: 'SSMP',
+          type: 'SBMP',
           routerName: 'SSMPProjectEdit'
         }
       ],

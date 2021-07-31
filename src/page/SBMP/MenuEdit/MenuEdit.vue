@@ -47,10 +47,10 @@
       }
     },
     computed: {
-      ...mapState('ssmp', ['tables', 'roles'])
+      ...mapState('sbmp', ['tables', 'roles'])
     },
     methods: {
-      ...mapMutations('ssmp', ['saveMenu', 'addMenuInRole']),
+      ...mapMutations('sbmp', ['saveMenu', 'addMenuInRole']),
       onSave() {
         let newMenu = JSON.parse(JSON.stringify(this.menu))
         if (this.menu.bind) {

@@ -103,7 +103,7 @@
       }
     },
     computed: {
-      ...mapState('ssmp', ['menus', 'roles', 'tables'])
+      ...mapState('sbmp', ['menus', 'roles', 'tables'])
     },
     mounted() {
       this.activeName = this.$route.query.activeName || 'base-setting'

@@ -371,7 +371,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('ssmp', ['roles', 'tables'])
+    ...mapState('sbmp', ['roles', 'tables'])
   },
   methods: {
     onClickColumnItem(column) {
@@ -567,7 +567,7 @@ export default {
     onClose() {
       this.$router.back()
     },
-    ...mapMutations('ssmp', ['saveTable'])
+    ...mapMutations('sbmp', ['saveTable'])
   }
 }
 </script>
