@@ -53,14 +53,6 @@
       <el-form-item label="数据库名">
         <el-input placeholder="jdbcDatabase" v-model="config.jdbcDatabase"></el-input>
       </el-form-item>
-      <el-form-item label="UI库">
-        <el-select v-model="config.type">
-          <el-option v-for="item in projectTypes"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onGenerate">生成</el-button>
       </el-form-item>
@@ -79,10 +71,6 @@
     },
     data() {
       return {
-        projectTypes: [{
-          name: 'layui',
-          value: 1
-        }],
         databases: ['mysql', 'sqlserver']
       }
     },

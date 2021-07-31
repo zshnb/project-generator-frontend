@@ -54,24 +54,6 @@
     components: {ProjectRole, ProjectMenu, ProjectTable, ProjectConfig},
     data() {
       return {
-        config: {
-          groupId: 'com.demo',
-          artifactId: 'demo',
-          version: '1.0',
-          rootPackageName: 'com.demo.demo',
-          entityPackageName: 'entity',
-          servicePackageName: 'service',
-          serviceImplPackageName: 'serviceImpl',
-          mapperPackageName: 'mapper',
-          controllerPackageName: 'controller',
-          database: 'mysql',
-          jdbcHost: 'localhost',
-          jdbcPort: 3306,
-          jdbcUser: 'root',
-          jdbcPassword: 'root',
-          jdbcDatabase: 'demo',
-          type: 1
-        },
         table: {
           name: '',
           bindRoles: [],
@@ -103,7 +85,7 @@
       }
     },
     computed: {
-      ...mapState('sbmp', ['menus', 'roles', 'tables'])
+      ...mapState('sbmp', ['menus', 'roles', 'tables', 'config'])
     },
     mounted() {
       this.activeName = this.$route.query.activeName || 'base-setting'
