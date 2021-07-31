@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import c from './c'
-import ssmp from "./ssmp";
+import sbmp from "./sbmp";
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    ssmp,
+    sbmp,
     c
   }
 })

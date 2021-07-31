@@ -23,7 +23,7 @@
       }
     },
     methods: {
-      ...mapMutations('ssmp', ['deleteMenu']),
+      ...mapMutations('sbmp', ['deleteMenu']),
       onEdit() {
         this.$router.push({
           name: 'MenuEdit',

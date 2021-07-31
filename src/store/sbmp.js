@@ -1,7 +1,26 @@
 import { getDefaultOperations, generateDefaultColumns } from "../util/TableUtils";
 import { formItemClassNames } from "../util/Constant";
+import { databaseConfigs } from "../util/Constant";
 
 const state = {
+  config: {
+    groupId: 'com.demo',
+    artifactId: 'demo',
+    version: '1.0',
+    rootPackageName: 'com.demo.demo',
+    entityPackageName: 'entity',
+    servicePackageName: 'service',
+    serviceImplPackageName: 'serviceImpl',
+    mapperPackageName: 'mapper',
+    controllerPackageName: 'controller',
+    database: 'mysql',
+    jdbcHost: databaseConfigs.mysql.jdbcHost,
+    jdbcPort: databaseConfigs.mysql.jdbcPort,
+    jdbcUser: databaseConfigs.mysql.jdbcUser,
+    jdbcPassword: databaseConfigs.mysql.jdbcPassword,
+    jdbcDatabase: 'demo',
+  },
+  type: '',
   tables: [
     {
       name: 'user',
@@ -104,7 +123,8 @@ const state = {
 const getters = {
   tables: state => state.tables,
   roles: state => state.roles,
-  menus: state => state.menus
+  menus: state => state.menus,
+  type: state => state.type
 }
 
 const mutations = {
@@ -171,6 +191,9 @@ const mutations = {
       icon: menu.icon,
       bind: menu.bind
     })
+  },
+  setType(state, type) {
+    state.type = type
   }
 }
 

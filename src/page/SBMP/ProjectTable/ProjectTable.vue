@@ -39,7 +39,7 @@
       }
     },
     methods: {
-      ...mapMutations('ssmp', ['deleteTable']),
+      ...mapMutations('sbmp', ['deleteTable']),
       onDelete() {
         this.deleteTable(this.index)
       },

@@ -54,24 +54,6 @@
     components: {ProjectRole, ProjectMenu, ProjectTable, ProjectConfig},
     data() {
       return {
-        config: {
-          groupId: 'com.demo',
-          artifactId: 'demo',
-          version: '1.0',
-          rootPackageName: 'com.demo.demo',
-          entityPackageName: 'entity',
-          servicePackageName: 'service',
-          serviceImplPackageName: 'serviceImpl',
-          mapperPackageName: 'mapper',
-          controllerPackageName: 'controller',
-          database: 'mysql',
-          jdbcHost: 'localhost',
-          jdbcPort: 3306,
-          jdbcUser: 'root',
-          jdbcPassword: 'root',
-          jdbcDatabase: 'demo',
-          type: 1
-        },
         table: {
           name: '',
           bindRoles: [],
@@ -103,7 +85,7 @@
       }
     },
     computed: {
-      ...mapState('ssmp', ['menus', 'roles', 'tables'])
+      ...mapState('sbmp', ['menus', 'roles', 'tables', 'config', 'type'])
     },
     mounted() {
       this.activeName = this.$route.query.activeName || 'base-setting'
@@ -209,7 +191,7 @@
             }
           }),
           roles: roles,
-          type: this.config.type
+          type: this.type
         }
         let loadingInstance = Loading.service({
           fullscreen: true,
@@ -231,6 +213,8 @@
           a.click() //执行下载
           window.URL.revokeObjectURL(a.href)
           document.body.removeChild(a)
+          loadingInstance.close()
+        }).catch(res => {
           loadingInstance.close()
         })
       }

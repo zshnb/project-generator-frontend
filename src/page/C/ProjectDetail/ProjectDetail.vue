@@ -132,6 +132,8 @@ export default {
         window.URL.revokeObjectURL(a.href)
         document.body.removeChild(a)
         loadingInstance.close()
+      }).catch(res => {
+        loadingInstance.close()
       })
     },
     ...mapMutations('c', ['deleteEntity'])

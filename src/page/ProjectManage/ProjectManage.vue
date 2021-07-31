@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "ProjectManage",
   data() {
@@ -38,8 +40,13 @@ export default {
           routerName: 'CProjectDetail'
         },
         {
-          name: 'Spring Boot',
-          type: 'SSMP',
+          name: 'Spring Boot(MybatisPlus+Thymeleaf)',
+          type: 'SBMP',
+          routerName: 'SSMPProjectEdit'
+        },
+        {
+          name: 'Spring(MybatisPlus+JSP)',
+          type: 'SSM',
           routerName: 'SSMPProjectEdit'
         }
       ],
@@ -51,10 +58,14 @@ export default {
       this.showAddProjectDialog = true
     },
     onConfirmProjectType(projectType) {
+      if (['SBMP', 'SSM'].includes(projectType.type)) {
+        this.setType(projectType.type)
+      }
       this.$router.push({
         name: projectType.routerName
       })
-    }
+    },
+    ...mapMutations('sbmp', ['setType'])
   }
 }
 </script>
