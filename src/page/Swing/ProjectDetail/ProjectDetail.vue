@@ -15,7 +15,7 @@
                 <div class="card-header">
                   <p>{{table.name}}</p>
                   <div>
-                    <el-button size="small" type="primary" @click="onEdit" icon="el-icon-edit"></el-button>
+                    <el-button size="small" type="primary" @click="onEdit(table)" icon="el-icon-edit"></el-button>
                     <el-button size="small" type="danger" @click="onDelete(index)" icon="el-icon-delete"></el-button>
                   </div>
                 </div>
@@ -146,11 +146,11 @@ export default {
     onDelete(index) {
       this.deleteTable(index)
     },
-    onEdit() {
+    onEdit(table) {
       this.$router.push({
         name: 'SwingTable',
         params: {
-          table: this.table
+          table
         }
       })
     },

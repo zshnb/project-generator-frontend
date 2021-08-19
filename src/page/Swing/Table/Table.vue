@@ -1,7 +1,7 @@
 <template>
   <div id="swing-table">
     <el-form :model="table" label-width="120px">
-      <el-form-item class="name-form-item" label="开启页面">
+      <el-form-item class="name-form-item" label="开启窗体">
         <el-switch v-model="table.enablePage"/>
       </el-form-item>
       <el-form-item label="表名">
@@ -335,7 +335,7 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-#table-edit
+#swing-table
   .el-row
     margin-bottom 20px
 
