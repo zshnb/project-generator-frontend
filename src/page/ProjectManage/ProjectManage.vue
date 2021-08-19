@@ -48,6 +48,11 @@ export default {
           name: 'Spring(MybatisPlus+JSP)',
           type: 'SSM',
           routerName: 'SSMPProjectEdit'
+        },
+        {
+          name: 'Swing',
+          type: 'SWING',
+          routerName: 'SwingProjectEdit'
         }
       ],
       showAddProjectDialog: false

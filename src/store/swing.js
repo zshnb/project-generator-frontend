@@ -1,5 +1,3 @@
-import { getDefaultOperations, generateDefaultColumns } from "../util/TableUtils";
-import { formItemClassNames, frameItemClassNames } from "../util/Constant";
 import { databaseConfigs } from "../util/Constant";
 
 const state = {
@@ -9,10 +7,7 @@ const state = {
     version: '1.0',
     rootPackageName: 'com.demo.demo',
     entityPackageName: 'entity',
-    servicePackageName: 'service',
-    serviceImplPackageName: 'serviceImpl',
     mapperPackageName: 'mapper',
-    controllerPackageName: 'controller',
     database: 'mysql',
     jdbcHost: databaseConfigs.mysql.jdbcHost,
     jdbcPort: databaseConfigs.mysql.jdbcPort,
@@ -20,7 +15,6 @@ const state = {
     jdbcPassword: databaseConfigs.mysql.jdbcPassword,
     jdbcDatabase: 'demo',
   },
-  type: '',
   tables: [],
   roles: [],
   menus: []
@@ -97,9 +91,6 @@ const mutations = {
       icon: menu.icon,
       bind: menu.bind
     })
-  },
-  setType(state, type) {
-    state.type = type
   }
 }
 

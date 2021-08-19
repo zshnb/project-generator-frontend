@@ -190,16 +190,16 @@
 
 <script>
 import axios from "../../../util/Axios";
-import { generateDefaultColumns, getColumn } from "../../../util/TableUtils";
+import { generateDefaultColumns, getColumn } from "../../../util/swing/TableUtils";
 import { mapMutations, mapState } from "vuex";
-import { formItemClassNames } from "../../../util/Constant";
+import { frameItemClassNames } from "../../../util/Constant";
 
 export default {
   name: "Table",
   created() {
     axios.get('/column/types').then(res => this.columnTypes = res.list)
-    axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
-    axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
+    axios.get('/page/frame-items').then(res => this.formItemTypes = res.list)
+    axios.get('/page/option-frame-items').then(res => this.needOptionFormItemTypes = res.list)
     if (this.table.name !== '') {
       this.overwrite = true
     }
@@ -227,7 +227,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('swing', ['roles', 'tables'])
+    ...mapState('swing', ['tables'])
   },
   methods: {
     onClickColumnItem(column) {
@@ -241,37 +241,12 @@ export default {
       switch (column.type) {
         case 'int': {
           column.length = 0
-          column.formItemType = formItemClassNames.inputFormItem
+          column.formItemType = frameItemClassNames.textFieldFrameItem
           break
         }
         case 'varchar': {
           column.length = 255
-          column.formItemType = formItemClassNames.inputFormItem
-          break
-        }
-        case 'tinyint': {
-          column.length = 1
-          column.formItemType = formItemClassNames.inputFormItem
-          break
-        }
-        case 'date': {
-          column.length = 0
-          column.formItemType = formItemClassNames.dateFormItem
-          break;
-        }
-        case 'text': {
-          column.length = 0
-          column.formItemType = formItemClassNames.textAreaFormItem
-          break;
-        }
-        case 'double': {
-          column.length = 0
-          column.formItemType = formItemClassNames.inputFormItem
-          break;
-        }
-        case 'datetime': {
-          column.length = 0
-          column.formItemType = formItemClassNames.dateTimeFormItem
+          column.formItemType = frameItemClassNames.textFieldFrameItem
           break
         }
       }
@@ -304,7 +279,7 @@ export default {
       column.length = 0
       column.enableFormItem = true
       column.enableTableField = false
-      column.formItemType = formItemClassNames.selectFormItem
+      column.formItemType = frameItemClassNames.selectFrameItem
     },
     onChangeAssociateTable(tableName, columnAssociate) {
       this.associateTable = this.tables.find(it => it.name === tableName)
@@ -339,7 +314,7 @@ export default {
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
       newTable.id = Math.random()
-      newTable.frames = this.table.columns.map(it => {
+      newTable.items = this.table.columns.map(it => {
         return {
           className: it.formItemType,
           options: it.options
@@ -375,4 +350,4 @@ export default {
     display inline-block
   >>>.el-drawer.rtl
     overflow scroll
-</style
+</style>

@@ -10,7 +10,26 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="6" v-for="(table, index) in tables" :key="table.id">
-            <project-table :table.sync="table" :index="index"/>
+            <el-card>
+              <div slot="header">
+                <div class="card-header">
+                  <p>{{table.name}}</p>
+                  <div>
+                    <el-button size="small" type="primary" @click="onEdit" icon="el-icon-edit"></el-button>
+                    <el-button size="small" type="danger" @click="onDelete(index)" icon="el-icon-delete"></el-button>
+                  </div>
+                </div>
+              </div>
+              <div class="table-body">
+                <ul>
+                  <li v-for="column in table.columns" :key="column.id">
+                    <span>{{column.name}}</span>
+                    <span>{{column.type}}</span>
+                    <span>({{column.length}})</span>
+                  </li>
+                </ul>
+              </div>
+            </el-card>
           </el-col>
         </el-row>
       </el-tab-pane>
@@ -44,26 +63,19 @@ import { Loading } from "element-ui";
 import axios from "../../../util/Axios";
 import ProjectRole from "../../SBMP/ProjectRole/ProjectRole";
 import ProjectMenu from "../../SBMP/ProjectMenu/ProjectMenu";
-import ProjectTable from "../../SBMP/ProjectTable/ProjectTable";
+import Table from "../Table/Table";
 import ProjectConfig from "../../SBMP/ProjectConfig/ProjectConfig";
-import { getColumn, getDefaultOperations } from "../../../util/TableUtils";
+import { getColumn } from "../../../util/swing/TableUtils";
 
 export default {
   name: "ProjectDetail",
-  components: {ProjectRole, ProjectMenu, ProjectTable, ProjectConfig},
+  components: { ProjectRole, ProjectMenu, Table, ProjectConfig },
   data() {
     return {
       table: {
         name: '',
-        bindRoles: [],
-        bindUser: '',
         comment: '',
         columns: [getColumn()],
-        permissions: [{
-          role: '',
-          operations: getDefaultOperations(),
-          checkAll: false
-        }],
         enablePage: true
       },
       menu: {
@@ -84,7 +96,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('sbmp', ['menus', 'roles', 'tables', 'config', 'type'])
+    ...mapState('swing', ['menus', 'roles', 'tables', 'config'])
   },
   mounted() {
     this.activeName = this.$route.query.activeName || 'base-setting'
@@ -101,16 +113,15 @@ export default {
   methods: {
     onCreateTable() {
       this.$router.push({
-        name: 'TableEdit',
+        name: 'SwingTable',
         params: {
-          table: this.table,
-          roles: this.roles
+          table: this.table
         }
       })
     },
     onCreateMenu() {
       this.$router.push({
-        name: 'MenuEdit',
+        name: 'SwingMenu',
         params: {
           menu: this.menu
         }
@@ -118,7 +129,7 @@ export default {
     },
     onCreateRole() {
       this.$router.push({
-        name: 'RoleEdit',
+        name: 'SwingRole',
         params: {
           role: this.role
         }
@@ -129,6 +140,17 @@ export default {
         path: this.$route.path,
         query: {
           activeName: tab.name
+        }
+      })
+    },
+    onDelete(index) {
+      this.deleteTable(index)
+    },
+    onEdit() {
+      this.$router.push({
+        name: 'SwingTable',
+        params: {
+          table: this.table
         }
       })
     },
@@ -144,12 +166,6 @@ export default {
       })
       let tables = this.tables.map(it => {
         let table = JSON.parse(JSON.stringify(it))
-        if (table.bindRoles.length === 0) {
-          delete table.bindRoles
-        }
-        if (table.bindUser === '') {
-          delete table.bindUser
-        }
         table.columns.forEach(c => {
           if (c.associate && c.associate.targetTableName === '') {
             delete c.associate
@@ -171,32 +187,18 @@ export default {
       let project = {
         config: this.config,
         tables: tables,
-        pages: this.tables.filter(t => t.enablePage).map(t => {
-          let form = JSON.parse(JSON.stringify(t.form))
-          form.items.forEach(it => {
-            if (it.options && it.options.length === 0) {
-              delete it.options
-            }
-          })
-          let tableComponent = JSON.parse(JSON.stringify(t.table))
-          tableComponent.fields.forEach(it => {
-            if (it.mappings && it.mappings.length === 0) {
-              delete it.mappings
-            }
-          })
+        frames: this.tables.filter(t => t.enablePage).map(t => {
           return {
-            form: form,
-            table: tableComponent
+            items: t.items
           }
         }),
-        roles: roles,
-        type: this.type
+        roles: roles
       }
       let loadingInstance = Loading.service({
         fullscreen: true,
         text: '项目生成中...'
       });
-      axios.post('/project/generate', JSON.stringify({ webProject: project }), {
+      axios.post('/project/generate', JSON.stringify({ swingProject: project }), {
         responseType: 'blob'
       }).then(data => {
         if (!data) {
@@ -216,11 +218,17 @@ export default {
       }).catch(res => {
         loadingInstance.close()
       })
-    }
+    },
+    ...mapMutations('swing', ['deleteTable']),
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+#swing-project-detail
+  .card-header
+    display flex
+    justify-content space-between
+    align-items center
 </style>
+>
