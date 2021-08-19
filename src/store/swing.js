@@ -1,4 +1,5 @@
-import { databaseConfigs } from "../util/Constant";
+import { databaseConfigs, frameItemClassNames } from "../util/Constant";
+import { generateDefaultColumns } from "../util/TableUtils";
 
 const state = {
   config: {
@@ -15,7 +16,71 @@ const state = {
     jdbcPassword: databaseConfigs.mysql.jdbcPassword,
     jdbcDatabase: 'demo',
   },
-  tables: [],
+  tables: [
+    {
+      name: 'user',
+      comment: '用户',
+      columns: [{
+        name: 'username',
+        type: 'varchar',
+        comment: '用户名',
+        length: 255,
+        primary: false,
+        repeatable: false,
+        require: true,
+        searchable: false,
+        enableFormItem: true,
+        enableTableField: true,
+        formItemType: frameItemClassNames.textFieldFrameItem,
+        enableAssociate: false
+      }, {
+        name: 'password',
+        type: 'varchar',
+        comment: '密码',
+        length: 255,
+        primary: false,
+        repeatable: true,
+        require: true,
+        searchable: false,
+        enableFormItem: true,
+        enableTableField: true,
+        formItemType: frameItemClassNames.passwordFrameItem,
+        enableAssociate: false
+      }, {
+        name: 'role',
+        type: 'varchar',
+        comment: '角色',
+        length: 255,
+        primary: false,
+        repeatable: true,
+        require: true,
+        searchable: false,
+        enableFormItem: true,
+        enableTableField: true,
+        formItemType: frameItemClassNames.selectFrameItem,
+        options: [],
+        enableAssociate: false
+      }, ...generateDefaultColumns()],
+      enablePage: false,
+      frame: {
+        items: [
+          {
+            formItemClassName: frameItemClassNames.textFieldFrameItem,
+            require: true
+          },
+          {
+            formItemClassName: frameItemClassNames.passwordFrameItem,
+            require: true
+          },
+          {
+            formItemClassName: frameItemClassNames.selectFrameItem,
+            require: true,
+            options: []
+          }
+        ]
+      }
+    }
+  ],
   roles: [],
   menus: []
 }
@@ -47,20 +112,8 @@ const mutations = {
     if (!overwrite) {
       state.roles.push(role)
     } else {
-      let index = state.roles.findIndex(it => it.name === role.name )
+      let index = state.roles.findIndex(it => it.name === role.name)
       state.roles.splice(index, 1, role)
-    }
-    let table = state.tables.find(t => t.name === 'user')
-    if (table !== undefined) {
-      let roleColumnIndex = table.columns.findIndex(c => c.name === 'role')
-      let options = state.roles.map(r => {
-        return {
-          title: r.description,
-          value: r.name
-        }
-      })
-      table.columns[roleColumnIndex].options = options
-      table.form.items[roleColumnIndex].options = options
     }
   },
   deleteRole(state, index) {
@@ -72,7 +125,7 @@ const mutations = {
     if (!overwrite) {
       state.menus.push(menu)
     } else {
-      let index = state.menus.findIndex(it => it.name === menu.name )
+      let index = state.menus.findIndex(it => it.name === menu.name)
       state.menus.splice(index, 1, menu)
     }
   },
@@ -82,7 +135,7 @@ const mutations = {
   addMenuInRole(state, payload) {
     let role = state.roles.find(it => it.description === payload.roleDescription)
     if (role === undefined) {
-      throw Error(`role: ${payload.roleDescription} not found`)
+      throw Error(`role: ${ payload.roleDescription } not found`)
     }
     let menu = payload.menu
     role.menus.push({
