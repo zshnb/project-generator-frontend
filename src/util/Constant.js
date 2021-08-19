@@ -25,7 +25,15 @@ const formItemClassNames = {
   imageFormItem: 'com.zshnb.projectgenerator.generator.entity.web.ImageFormItem',
 }
 
+const frameItemClassNames = {
+  textFieldFrameItem: 'com.zshnb.projectgenerator.generator.entity.swing.TextFieldFrameItem',
+  passwordFrameItem: 'com.zshnb.projectgenerator.generator.entity.swing.PasswordFrameItem',
+  radioFrameItem: 'com.zshnb.projectgenerator.generator.entity.swing.RadioFrameItem',
+  selectFrameItem: 'com.zshnb.projectgenerator.generator.entity.swing.SelectFrameItem',
+}
+
 export {
   databaseConfigs,
-  formItemClassNames
+  formItemClassNames,
+  frameItemClassNames
 }

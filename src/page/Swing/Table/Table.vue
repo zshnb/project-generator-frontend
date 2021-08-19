@@ -1,0 +1,378 @@
+<template>
+  <div id="swing-table">
+    <el-form :model="table" label-width="120px">
+      <el-form-item class="name-form-item" label="开启页面">
+        <el-switch v-model="table.enablePage"/>
+      </el-form-item>
+      <el-form-item label="表名">
+        <el-col :span="3">
+          <el-input v-model="table.name" placeholder="请输入表名"/>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="表描述">
+        <el-col :span="3">
+          <el-input v-model="table.comment" placeholder="请输入表名"/>
+        </el-col>
+      </el-form-item>
+      <el-form-item v-for="(column, index) in table.columns" :key="column.id" @click.native="onClickColumnItem(column)">
+        <div slot="label">
+          <el-button type="primary"
+                     size="small"
+                     icon="el-icon-circle-plus-outline"
+                     plain
+                     @click="onAddColumn(index)"/>
+          <el-button type="danger"
+                     size="small"
+                     icon="el-icon-remove-outline"
+                     plain
+                     @click="onDeleteColumn(index)"/>
+        </div>
+        <el-form :inline="true"
+                 :model="column"
+                 class="column-form">
+          <el-row>
+            <el-form-item label="列名" class="name-form-item">
+              <el-input v-model="column.name" placeholder="列名"/>
+            </el-form-item>
+            <el-form-item label="类型">
+              <el-select v-model="column.type" @change="onChangeType($event, column)">
+                <el-option v-for="type in columnTypes" :key="type" :label="type" :value="type"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item class="length-form-item" label="长度">
+              <el-input v-model="column.length"/>
+            </el-form-item>
+            <el-form-item label="列描述" class="name-form-item">
+              <el-input v-model="column.comment"/>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <div>
+              <el-form-item label="主键">
+                <el-switch v-model="column.primary"/>
+              </el-form-item>
+              <el-form-item label="可空">
+                <el-switch v-model="column.nullable"/>
+              </el-form-item>
+              <el-form-item label="重复">
+                <el-switch v-model="column.repeatable"/>
+              </el-form-item>
+            </div>
+            <div v-if="table.enablePage">
+              <el-form-item label="表单项">
+                <el-switch v-model="column.enableFormItem"/>
+              </el-form-item>
+              <el-form-item label="必选项" v-if="column.enableFormItem">
+                <el-switch v-model="column.require"/>
+              </el-form-item>
+              <el-form-item label="表单项类型" v-if="column.enableFormItem">
+                <el-select v-model="column.formItemType">
+                  <el-option v-for="formItemType in formItemTypes"
+                             :key="formItemType.className"
+                             :label="formItemType.name"
+                             :value="formItemType.className"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="isOptionalFormItem(column.formItemType)">
+                <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
+              </el-form-item>
+            </div>
+            <div v-if="table.enablePage">
+              <el-form-item label="搜索">
+                <el-switch v-model="column.searchable"/>
+              </el-form-item>
+              <el-form-item label="表格列">
+                <el-switch v-model="column.enableTableField"/>
+              </el-form-item>
+            </div>
+            <div>
+              <el-form-item label="关联">
+                <el-switch v-model="column.enableAssociate" @change="onChangeAssociateStatus($event, column)"/>
+              </el-form-item>
+              <el-form-item v-if="column.enableAssociate">
+                <el-form :inline="true" :model="column.associate">
+                  <el-form-item label="选择关联表">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column.associate)">
+                      <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="关联的列">
+                    <el-select v-model="column.associate.targetColumnName"
+                               @visible-change="onUpdateTargetColumnNames($event, column)">
+                      <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item v-if="column.enableFormItem" label="表单项列">
+                    <el-select v-model="column.associate.formItemColumnName">
+                      <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="onEditAssociateResultColumns(column)">编辑关联的筛选列</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-form-item>
+            </div>
+          </el-row>
+        </el-form>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSave">保存</el-button>
+        <el-button @click="onClose">取消</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-drawer :visible.sync="showEditOptions" class="option-drawer">
+      <el-form :model="column">
+        <el-form-item v-for="(option, index) in column.options" :key="option.id">
+          <el-form :inline="true" :model="option">
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="option.title" placeholder="选项描述" @input="onInputOptionTitle($event, option)"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="option.value" placeholder="选项值"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item>
+                <el-button type="danger"
+                           icon="el-icon-remove-outline"
+                           @click="onDeleteOption(index)"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-form-item>
+        <el-form-item class="add-btn-form-item">
+          <el-button type="primary" @click="onAddOption">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
+
+    <el-drawer v-if="showEditAssociateResultColumns" :visible.sync="showEditAssociateResultColumns"
+               class="option-drawer">
+      <el-form :model="column.associate">
+        <el-form-item v-for="(resultColumn, index) in column.associate.associateResultColumns"
+                      :key="resultColumn.originColumnName">
+          <el-form :inline="true" :model="resultColumn">
+            <el-col :span="10">
+              <el-form-item>
+                <el-select v-model="resultColumn.originColumnName"
+                           placeholder="列名"
+                           @change="onChangeAssociateResultColumn($event, resultColumn)">
+                  <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item>
+                <el-input v-model="resultColumn.tableFieldTitle" placeholder="列描述"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item>
+                <el-button type="danger"
+                           icon="el-icon-remove-outline"
+                           @click="onDeleteResultColumn(index)"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-form-item>
+        <el-form-item class="add-btn-form-item">
+          <el-button type="primary" @click="onAddResultColumn">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
+  </div>
+</template>
+
+<script>
+import axios from "../../../util/Axios";
+import { generateDefaultColumns, getColumn } from "../../../util/TableUtils";
+import { mapMutations, mapState } from "vuex";
+import { formItemClassNames } from "../../../util/Constant";
+
+export default {
+  name: "Table",
+  created() {
+    axios.get('/column/types').then(res => this.columnTypes = res.list)
+    axios.get('/page/form-items').then(res => this.formItemTypes = res.list)
+    axios.get('/page/option-form-items').then(res => this.needOptionFormItemTypes = res.list)
+    if (this.table.name !== '') {
+      this.overwrite = true
+    }
+    if (this.table.columns.map(it => it.name).indexOf('id') === -1) {
+      generateDefaultColumns().forEach(it => this.table.columns.push(it))
+    }
+  },
+  props: {
+    table: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      columnTypes: [],
+      formItemTypes: [],
+      needOptionFormItemTypes: [],
+      showEditOptions: false,
+      showEditAssociateResultColumns: false,
+      showEditFieldMapping: false,
+      column: {},
+      overwrite: false,
+      associateTable: {},
+      permission: {}
+    }
+  },
+  computed: {
+    ...mapState('swing', ['roles', 'tables'])
+  },
+  methods: {
+    onClickColumnItem(column) {
+      this.column = column
+    },
+    onAddColumn(index) {
+      let column = getColumn()
+      this.table.columns.splice(index + 1, 0, column)
+    },
+    onChangeType(event, column) {
+      switch (column.type) {
+        case 'int': {
+          column.length = 0
+          column.formItemType = formItemClassNames.inputFormItem
+          break
+        }
+        case 'varchar': {
+          column.length = 255
+          column.formItemType = formItemClassNames.inputFormItem
+          break
+        }
+        case 'tinyint': {
+          column.length = 1
+          column.formItemType = formItemClassNames.inputFormItem
+          break
+        }
+        case 'date': {
+          column.length = 0
+          column.formItemType = formItemClassNames.dateFormItem
+          break;
+        }
+        case 'text': {
+          column.length = 0
+          column.formItemType = formItemClassNames.textAreaFormItem
+          break;
+        }
+        case 'double': {
+          column.length = 0
+          column.formItemType = formItemClassNames.inputFormItem
+          break;
+        }
+        case 'datetime': {
+          column.length = 0
+          column.formItemType = formItemClassNames.dateTimeFormItem
+          break
+        }
+      }
+    },
+    onDeleteColumn(index) {
+      this.table.columns.splice(index, 1)
+    },
+    isOptionalFormItem(formItemType) {
+      return this.needOptionFormItemTypes.includes(formItemType)
+    },
+    onInputOptionTitle(value, option) {
+      option.value = value
+    },
+    onEditOptions(column) {
+      this.column = column
+      this.showEditOptions = true
+    },
+    onAddOption() {
+      this.column.options.push({
+        id: Math.random(),
+        title: '',
+        value: ''
+      })
+    },
+    onDeleteOption(index) {
+      this.column.options.splice(index, 1)
+    },
+    onChangeAssociateStatus(status, column) {
+      column.type = 'int'
+      column.length = 0
+      column.enableFormItem = true
+      column.enableTableField = false
+      column.formItemType = formItemClassNames.selectFormItem
+    },
+    onChangeAssociateTable(tableName, columnAssociate) {
+      this.associateTable = this.tables.find(it => it.name === tableName)
+      columnAssociate.targetColumnName = 'id'
+    },
+    onChangeAssociateResultColumn(originColumnName, resultColumn) {
+      let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
+      resultColumn.columnType = targetColumn.type
+      resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
+    },
+    onEditAssociateResultColumns(column) {
+      this.column = column
+      this.showEditAssociateResultColumns = true
+      this.associateTable = this.tables.find(it => it.name === this.column.associate.targetTableName)
+    },
+    onAddResultColumn() {
+      this.column.associate.associateResultColumns.push({
+        columnType: '',
+        originColumnName: '',
+        tableFieldTitle: ''
+      })
+    },
+    onUpdateTargetColumnNames(value, column) {
+      if (value) {
+        let tableName = column.associate.targetTableName
+        this.associateTable = this.tables.find(it => it.name === tableName)
+      }
+    },
+    onDeleteResultColumn(index) {
+      this.column.associate.associateResultColumns.splice(index, 1)
+    },
+    onSave() {
+      let newTable = JSON.parse(JSON.stringify(this.table))
+      newTable.id = Math.random()
+      newTable.frames = this.table.columns.map(it => {
+        return {
+          className: it.formItemType,
+          options: it.options
+        }
+      })
+      this.saveTable({
+        table: newTable,
+        overwrite: this.overwrite
+      })
+      this.$router.back()
+    },
+    onClose() {
+      this.$router.back()
+    },
+    ...mapMutations('swing', ['saveTable'])
+  }
+}
+</script>
+
+<style scoped lang="stylus">
+#table-edit
+  .el-row
+    margin-bottom 20px
+
+  .option-drawer
+    .el-form
+      padding 0 10px
+
+  .add-btn-form-item
+    text-align center
+
+  .el-checkbox-group
+    display inline-block
+  >>>.el-drawer.rtl
+    overflow scroll
+</style
