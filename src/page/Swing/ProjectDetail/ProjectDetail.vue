@@ -2,7 +2,8 @@
   <div id="swing-project-detail">
     <el-tabs :active-name="activeName" @tab-click="onChangeTabPane">
       <el-tab-pane class="content" label="基础配置" name="base-setting">
-        <project-config :config="config" @generate="onGenerate"/>
+        <config :config="config"/>
+        <el-button type="primary" @click="onGenerate">生成</el-button>
       </el-tab-pane>
       <el-tab-pane label="表结构配置" class="content" name="table-setting">
         <div style="margin-bottom: 10px">
@@ -64,12 +65,12 @@ import axios from "../../../util/Axios";
 import ProjectRole from "../../SBMP/ProjectRole/ProjectRole";
 import ProjectMenu from "../../SBMP/ProjectMenu/ProjectMenu";
 import Table from "../Table/Table";
-import ProjectConfig from "../../SBMP/ProjectConfig/ProjectConfig";
+import Config from "../Config/Config";
 import { getColumn } from "../../../util/swing/TableUtils";
 
 export default {
   name: "ProjectDetail",
-  components: { ProjectRole, ProjectMenu, Table, ProjectConfig },
+  components: { ProjectRole, ProjectMenu, Table, Config },
   data() {
     return {
       table: {
