@@ -55,7 +55,7 @@ export default {
       let newMenu = JSON.parse(JSON.stringify(this.menu))
       if (this.menu.bind) {
         const camelcase = require('camelcase')
-        newMenu.href = `/${camelcase(newMenu.tableName)}/tablePage`
+        newMenu.href = `${camelcase(newMenu.tableName)}`
       }
       this.menu.roleDescriptions.forEach(description => {
         this.addMenuInRole({
