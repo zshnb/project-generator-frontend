@@ -48,7 +48,7 @@
         <el-checkbox-group v-model="entity.operations">
           <el-checkbox v-for="operation in operations"
                        :key="operation.value"
-                       :label="operation.name">
+                       :label="operation.value">
             {{ operation.name }}
           </el-checkbox>
         </el-checkbox-group>
@@ -121,7 +121,7 @@ export default {
     onAddEntity() {
       let menus = []
       this.entity.operations.forEach(it => {
-        switch (it.value) {
+        switch (it) {
           case 'add': {
             menus.push({
               name: `添加${ this.entity.comment }`,
