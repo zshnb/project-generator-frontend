@@ -142,7 +142,7 @@ export default {
             let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
               return {
                 name: `通过${ it.name }查找${ this.entity.comment }`,
-                value: it,
+                value: 'detail',
                 method: `find_${ this.entity.name }_by_${ it.name }()`
               }
             })
@@ -153,7 +153,7 @@ export default {
             let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
               return {
                 name: `通过${ it.name }删除${ this.entity.comment }`,
-                value: it,
+                value: 'delete',
                 method: `delete_${ this.entity.name }_by_${ it.name }()`
               }
             })
