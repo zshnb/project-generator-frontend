@@ -125,7 +125,7 @@ export default {
           case 'add': {
             menus.push({
               name: `添加${ this.entity.comment }`,
-              value: it.value,
+              value: it,
               method: `add_${ this.entity.name }()`
             })
             break
@@ -133,7 +133,7 @@ export default {
           case 'edit': {
             menus.push({
               name: `修改${ this.entity.comment }`,
-              value: it.value,
+              value: it,
               method: `update_${ this.entity.name }()`
             })
             break
@@ -142,7 +142,7 @@ export default {
             let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
               return {
                 name: `通过${ it.name }查找${ this.entity.comment }`,
-                value: 'detail',
+                value: it,
                 method: `find_${ this.entity.name }_by_${ it.name }()`
               }
             })
@@ -153,7 +153,7 @@ export default {
             let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
               return {
                 name: `通过${ it.name }删除${ this.entity.comment }`,
-                value: 'delete',
+                value: it,
                 method: `delete_${ this.entity.name }_by_${ it.name }()`
               }
             })
