@@ -16,8 +16,8 @@
                 <div class="card-header">
                   <p>{{table.name}}</p>
                   <div>
-                    <el-button size="small" type="primary" @click="onEdit(table)" icon="el-icon-edit"></el-button>
-                    <el-button size="small" type="danger" @click="onDelete(index)" icon="el-icon-delete"></el-button>
+                    <el-button size="small" type="primary" @click="onEditTable(table)" icon="el-icon-edit"></el-button>
+                    <el-button size="small" type="danger" @click="onDeleteTable(index)" icon="el-icon-delete"></el-button>
                   </div>
                 </div>
               </div>
@@ -40,7 +40,13 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="3" v-for="(menu, index) in menus" :key="menu.id">
-            <project-menu :menu="menu" :index="index"/>
+            <el-card>
+              <div slot="header">
+                <span>{{menu.name}}</span>
+                <el-button size="small" type="primary" @click="onEditMenu(menu)">编辑</el-button>
+                <el-button size="small" type="danger" @click="onDeleteMenu(index)">删除</el-button>
+              </div>
+            </el-card>
           </el-col>
         </el-row>
       </el-tab-pane>
@@ -50,7 +56,13 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="3" v-for="(role, index) in roles" :key="role.id">
-            <project-role :role="role" :index="index"/>
+            <el-card>
+              <div slot="header">
+                <span>{{role.description}}</span>
+                <el-button size="small" type="primary" @click="onEditRole(role)">编辑</el-button>
+                <el-button size="small" type="danger" @click="onDeleteRole(index)">删除</el-button>
+              </div>
+            </el-card>
           </el-col>
         </el-row>
       </el-tab-pane>
@@ -86,9 +98,7 @@ export default {
       },
       menu: {
         name: '',
-        icon: '',
         href: '',
-        bind: true,
         overwrite: false,
         roleDescriptions: [],
         tableName: ''
@@ -125,6 +135,17 @@ export default {
         }
       })
     },
+    onEditTable(table) {
+      this.$router.push({
+        name: 'SwingTable',
+        params: {
+          table
+        }
+      })
+    },
+    onDeleteTable(index) {
+      this.deleteTable(index)
+    },
     onCreateMenu() {
       this.$router.push({
         name: 'SwingMenu',
@@ -132,6 +153,17 @@ export default {
           menu: this.menu
         }
       })
+    },
+    onEditMenu(menu) {
+      this.$router.push({
+        name: 'MenuEdit',
+        params: {
+          menu: menu
+        }
+      })
+    },
+    onDeleteMenu(index) {
+      this.deleteMenu(index)
     },
     onCreateRole() {
       this.$router.push({
@@ -141,22 +173,22 @@ export default {
         }
       })
     },
+    onEditRole(role) {
+      this.$router.push({
+        name: 'RoleEdit',
+        params: {
+          role: role
+        }
+      })
+    },
+    onDeleteRole(index) {
+      this.deleteRole(index)
+    },
     onChangeTabPane(tab) {
       this.$router.push({
         path: this.$route.path,
         query: {
           activeName: tab.name
-        }
-      })
-    },
-    onDelete(index) {
-      this.deleteTable(index)
-    },
-    onEdit(table) {
-      this.$router.push({
-        name: 'SwingTable',
-        params: {
-          table
         }
       })
     },
@@ -225,7 +257,7 @@ export default {
         loadingInstance.close()
       })
     },
-    ...mapMutations('swing', ['deleteTable']),
+    ...mapMutations('swing', ['deleteTable', 'deleteMenu', 'deleteRole']),
   }
 }
 </script>
