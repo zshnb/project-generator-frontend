@@ -5,15 +5,8 @@
         <el-form-item label="菜单名称">
           <el-input v-model="menu.name"/>
         </el-form-item>
-        <el-form-item label="图标">
-          <el-input v-model="menu.icon"/>
-        </el-form-item>
-        <el-form-item label="绑定表">
-          <el-switch v-model="menu.bind"/>
-        </el-form-item>
         <el-form-item label="路径">
-          <el-input v-if="!menu.bind" v-model="menu.href"/>
-          <el-select v-if="menu.bind" v-model="menu.tableName">
+          <el-select v-model="menu.tableName" @change="onChangeTable">
             <el-option v-for="table in tables" :key="table.id" :label="table.name" :value="table.name"/>
           </el-select>
         </el-form-item>
@@ -51,6 +44,10 @@ export default {
   },
   methods: {
     ...mapMutations('swing', ['saveMenu', 'addMenuInRole']),
+    onChangeTable(tableName) {
+      let table = this.tables.find(it => it.name === tableName)
+      this.menu.name = `${table.comment}管理`
+    },
     onSave() {
       let newMenu = JSON.parse(JSON.stringify(this.menu))
       if (this.menu.bind) {
