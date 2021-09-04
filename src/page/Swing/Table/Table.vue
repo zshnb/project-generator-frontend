@@ -116,6 +116,43 @@
           </el-row>
         </el-form>
       </el-form-item>
+      <el-form-item v-if="table.enablePage"
+                    v-for="(permission, index) in table.permissions"
+                    @click.native=onClickPermission(permission)
+                    :key="permission.id">
+        <div slot="label">
+          <el-button type="primary"
+                     size="small"
+                     icon="el-icon-circle-plus-outline"
+                     plain
+                     @click="onAddPermission"/>
+          <el-button type="danger"
+                     size="small"
+                     icon="el-icon-remove-outline"
+                     plain
+                     @click="onDeletePermission(index)"/>
+        </div>
+        <el-form :inline="true"
+                 class="permission-form">
+          <el-form-item label="角色">
+            <el-select v-model="permission.role">
+              <el-option v-for="role in roles" :key="role.name" :label="role.description" :value="role.name"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="操作">
+            <el-checkbox-group v-model="permission.operations">
+              <el-checkbox v-for="operation in permission.operations"
+                           :key="operation.value"
+                           :label="operation">
+                {{ operation.description }}
+                <el-button type="primary" size="mini" icon="el-icon-edit"
+                           @click="onEditOperation(operation)"/>
+              </el-checkbox>
+            </el-checkbox-group>
+            <el-button type="primary" size="mini" @click="onShowOperationDialog(permission.role)">添加</el-button>
+          </el-form-item>
+        </el-form>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSave">保存</el-button>
         <el-button @click="onClose">取消</el-button>
@@ -185,6 +222,19 @@
         </el-form-item>
       </el-form>
     </el-drawer>
+    <el-dialog :visible.sync="showOperation">
+      <el-form :model="operation" ref="operationForm">
+        <el-form-item label="描述">
+          <el-input v-model="operation.description"/>
+        </el-form-item>
+        <el-form-item label="值">
+          <el-input v-model="operation.value"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onAddOperation">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -193,6 +243,7 @@ import axios from "../../../util/Axios";
 import { generateDefaultColumns, getColumn } from "../../../util/swing/TableUtils";
 import { mapMutations, mapState } from "vuex";
 import { frameItemClassNames } from "../../../util/Constant";
+import { getDefaultOperations } from "../../../util/TableUtils";
 
 export default {
   name: "Table",
@@ -220,14 +271,20 @@ export default {
       showEditOptions: false,
       showEditAssociateResultColumns: false,
       showEditFieldMapping: false,
+      showOperation: false,
       column: {},
       overwrite: false,
       associateTable: {},
+      defaultOperations: getDefaultOperations(),
+      operation: {
+        description: '',
+        value: ''
+      },
       permission: {}
     }
   },
   computed: {
-    ...mapState('swing', ['tables'])
+    ...mapState('swing', ['tables', 'roles'])
   },
   methods: {
     onClickColumnItem(column) {
@@ -310,6 +367,34 @@ export default {
     },
     onDeleteResultColumn(index) {
       this.column.associate.associateResultColumns.splice(index, 1)
+    },
+    onShowOperationDialog(role) {
+      this.role = role
+      this.showOperation = true
+    },
+    onAddOperation() {
+      let newOperation = JSON.parse(JSON.stringify(this.operation))
+      this.permission.operations.push(newOperation)
+      this.operation = {}
+      this.showOperation = false
+    },
+    onEditOperation(operation) {
+      this.operation = operation
+      this.showOperation = true
+    },
+    onAddPermission() {
+      let permission = {
+        role: '',
+        operations: getDefaultOperations()
+      }
+      permission.id = Math.random()
+      this.table.permissions.push(permission)
+    },
+    onClickPermission(permission) {
+      this.permission = permission
+    },
+    onDeletePermission(index) {
+      this.table.permissions.splice(index, 1)
     },
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))

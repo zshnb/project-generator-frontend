@@ -67,6 +67,7 @@ import ProjectMenu from "../../SBMP/ProjectMenu/ProjectMenu";
 import Table from "../Table/Table";
 import Config from "../Config/Config";
 import { getColumn } from "../../../util/swing/TableUtils";
+import { getDefaultOperations } from "../../../util/TableUtils";
 
 export default {
   name: "ProjectDetail",
@@ -77,6 +78,10 @@ export default {
         name: '',
         comment: '',
         columns: [getColumn()],
+        permissions: [{
+          role: '',
+          operations: getDefaultOperations()
+        }],
         enablePage: true
       },
       menu: {
