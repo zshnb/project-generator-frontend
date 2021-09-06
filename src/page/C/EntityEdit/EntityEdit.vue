@@ -41,6 +41,9 @@
             <el-form-item label="搜索" class="length-form-item">
               <el-switch v-model="field.searchable"/>
             </el-form-item>
+            <el-form-item label="删除" class="length-form-item">
+              <el-switch v-model="field.deletable"/>
+            </el-form-item>
           </div>
         </el-form>
       </el-form-item>
@@ -95,14 +98,6 @@ export default {
         {
           name: '编辑',
           value: 'edit',
-        },
-        {
-          name: '详情',
-          value: 'detail',
-        },
-        {
-          name: '删除',
-          value: 'delete',
         }
       ],
       buttonText: ''
@@ -138,32 +133,25 @@ export default {
             })
             break
           }
-          case 'detail': {
-            let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
-              return {
-                name: `通过${ it.name }查找${ this.entity.comment }`,
-                value: 'detail',
-                method: `find_${ this.entity.name }_by_${ it.name }()`
-              }
-            })
-            appendAll(menus, ...subMenus)
-            break
-          }
-          case 'delete': {
-            let subMenus = this.entity.fields.filter(it => it.searchable).flatMap(it => {
-              return {
-                name: `通过${ it.name }删除${ this.entity.comment }`,
-                value: 'delete',
-                method: `delete_${ this.entity.name }_by_${ it.name }()`
-              }
-            })
-            appendAll(menus, ...subMenus)
-            break
-          }
         }
       })
-      appendAll(menus, ...getDefaultMenus(this.entity))
-      this.entity.menus = menus
+      let detailMenus = this.entity.fields.filter(it => it.searchable).map(it => {
+        return {
+          name: `通过${ it.name }查找${ this.entity.comment }`,
+          value: 'detail',
+          method: `find_${ this.entity.name }_by_${ it.name }()`
+        }
+      })
+      menus = appendAll(menus, detailMenus)
+      let deleteMenus = this.entity.fields.filter(it => it.deletable).map(it => {
+        return {
+          name: `通过${ it.name }删除${ this.entity.comment }`,
+          value: 'delete',
+          method: `delete_${ this.entity.name }_by_${ it.name }()`
+        }
+      })
+      menus = appendAll(menus, deleteMenus)
+      this.entity.menus = appendAll(menus, getDefaultMenus(this.entity))
       this.addEntity({
         entity: JSON.parse(JSON.stringify(this.entity)),
         overwrite: this.overwrite

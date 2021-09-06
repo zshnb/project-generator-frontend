@@ -66,7 +66,8 @@ export default {
           name: '',
           type: '',
           comment: '',
-          searchable: false
+          searchable: false,
+          deletable: false
         }]
       },
       activeName: 'project-setting'
