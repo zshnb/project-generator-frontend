@@ -45,6 +45,23 @@ function generateDefaultColumns() {
   ]
 }
 
+function getDefaultOperations() {
+  return [
+    {
+      description: '添加',
+      value: 'add'
+    },
+    {
+      description: '编辑',
+      value: 'edit'
+    },
+    {
+      description: '删除',
+      value: 'delete'
+    }
+  ]
+}
+
 function getColumn() {
   return {
     id: Math.random(),
@@ -72,5 +89,6 @@ function getColumn() {
 
 export {
   generateDefaultColumns,
-  getColumn
+  getColumn,
+  getDefaultOperations
 }

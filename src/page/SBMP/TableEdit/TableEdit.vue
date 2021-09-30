@@ -321,6 +321,7 @@
 import axios from "../../../util/Axios";
 import { mapMutations, mapState } from 'vuex'
 import { generateDefaultColumns, getDefaultOperations, getColumn } from '../../../util/TableUtils'
+import { clear } from "../../../util/ObjectUtils";
 import { formItemClassNames } from "../../../util/Constant";
 
 export default {
@@ -426,8 +427,7 @@ export default {
     onAddPermission() {
       let permission = {
         role: '',
-        operations: getDefaultOperations(),
-        checkAll: false
+        operations: getDefaultOperations()
       }
       permission.id = Math.random()
       this.table.permissions.push(permission)
@@ -521,13 +521,13 @@ export default {
       this.column.mappings.splice(index, 1)
     },
     onShowOperationDialog(role) {
-      this.role = role
+      clear(this.operation)
+      // this.role = role
       this.showOperation = true
     },
     onAddOperation() {
       let newOperation = JSON.parse(JSON.stringify(this.operation))
       this.permission.operations.push(newOperation)
-      this.operation = {}
       this.showOperation = false
     },
     onEditOperation(operation) {
