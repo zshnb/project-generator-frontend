@@ -243,7 +243,7 @@ import axios from "../../../util/Axios";
 import { generateDefaultColumns, getColumn } from "../../../util/swing/TableUtils";
 import { mapMutations, mapState } from "vuex";
 import { frameItemClassNames } from "../../../util/Constant";
-import { getDefaultOperations } from "../../../util/TableUtils";
+import { getDefaultOperations } from "../../../util/swing/TableUtils";
 
 export default {
   name: "Table",
