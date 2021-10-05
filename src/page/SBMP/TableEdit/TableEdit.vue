@@ -56,7 +56,7 @@
               <el-input v-model="column.length"/>
             </el-form-item>
             <el-form-item label="列描述" class="name-form-item">
-              <el-input v-model="column.comment"/>
+              <el-input v-model="column.comment" @input="onInputComment($event, column)"/>
             </el-form-item>
           </el-row>
           <el-row>
@@ -87,7 +87,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="表单项标签" v-if="column.enableFormItem">
-                <el-input v-model="column.label" @input="onInputLabel($event, column)"/>
+                <el-input v-model="column.label"/>
               </el-form-item>
               <el-form-item v-if="isOptionalFormItem(column.formItemType)">
                 <el-button type="primary" @click="onEditOptions(column)">编辑选项</el-button>
@@ -424,6 +424,10 @@ export default {
     onDeleteColumn(index) {
       this.table.columns.splice(index, 1)
     },
+    onInputComment(value, column) {
+      column.title = value
+      column.label = value
+    },
     onAddPermission() {
       let permission = {
         role: '',
@@ -437,10 +441,6 @@ export default {
     },
     onDeletePermission(index) {
       this.table.permissions.splice(index, 1)
-    },
-    onInputLabel(value, column) {
-      column.title = value
-      column.comment = value
     },
     isOptionalFormItem(formItemType) {
       return this.needOptionFormItemTypes.includes(formItemType)
