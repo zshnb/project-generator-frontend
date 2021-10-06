@@ -1,5 +1,6 @@
 import { databaseConfigs, frameItemClassNames } from "../util/Constant";
-import { generateDefaultColumns } from "../util/TableUtils";
+import { generateDefaultColumns, getDefaultOperations } from "../util/swing/TableUtils";
+import { saveRole as commonSaveRole } from "../util/StoreUtils";
 
 const state = {
   config: {
@@ -62,23 +63,10 @@ const state = {
         enableAssociate: false
       }, ...generateDefaultColumns()],
       enablePage: false,
-      frame: {
-        items: [
-          {
-            formItemClassName: frameItemClassNames.textFieldFrameItem,
-            require: true
-          },
-          {
-            formItemClassName: frameItemClassNames.passwordFrameItem,
-            require: true
-          },
-          {
-            formItemClassName: frameItemClassNames.selectFrameItem,
-            require: true,
-            options: []
-          }
-        ]
-      }
+      permissions: [{
+        role: '',
+        operations: getDefaultOperations()
+      }],
     }
   ],
   roles: [],
@@ -107,14 +95,7 @@ const mutations = {
     state.tables.splice(index, 1)
   },
   saveRole(state, payload) {
-    let role = payload.role
-    let overwrite = payload.overwrite
-    if (!overwrite) {
-      state.roles.push(role)
-    } else {
-      let index = state.roles.findIndex(it => it.name === role.name)
-      state.roles.splice(index, 1, role)
-    }
+    commonSaveRole(state, payload)
   },
   deleteRole(state, index) {
     state.roles.splice(index, 1)

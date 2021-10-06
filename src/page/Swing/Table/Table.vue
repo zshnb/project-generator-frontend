@@ -399,12 +399,13 @@ export default {
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
       newTable.id = Math.random()
-      newTable.items = this.table.columns.map(it => {
-        return {
-          className: it.formItemType,
-          options: it.options
-        }
-      })
+      newTable.items = this.table.columns.filter(it => it.enableFormItem)
+        .map(it => {
+          return {
+            className: it.formItemType,
+            options: it.options
+          }
+        })
       this.saveTable({
         table: newTable,
         overwrite: this.overwrite
