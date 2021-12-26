@@ -101,7 +101,8 @@ export default {
         href: '',
         overwrite: false,
         roleDescriptions: [],
-        tableName: ''
+        tableName: '',
+        bind: true
       },
       role: {
         name: '',
