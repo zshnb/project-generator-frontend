@@ -137,7 +137,7 @@ export default {
       })
       let detailMenus = this.entity.fields.filter(it => it.searchable).map(it => {
         return {
-          name: `通过${ it.name }查找${ this.entity.comment }`,
+          name: `通过${ it.comment }查找${ this.entity.comment }`,
           value: 'detail',
           method: `find_${ this.entity.name }_by_${ it.name }()`
         }
@@ -145,7 +145,7 @@ export default {
       menus = appendAll(menus, detailMenus)
       let deleteMenus = this.entity.fields.filter(it => it.deletable).map(it => {
         return {
-          name: `通过${ it.name }删除${ this.entity.comment }`,
+          name: `通过${ it.comment }删除${ this.entity.comment }`,
           value: 'delete',
           method: `delete_${ this.entity.name }_by_${ it.name }()`
         }

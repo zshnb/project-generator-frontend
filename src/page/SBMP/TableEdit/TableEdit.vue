@@ -114,7 +114,7 @@
               <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
-                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column.associate)">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column)">
                       <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
                     </el-select>
                   </el-form-item>
@@ -472,15 +472,20 @@ export default {
       this.$message.success('填充成功')
     },
     onChangeAssociateStatus(status, column) {
-      column.type = 'int'
-      column.length = 0
-      column.enableFormItem = true
-      column.enableTableField = false
-      column.formItemType = formItemClassNames.selectFormItem
+      if (status) {
+        column.type = 'int'
+        column.length = 0
+        column.enableFormItem = true
+        column.enableTableField = false
+        column.formItemType = formItemClassNames.selectFormItem
+      } else {
+        clear(column.associate)
+      }
     },
-    onChangeAssociateTable(tableName, columnAssociate) {
+    onChangeAssociateTable(tableName, column) {
       this.associateTable = this.tables.find(it => it.name === tableName)
-      columnAssociate.targetColumnName = 'id'
+      column.associate.targetColumnName = 'id'
+      column.comment = this.associateTable.comment
     },
     onChangeAssociateResultColumn(originColumnName, resultColumn) {
       let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)

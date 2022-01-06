@@ -92,7 +92,7 @@
               <el-form-item v-if="column.enableAssociate">
                 <el-form :inline="true" :model="column.associate">
                   <el-form-item label="选择关联表">
-                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column.associate)">
+                    <el-select v-model="column.associate.targetTableName" @change="onChangeAssociateTable($event, column)">
                       <el-option v-for="table in tables" :key="table.id" :value="table.name"/>
                     </el-select>
                   </el-form-item>
@@ -244,6 +244,7 @@ import { generateDefaultColumns, getColumn } from "../../../util/swing/TableUtil
 import { mapMutations, mapState } from "vuex";
 import { frameItemClassNames } from "../../../util/Constant";
 import { getDefaultOperations } from "../../../util/swing/TableUtils";
+import { clear } from "../../../util/ObjectUtils";
 
 export default {
   name: "Table",
@@ -332,15 +333,20 @@ export default {
       this.column.options.splice(index, 1)
     },
     onChangeAssociateStatus(status, column) {
-      column.type = 'int'
-      column.length = 0
-      column.enableFormItem = true
-      column.enableTableField = false
-      column.formItemType = frameItemClassNames.selectFrameItem
+      if (status) {
+        column.type = 'int'
+        column.length = 0
+        column.enableFormItem = true
+        column.enableTableField = false
+        column.formItemType = frameItemClassNames.selectFrameItem
+      } else {
+        clear(column.associate)
+      }
     },
-    onChangeAssociateTable(tableName, columnAssociate) {
+    onChangeAssociateTable(tableName, column) {
       this.associateTable = this.tables.find(it => it.name === tableName)
-      columnAssociate.targetColumnName = 'id'
+      column.associate.targetColumnName = 'id'
+      column.comment = this.associateTable.comment
     },
     onChangeAssociateResultColumn(originColumnName, resultColumn) {
       let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
