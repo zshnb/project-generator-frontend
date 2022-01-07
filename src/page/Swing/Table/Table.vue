@@ -404,6 +404,12 @@ export default {
     },
     onSave() {
       let newTable = JSON.parse(JSON.stringify(this.table))
+      let associateColumns = newTable.columns.filter(it => it.enableAssociate && it.associate.targetTableName !== '')
+      associateColumns.forEach(column => {
+        let index = newTable.columns.findIndex(it => it === column)
+        newTable.columns.splice(index, 1)
+      })
+      associateColumns.forEach(it => newTable.columns.push(it))
       newTable.id = Math.random()
       newTable.items = this.table.columns.filter(it => it.enableFormItem)
         .map(it => {
