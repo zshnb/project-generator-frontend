@@ -486,6 +486,7 @@ export default {
       this.associateTable = this.tables.find(it => it.name === tableName)
       column.associate.targetColumnName = 'id'
       column.comment = this.associateTable.comment
+      column.label = this.associateTable.comment
     },
     onChangeAssociateResultColumn(originColumnName, resultColumn) {
       let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
