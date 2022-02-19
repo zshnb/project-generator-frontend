@@ -411,7 +411,7 @@ export default {
       })
       associateColumns.forEach(it => newTable.columns.push(it))
       newTable.id = Math.random()
-      newTable.items = this.table.columns.filter(it => it.enableFormItem)
+      newTable.items = newTable.columns.filter(it => it.enableFormItem)
         .map(it => {
           return {
             className: it.formItemType,
