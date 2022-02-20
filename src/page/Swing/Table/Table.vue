@@ -103,7 +103,9 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item v-if="column.enableFormItem" label="表单项列">
-                    <el-select v-model="column.associate.formItemColumnName">
+                    <el-select v-model="column.associate.formItemColumnName"
+                               @change="onChangeAssociateFormItemColumnName"
+                    >
                       <el-option v-for="column in associateTable.columns" :key="column.id" :value="column.name"/>
                     </el-select>
                   </el-form-item>
@@ -348,15 +350,23 @@ export default {
       column.associate.targetColumnName = 'id'
       column.comment = this.associateTable.comment
     },
-    onChangeAssociateResultColumn(originColumnName, resultColumn) {
-      let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
-      resultColumn.columnType = targetColumn.type
-      resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
+    onChangeAssociateFormItemColumnName(column) {
+      let targetColumn = this.associateTable.columns.find(it => it.name === column)
+      this.column.associate.associateResultColumns.push({
+        columnType: targetColumn.columnType,
+        originColumnName: column,
+        tableFieldTitle: `${this.associateTable.comment}${targetColumn.comment}`
+      })
     },
     onEditAssociateResultColumns(column) {
       this.column = column
       this.showEditAssociateResultColumns = true
       this.associateTable = this.tables.find(it => it.name === this.column.associate.targetTableName)
+    },
+    onChangeAssociateResultColumn(originColumnName, resultColumn) {
+      let targetColumn = this.associateTable.columns.find(it => it.name === originColumnName)
+      resultColumn.columnType = targetColumn.type
+      resultColumn.tableFieldTitle = `${this.associateTable.comment}${targetColumn.comment}`
     },
     onAddResultColumn() {
       this.column.associate.associateResultColumns.push({
