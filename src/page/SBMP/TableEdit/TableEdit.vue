@@ -491,7 +491,7 @@ export default {
     onChangeAssociateFormItemColumnName(column) {
       let targetColumn = this.associateTable.columns.find(it => it.name === column)
       this.column.associate.associateResultColumns.push({
-        columnType: targetColumn.columnType,
+        columnType: targetColumn.type,
         originColumnName: column,
         tableFieldTitle: `${this.associateTable.comment}${targetColumn.comment}`
       })
